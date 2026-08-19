@@ -1,10 +1,20 @@
 import React from "react";
 import { useUserState } from "../state/UserStateContext";
+import { PERSONA_REGISTRY } from "../speculum/personaRegistry";
 
-// The Studiolo — Final Analysis Architecture v1.2의 5개 출력 영역을 보여주는 화면.
-// ("My Mirror"는 옛 이름, 폐기 — claude/app-build-readiness-v1.md 참고)
+// claude/돌하나를-얹다-app-spec-v1.md "11. CURRENT HOME / FINAL ANALYSIS" — 이름: 현재의 돌탑.
+// 인트로의 돌탑(삶 속에서 형성되어 온 판단 전체의 비유)과는 의미가 다르다 — 여기서는 앱 안에서 실제로
+// 거친 질문·판단 경험만 기록한다. Final Analysis Architecture v1.2의 5개 출력 영역 구조는 그대로 두고
+// (I~V), 이 중 스펙 11번이 명시적으로 다시 확정한 IV/V만 "지금까지 얹은 돌" / "쌓이면서 드러난 것"으로
+// 이름을 바꿨다. ("My Mirror"는 옛 이름, 폐기 — claude/app-build-readiness-v1.md 참고)
 // Speculum이 아직 연결되지 않았으므로(로드맵 4번, 다음 단계) IV/V는 지금은 항상 비어 있는 상태로 보여준다 —
 // 데이터가 없다고 화면을 숨기지 않고, "아직 쌓이지 않았다"는 것 자체를 보여주는 게 이 화면의 원칙에 맞는다.
+
+function formatSessionDate(timestamp) {
+  if (!timestamp) return "";
+  const d = new Date(timestamp);
+  return `${d.getMonth() + 1}월 ${d.getDate()}일`;
+}
 
 const CSS = `
 .st-root { min-height: 100%; background: #16131c; color: #ece7de; font-family: Pretendard, -apple-system, sans-serif; padding: 32px 20px 60px; box-sizing: border-box; }
@@ -33,7 +43,7 @@ export default function Studiolo() {
     <div className="st-root">
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <div className="st-shell">
-        <h1 className="st-title">The Studiolo</h1>
+        <h1 className="st-title">현재의 돌탑</h1>
         <p className="st-sub">처음 판단과 지금까지 쌓인 판단 사이에서 확인된 것들.</p>
 
         <div className="st-section">
@@ -69,13 +79,16 @@ export default function Studiolo() {
         </div>
 
         <div className="st-section">
-          <h2>IV. 판단이 움직였던 순간 — Speculum</h2>
+          <h2>지금까지 얹은 돌</h2>
           {speculumSessions.length === 0 ? (
-            <div className="st-empty">아직 Speculum 세션이 없습니다. (Speculum 연결은 다음 단계 — 로드맵 4번)</div>
+            <div className="st-empty">아직 얹은 돌이 없습니다.</div>
           ) : (
             speculumSessions.map((s) => (
               <div key={s.sessionId} className="st-item">
-                <span className="k">{s.personaId}</span>
+                <span className="k">
+                  {PERSONA_REGISTRY[s.personaId]?.koreanName ?? s.personaId}
+                  {s.timestamp ? ` · ${formatSessionDate(s.timestamp)}` : ""}
+                </span>
                 {s.initialJudgment} → {s.rejudgment}
               </div>
             ))
@@ -83,7 +96,7 @@ export default function Studiolo() {
         </div>
 
         <div className="st-section">
-          <h2>V. 나의 Judgment Paths</h2>
+          <h2>쌓이면서 드러난 것</h2>
           {judgmentPaths.length === 0 ? (
             <div className="st-empty">
               Judgment Path는 Speculum 세션이 쌓인 뒤에 생성됩니다(Final Analysis Architecture v1.2 — Evidence Rule).

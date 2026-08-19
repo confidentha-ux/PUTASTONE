@@ -12,6 +12,7 @@ const CSS = `
 .sv-persona h1 { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:32px; margin:0; font-weight:500; }
 .sv-persona .en { font-size:12px; color:var(--muted); margin-top:4px; }
 .sv-tagline { font-family:'Gowun Batang',serif; font-size:16px; line-height:1.6; color:var(--paper); text-align:center; margin:0 0 24px; }
+.sv-persona-header { font-family:'Gowun Batang',serif; font-size:15px; line-height:1.6; color:#f6ecda; text-align:center; margin:0 0 20px; font-weight:600; }
 .sv-subject { font-size:12px; color:var(--open); border-left:2px solid rgba(214,167,86,.5); padding-left:10px; margin-bottom:20px; line-height:1.6; }
 .sv-step-label { font-size:11px; color:var(--muted); letter-spacing:.08em; margin-bottom:8px; }
 .sv-q { font-family:'Gowun Batang',serif; font-size:18px; line-height:1.65; margin:0 0 6px; font-weight:400; }
@@ -192,7 +193,7 @@ export default function SurveyorLens({ onComplete } = {}) {
     <div className="sv-root">
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <div className="sv-shell">
-        <div className="sv-eyebrow">르네상스의 그 거울 · III</div>
+        <div className="sv-eyebrow">돌 하나를 얹다</div>
         <div className="sv-persona">
           <h1>측량사</h1>
           <div className="en">The Surveyor</div>
@@ -201,6 +202,7 @@ export default function SurveyorLens({ onComplete } = {}) {
         {step === "intro" && (
           <>
             <p className="sv-tagline">지금 꼭 결정해야 하는 건<br />어디까지일까.</p>
+            <p className="sv-persona-header">지금 실제로 판단해야 하는 크기를 찾아봅시다.</p>
             <p className="sv-hint">여덟 개의 질문을 지나갑니다.</p>
             <button className="sv-next" onClick={() => setStep("s0")}>시작하기</button>
           </>

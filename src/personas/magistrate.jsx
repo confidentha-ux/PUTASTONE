@@ -12,6 +12,7 @@ const CSS = `
 .mg-persona h1 { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:32px; margin:0; font-weight:500; }
 .mg-persona .en { font-size:12px; color:var(--muted); margin-top:4px; }
 .mg-tagline { font-family:'Gowun Batang',serif; font-size:16px; line-height:1.6; color:var(--paper); text-align:center; margin:0 0 24px; }
+.mg-persona-header { font-family:'Gowun Batang',serif; font-size:15px; line-height:1.6; color:#f6ecda; text-align:center; margin:0 0 20px; font-weight:600; }
 .mg-subject { font-size:12px; color:var(--open); border-left:2px solid rgba(214,167,86,.5); padding-left:10px; margin-bottom:20px; line-height:1.6; }
 .mg-step-label { font-size:11px; color:var(--muted); letter-spacing:.08em; margin-bottom:8px; }
 .mg-q { font-family:'Gowun Batang',serif; font-size:18px; line-height:1.65; margin:0 0 6px; font-weight:400; }
@@ -191,15 +192,16 @@ export default function MagistrateLens({ onComplete } = {}) {
     <div className="mg-root">
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <div className="mg-shell">
-        <div className="mg-eyebrow">르네상스의 그 거울 · III</div>
+        <div className="mg-eyebrow">돌 하나를 얹다</div>
         <div className="mg-persona">
-          <h1>재판관</h1>
+          <h1>기준!</h1>
           <div className="en">The Magistrate</div>
         </div>
 
         {step === "intro" && (
           <>
             <p className="mg-tagline">어느 정도까지라면,<br />내 판단은 달라질까.</p>
+            <p className="mg-persona-header">어느 지점에서 판단이 달라지는지 찾아봅시다.</p>
             <p className="mg-hint">여덟 개의 질문을 지나갑니다.</p>
             <button className="mg-next" onClick={() => setStep("s0")}>시작하기</button>
           </>
@@ -282,7 +284,7 @@ export default function MagistrateLens({ onComplete } = {}) {
 
         {step === "loading-question" && (
           <div className="mg-loading">
-            재판관이 판결선을 확인하고 있습니다
+            판결선을 확인하고 있습니다
             <div style={{ marginTop: 12 }}>
               <span className="dot" /><span className="dot" /><span className="dot" />
             </div>

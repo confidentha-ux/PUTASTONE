@@ -12,6 +12,7 @@ const CSS = `
 .tt-persona h1 { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:32px; margin:0; font-weight:500; }
 .tt-persona .en { font-size:12px; color:var(--muted); margin-top:4px; }
 .tt-tagline { font-family:'Gowun Batang',serif; font-size:16px; line-height:1.6; color:var(--paper); text-align:center; margin:0 0 24px; }
+.tt-persona-header { font-family:'Gowun Batang',serif; font-size:15px; line-height:1.6; color:#f6ecda; text-align:center; margin:0 0 20px; font-weight:600; }
 .tt-subject { font-size:12px; color:var(--open); border-left:2px solid rgba(214,167,86,.5); padding-left:10px; margin-bottom:20px; line-height:1.6; }
 .tt-step-label { font-size:11px; color:var(--muted); letter-spacing:.08em; margin-bottom:8px; }
 .tt-q { font-family:'Gowun Batang',serif; font-size:18px; line-height:1.65; margin:0 0 6px; font-weight:400; }
@@ -147,7 +148,7 @@ export default function TimeTravelerLens({ onComplete } = {}) {
     <div className="tt-root">
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <div className="tt-shell">
-        <div className="tt-eyebrow">르네상스의 그 거울 · III</div>
+        <div className="tt-eyebrow">돌 하나를 얹다</div>
         <div className="tt-persona">
           <h1>시간여행자</h1>
           <div className="en">The Time Traveler</div>
@@ -156,6 +157,7 @@ export default function TimeTravelerLens({ onComplete } = {}) {
         {step === "intro" && (
           <>
             <p className="tt-tagline">몇 년 뒤에 돌아보면,<br />지금 이 일은 얼마나 중요할까.</p>
+            <p className="tt-persona-header">이 판단을 조금 먼 시간으로 옮겨봅시다.</p>
             <div className="tt-subject">"{answers.judgment}"</div>
             <p className="tt-hint">일곱 개의 질문을 지나갑니다.</p>
             <button className="tt-next" onClick={() => setStep("s0")}>시작하기</button>

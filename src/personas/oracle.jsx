@@ -13,6 +13,7 @@ const CSS = `
 .or-persona h1 { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:32px; margin:0; font-weight:500; }
 .or-persona .en { font-size:12px; color:var(--muted); margin-top:4px; }
 .or-tagline { font-family:'Gowun Batang',serif; font-size:16px; line-height:1.6; color:var(--paper); text-align:center; margin:0 0 24px; }
+.or-persona-header { font-family:'Gowun Batang',serif; font-size:15px; line-height:1.6; color:#f6ecda; text-align:center; margin:0 0 20px; font-weight:600; }
 .or-subject { font-size:12px; color:var(--open); border-left:2px solid rgba(214,167,86,.5); padding-left:10px; margin-bottom:20px; line-height:1.6; }
 .or-step-label { font-size:11px; color:var(--muted); letter-spacing:.08em; margin-bottom:8px; }
 .or-q { font-family:'Gowun Batang',serif; font-size:18px; line-height:1.65; margin:0 0 6px; font-weight:400; }
@@ -147,15 +148,16 @@ export default function OracleLens({ onComplete } = {}) {
     <div className="or-root">
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <div className="or-shell">
-        <div className="or-eyebrow">르네상스의 그 거울 · III</div>
+        <div className="or-eyebrow">돌 하나를 얹다</div>
         <div className="or-persona">
-          <h1>신탁자</h1>
+          <h1>웨이팅 리스트</h1>
           <div className="en">The Oracle</div>
         </div>
 
         {step === "intro" && (
           <>
             <p className="or-tagline">기다리면 정말 알게 되는 게 있을까.</p>
+            <p className="or-persona-header">기다리면 실제로 무엇이 달라지는지 봅시다.</p>
             <div className="or-subject">"{answers.judgment}"</div>
             <p className="or-hint">일곱 개의 질문을 지나갑니다.</p>
             <button className="or-next" onClick={() => setStep("s0")}>시작하기</button>

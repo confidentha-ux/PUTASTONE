@@ -12,6 +12,7 @@ const CSS = `
 .dt-persona h1 { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:32px; margin:0; font-weight:500; }
 .dt-persona .en { font-size:12px; color:var(--muted); margin-top:4px; }
 .dt-tagline { font-family:'Gowun Batang',serif; font-size:16px; line-height:1.6; color:var(--paper); text-align:center; margin:0 0 24px; }
+.dt-persona-header { font-family:'Gowun Batang',serif; font-size:15px; line-height:1.6; color:#f6ecda; text-align:center; margin:0 0 20px; font-weight:600; }
 .dt-subject { font-size:12px; color:var(--open); border-left:2px solid rgba(214,167,86,.5); padding-left:10px; margin-bottom:20px; line-height:1.6; }
 .dt-step-label { font-size:11px; color:var(--muted); letter-spacing:.08em; margin-bottom:8px; }
 .dt-q { font-family:'Gowun Batang',serif; font-size:18px; line-height:1.65; margin:0 0 6px; font-weight:400; }
@@ -199,7 +200,7 @@ export default function ChroniclerLens({ onComplete } = {}) {
     <div className="dt-root">
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <div className="dt-shell">
-        <div className="dt-eyebrow">르네상스의 그 거울 · III</div>
+        <div className="dt-eyebrow">돌 하나를 얹다</div>
         <div className="dt-persona">
           <h1>기록자</h1>
           <div className="en">The Chronicler</div>
@@ -208,6 +209,7 @@ export default function ChroniclerLens({ onComplete } = {}) {
         {step === "intro" && (
           <>
             <p className="dt-tagline">내가 걱정하는 일은,<br />실제로 어디까지 확인된 걸까.</p>
+            <p className="dt-persona-header">일어난 일과 예상한 일을 나눠봅시다.</p>
             <div className="dt-subject">"{answers.judgment}"</div>
             <p className="dt-hint">일곱 개의 질문을 지나갑니다.</p>
             <button className="dt-next" onClick={() => setStep("s0")}>시작하기</button>

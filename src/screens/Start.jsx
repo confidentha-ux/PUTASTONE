@@ -1,6 +1,7 @@
 import React from "react";
 
-// claude/renaissance-mirror-full-copy-v1.md "## 시작" 카피 그대로.
+// claude/돌하나를-얹다-app-spec-v1.md "0. INTRO" 카피 그대로.
+// "르네상스의 그 거울" 컨셉을 대체하는 새 이름/인트로 — 2026-08-19 확정.
 export default function Start({ onStart }) {
   return (
     <div
@@ -20,22 +21,27 @@ export default function Start({ onStart }) {
       }}
     >
       <div style={{ maxWidth: 380 }}>
-        <h1 style={{ fontFamily: "'Cormorant Garamond', 'Gowun Batang', serif", fontStyle: "italic", fontSize: 34, margin: 0 }}>
-          르네상스의 그 거울
+        <h1 style={{ fontFamily: "'Cormorant Garamond', 'Gowun Batang', serif", fontStyle: "italic", fontSize: 30, margin: 0 }}>
+          돌 하나를 얹다
         </h1>
-        <p style={{ color: "#7d7489", fontSize: 14, lineHeight: 1.9, marginTop: 22 }}>
-          우리는 매일 선택하고 결정합니다.
-          <br />
-          어떤 선택은 자연스럽고, 어떤 선택에는 조건이 필요합니다.
-          <br />
-          <br />
-          중요한 일을 결정할 때는 무엇을 먼저 고려하고, 무엇을 확인하며,
-          어디에서 오래 생각하는지도 사람마다 다릅니다.
-          <br />
-          <br />
-          르네상스의 그 거울에서는 내가 어떤 선택을 하고 있는지 보고,
-          중요한 결정을 어떻게 내리는지 확인하고,
-          실제 고민에 다른 질문을 적용해 내 판단의 사각지대를 찾아봅니다.
+        <p style={{ color: "#7d7489", fontSize: 14, lineHeight: 1.9, marginTop: 22, whiteSpace: "pre-line" }}>
+          {`산길을 걷다 보면
+누가 처음 만들었는지 알 수 없는 돌탑을 만납니다.
+누군가 돌 하나를 올리고,
+지나가던 누군가가 또 하나를 얹었을 것입니다.
+
+우리의 판단도 그렇게 만들어집니다.
+누군가 내게 해준 말,
+나에게 보인 반응,
+오래 남은 경험,
+반복해서 들었던 기준,
+그리고 그때마다 내가 내린 선택.
+
+하나씩 쌓인 것들이
+지금의 판단을 만들었습니다.
+
+돌 하나를 더 얹어,
+지금까지와는 다른 돌탑을 만들어보면 어떤가요?`}
         </p>
       </div>
       <button

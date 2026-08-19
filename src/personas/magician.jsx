@@ -12,6 +12,7 @@ const CSS = `
 .mj-persona h1 { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:32px; margin:0; font-weight:500; }
 .mj-persona .en { font-size:12px; color:var(--muted); margin-top:4px; }
 .mj-tagline { font-family:'Gowun Batang',serif; font-size:16px; line-height:1.6; color:var(--paper); text-align:center; margin:0 0 24px; }
+.mj-persona-header { font-family:'Gowun Batang',serif; font-size:15px; line-height:1.6; color:#f6ecda; text-align:center; margin:0 0 20px; font-weight:600; }
 .mj-subject { font-size:12px; color:var(--open); border-left:2px solid rgba(214,167,86,.5); padding-left:10px; margin-bottom:20px; line-height:1.6; }
 .mj-step-label { font-size:11px; color:var(--muted); letter-spacing:.08em; margin-bottom:8px; }
 .mj-q { font-family:'Gowun Batang',serif; font-size:18px; line-height:1.65; margin:0 0 6px; font-weight:400; }
@@ -172,7 +173,7 @@ export default function MagicianLens({ onComplete } = {}) {
     <div className="mj-root">
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <div className="mj-shell">
-        <div className="mj-eyebrow">르네상스의 그 거울 · III</div>
+        <div className="mj-eyebrow">돌 하나를 얹다</div>
         <div className="mj-persona">
           <h1>마술사</h1>
           <div className="en">The Magician</div>
@@ -181,6 +182,7 @@ export default function MagicianLens({ onComplete } = {}) {
         {step === "intro" && (
           <>
             <p className="mj-tagline">가장 크게 걸리는 한 가지가 잠시 사라진다면,<br />나는 어떻게 선택할까.</p>
+            <p className="mj-persona-header">한 가지를 잠시 없애고 다시 봅시다.</p>
             <p className="mj-hint">아홉 개의 질문을 지나갑니다.</p>
             <button className="mj-next" onClick={() => setStep("s0")}>시작하기</button>
           </>

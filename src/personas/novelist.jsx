@@ -12,6 +12,7 @@ const CSS = `
 .nv-persona h1 { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:32px; margin:0; font-weight:500; }
 .nv-persona .en { font-size:12px; color:var(--muted); margin-top:4px; }
 .nv-tagline { font-family:'Gowun Batang',serif; font-size:16px; line-height:1.6; color:var(--paper); text-align:center; margin:0 0 24px; }
+.nv-persona-header { font-family:'Gowun Batang',serif; font-size:15px; line-height:1.6; color:#f6ecda; text-align:center; margin:0 0 20px; font-weight:600; }
 .nv-subject { font-size:12px; color:var(--open); border-left:2px solid rgba(214,167,86,.5); padding-left:10px; margin-bottom:20px; line-height:1.6; }
 .nv-step-label { font-size:11px; color:var(--muted); letter-spacing:.08em; margin-bottom:8px; }
 .nv-q { font-family:'Gowun Batang',serif; font-size:18px; line-height:1.65; margin:0 0 6px; font-weight:400; }
@@ -147,7 +148,7 @@ export default function NovelistLens({ onComplete } = {}) {
     <div className="nv-root">
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <div className="nv-shell">
-        <div className="nv-eyebrow">르네상스의 그 거울 · III</div>
+        <div className="nv-eyebrow">돌 하나를 얹다</div>
         <div className="nv-persona">
           <h1>소설가</h1>
           <div className="en">The Novelist</div>
@@ -156,6 +157,7 @@ export default function NovelistLens({ onComplete } = {}) {
         {step === "intro" && (
           <>
             <p className="nv-tagline">겉으로 보인 나와,<br />속으로 생각하던 나는 얼마나 같았을까.</p>
+            <p className="nv-persona-header">잠시 이야기 밖으로 나가봅시다.</p>
             <p className="nv-hint">여덟 개의 질문을 지나갑니다.</p>
             <button className="nv-next" onClick={() => setStep("s0")}>시작하기</button>
           </>

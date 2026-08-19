@@ -14,6 +14,7 @@ const CSS = `
 .gn-subject { font-size:12px; color:var(--open); border-left:2px solid rgba(214,167,86,.5); padding-left:10px; margin-bottom:20px; line-height:1.6; }
 .gn-step-label { font-size:11px; color:var(--muted); letter-spacing:.08em; margin-bottom:8px; }
 .gn-q { font-family:'Gowun Batang',serif; font-size:18px; line-height:1.65; margin:0 0 6px; font-weight:400; }
+.gn-persona-header { font-family:'Gowun Batang',serif; font-size:15px; line-height:1.6; color:#f6ecda; text-align:center; margin:0 0 20px; font-weight:600; }
 .gn-hint { font-size:12.5px; color:var(--muted); margin:0 0 16px; line-height:1.6; }
 .gn-textarea { width:100%; min-height:80px; background:rgba(236,231,222,.04); border:1px solid var(--line);
   border-radius:2px; color:var(--paper); font-family:inherit; font-size:14px; padding:14px 15px; box-sizing:border-box; resize:vertical; margin-bottom:16px; }
@@ -89,14 +90,15 @@ export default function GeneralLens({ onComplete } = {}) {
     <div className="gn-root">
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <div className="gn-shell">
-        <div className="gn-eyebrow">르네상스의 그 거울 · III</div>
+        <div className="gn-eyebrow">돌 하나를 얹다</div>
         <div className="gn-persona">
-          <h1>장군</h1>
+          <h1>물류관리자</h1>
           <div className="en">The General</div>
         </div>
 
         {step === "intro" && (
           <>
+            <p className="gn-persona-header">계속하는 동안 무엇이 자리를 차지하는지 봅시다.</p>
             <p className="gn-q">지금 하고 있는 선택을 바꾸지 않는다고 가정해봅시다.</p>
             <p className="gn-hint">그대로 계속했을 때 무엇이 함께 따라오는지 보겠습니다.</p>
             <button className="gn-next" onClick={() => setStep("s1")}>시작하기</button>

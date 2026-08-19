@@ -12,6 +12,7 @@ const CSS = `
 .at-persona h1 { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:32px; margin:0; font-weight:500; }
 .at-persona .en { font-size:12px; color:var(--muted); margin-top:4px; }
 .at-tagline { font-family:'Gowun Batang',serif; font-size:16px; line-height:1.6; color:var(--paper); text-align:center; margin:0 0 24px; }
+.at-persona-header { font-family:'Gowun Batang',serif; font-size:15px; line-height:1.6; color:#f6ecda; text-align:center; margin:0 0 20px; font-weight:600; }
 .at-subject { font-size:12px; color:var(--open); border-left:2px solid rgba(214,167,86,.5); padding-left:10px; margin-bottom:20px; line-height:1.6; }
 .at-step-label { font-size:11px; color:var(--muted); letter-spacing:.08em; margin-bottom:8px; }
 .at-q { font-family:'Gowun Batang',serif; font-size:18px; line-height:1.65; margin:0 0 6px; font-weight:400; }
@@ -204,15 +205,16 @@ export default function ArtisanLens({ onComplete } = {}) {
     <div className="at-root">
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <div className="at-shell">
-        <div className="at-eyebrow">르네상스의 그 거울 · III</div>
+        <div className="at-eyebrow">돌 하나를 얹다</div>
         <div className="at-persona">
-          <h1>세공사</h1>
+          <h1>레고</h1>
           <div className="en">The Artisan</div>
         </div>
 
         {step === "intro" && (
           <>
             <p className="at-tagline">이 고민을 몇 조각으로 나누면,<br />각각은 어떻게 보일까.</p>
+            <p className="at-persona-header">이 판단을 하나씩 나눠봅시다.</p>
             <p className="at-hint">여섯 개의 질문을 지나갑니다.</p>
             <button className="at-next" onClick={() => setStep("s0")}>시작하기</button>
           </>
@@ -375,7 +377,7 @@ export default function ArtisanLens({ onComplete } = {}) {
 
         {step === "loading-result" && (
           <div className="at-loading">
-            세공사가 조각들을 맞춰보고 있습니다
+            레고가 조각들을 맞춰보고 있습니다
             <div style={{ marginTop: 12 }}>
               <span className="dot" /><span className="dot" /><span className="dot" />
             </div>

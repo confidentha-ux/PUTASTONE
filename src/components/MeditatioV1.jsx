@@ -54,6 +54,9 @@ const CSS = `
 .mv-intro .sub { font-size: 13px; color: var(--muted); margin-top: 8px; }
 .mv-intro p { color: var(--muted); font-size: 14px; line-height: 1.85; margin: 0; }
 
+.mv-open-h1 { font-family: 'Gowun Batang', serif; font-weight: 400; font-size: 24px; line-height: 1.4; margin: 0 0 14px; }
+.mv-open-desc { color: var(--muted); font-size: 14px; line-height: 1.85; margin: 0; }
+
 .mv-back { background: none; border: none; color: var(--muted); font-size: 12px; cursor: pointer; margin-bottom: 16px; padding: 0; text-align: left; }
 .mv-section-h { font-family: 'Gowun Batang', serif; font-size: 18px; margin: 0 0 4px; font-weight: 400; }
 .mv-section-tag { font-size: 11px; color: var(--open); letter-spacing: 0.1em; margin-bottom: 20px; display: block; }
@@ -99,7 +102,7 @@ const CSS = `
 
 export default function MeditatioV1({ onComplete }) {
   const { state, actions } = useUserState();
-  const [view, setView] = useState("home"); // home | group | question | result
+  const [view, setView] = useState("intro"); // intro | home | group | question | result
   const [groupIdx, setGroupIdx] = useState(null);
   const [qIdx, setQIdx] = useState(0);
 
@@ -191,7 +194,21 @@ export default function MeditatioV1({ onComplete }) {
     <div className="mv-root">
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <div className="mv-shell">
-        <div className="mv-eyebrow">르네상스의 그 거울 · II · Meditatio v1.0</div>
+        <div className="mv-eyebrow">돌 하나를 얹다</div>
+
+        {view === "intro" && (
+          <div className="mv-intro">
+            <div>
+              <h1 className="mv-open-h1">나는 어떻게 판단하는가?</h1>
+              <p className="mv-open-desc">
+                내가 무엇을 보고, 무엇을 기억하며, 어떤 과정을 거쳐 판단을 내리는지 살펴봅니다.
+              </p>
+            </div>
+            <button className="mv-next" onClick={() => setView("home")}>
+              시작하기
+            </button>
+          </div>
+        )}
 
         {view === "home" && (
           <div className="mv-intro">
@@ -293,7 +310,7 @@ export default function MeditatioV1({ onComplete }) {
             <button className="mv-back" onClick={() => setView("home")}>
               ← 목록으로
             </button>
-            <h2>당신의 판단 흐름</h2>
+            <h2>지금, 나는 이렇게 판단합니다</h2>
             <div className="mv-result-card">{derived.narrative || "아직 판단 흐름을 구성할 만큼 응답이 모이지 않았습니다."}</div>
 
             {derived.affect.length > 0 && (

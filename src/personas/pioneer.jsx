@@ -12,6 +12,7 @@ const CSS = `
 .pn-persona h1 { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:32px; margin:0; font-weight:500; }
 .pn-persona .en { font-size:12px; color:var(--muted); margin-top:4px; }
 .pn-tagline { font-family:'Gowun Batang',serif; font-size:16px; line-height:1.6; color:var(--paper); text-align:center; margin:0 0 24px; }
+.pn-persona-header { font-family:'Gowun Batang',serif; font-size:15px; line-height:1.6; color:#f6ecda; text-align:center; margin:0 0 20px; font-weight:600; }
 .pn-subject { font-size:12px; color:var(--open); border-left:2px solid rgba(214,167,86,.5); padding-left:10px; margin-bottom:20px; line-height:1.6; }
 .pn-step-label { font-size:11px; color:var(--muted); letter-spacing:.08em; margin-bottom:8px; }
 .pn-q { font-family:'Gowun Batang',serif; font-size:18px; line-height:1.65; margin:0 0 6px; font-weight:400; }
@@ -157,7 +158,7 @@ export default function PioneerLens({ onComplete } = {}) {
     <div className="pn-root">
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <div className="pn-shell">
-        <div className="pn-eyebrow">르네상스의 그 거울 · III</div>
+        <div className="pn-eyebrow">돌 하나를 얹다</div>
         <div className="pn-persona">
           <h1>개척자</h1>
           <div className="en">The Pioneer</div>
@@ -165,6 +166,7 @@ export default function PioneerLens({ onComplete } = {}) {
         {step === "intro" && (
           <>
             <p className="pn-tagline">그 자리에 필요한 것 중,<br />나는 이미 무엇을 가지고 있을까.</p>
+            <p className="pn-persona-header">이 자리 앞에 내가 어떤 자격을 세워두었는지 봅시다.</p>
             <div className="pn-subject">"{answers.judgment}"</div>
             <p className="pn-hint">일곱 개의 질문을 지나갑니다.</p>
             <button className="pn-next" onClick={() => setStep("s0")}>시작하기</button>

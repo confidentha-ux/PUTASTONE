@@ -12,6 +12,7 @@ const CSS = `
 .gd-persona h1 { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:32px; margin:0; font-weight:500; }
 .gd-persona .en { font-size:12px; color:var(--muted); margin-top:4px; }
 .gd-tagline { font-family:'Gowun Batang',serif; font-size:16px; line-height:1.6; color:var(--paper); text-align:center; margin:0 0 24px; }
+.gd-persona-header { font-family:'Gowun Batang',serif; font-size:15px; line-height:1.6; color:#f6ecda; text-align:center; margin:0 0 20px; font-weight:600; }
 .gd-subject { font-size:12px; color:var(--open); border-left:2px solid rgba(214,167,86,.5); padding-left:10px; margin-bottom:20px; line-height:1.6; }
 .gd-step-label { font-size:11px; color:var(--muted); letter-spacing:.08em; margin-bottom:8px; }
 .gd-q { font-family:'Gowun Batang',serif; font-size:18px; line-height:1.65; margin:0 0 6px; font-weight:400; }
@@ -159,7 +160,7 @@ export default function GatekeeperLens({ onComplete } = {}) {
     <div className="gd-root">
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <div className="gd-shell">
-        <div className="gd-eyebrow">르네상스의 그 거울 · III</div>
+        <div className="gd-eyebrow">돌 하나를 얹다</div>
         <div className="gd-persona">
           <h1>수문장</h1>
           <div className="en">The Gatekeeper</div>
@@ -168,6 +169,7 @@ export default function GatekeeperLens({ onComplete } = {}) {
         {step === "intro" && (
           <>
             <p className="gd-tagline">나는 어디까지 해줄 수 있고,<br />어디서 멈추고 싶을까.</p>
+            <p className="gd-persona-header">내가 맡을 일의 끝이 어디인지 봅시다.</p>
             <p className="gd-hint">여덟 개의 질문을 지나갑니다.</p>
             <button className="gd-next" onClick={() => setStep("s0")}>시작하기</button>
           </>

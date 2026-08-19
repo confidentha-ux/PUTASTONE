@@ -12,6 +12,7 @@ const CSS = `
 .st-persona h1 { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:32px; margin:0; font-weight:500; }
 .st-persona .en { font-size:12px; color:var(--muted); margin-top:4px; }
 .st-tagline { font-family:'Gowun Batang',serif; font-size:16px; line-height:1.6; color:var(--paper); text-align:center; margin:0 0 24px; }
+.st-persona-header { font-family:'Gowun Batang',serif; font-size:15px; line-height:1.6; color:#f6ecda; text-align:center; margin:0 0 20px; font-weight:600; }
 .st-subject { font-size:12px; color:var(--open); border-left:2px solid rgba(214,167,86,.5); padding-left:10px; margin-bottom:20px; line-height:1.6; }
 .st-step-label { font-size:11px; color:var(--muted); letter-spacing:.08em; margin-bottom:8px; }
 .st-q { font-family:'Gowun Batang',serif; font-size:18px; line-height:1.65; margin:0 0 6px; font-weight:400; }
@@ -203,15 +204,16 @@ export default function StewardLens({ onComplete } = {}) {
     <div className="st-root">
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <div className="st-shell">
-        <div className="st-eyebrow">르네상스의 그 거울 · III</div>
+        <div className="st-eyebrow">돌 하나를 얹다</div>
         <div className="st-persona">
-          <h1>청지기</h1>
+          <h1>더치페이</h1>
           <div className="en">The Steward</div>
         </div>
 
         {step === "intro" && (
           <>
             <p className="st-tagline">이 일에서 내 몫은 어디까지이고,<br />나머지는 누구의 몫일까.</p>
+            <p className="st-persona-header">이 일의 몫을 하나씩 나눠봅시다.</p>
             <p className="st-hint">아홉 개의 질문을 지나갑니다.</p>
             <button className="st-next" onClick={() => setStep("s0")}>시작하기</button>
           </>
@@ -397,7 +399,7 @@ export default function StewardLens({ onComplete } = {}) {
 
         {step === "loading-result" && (
           <div className="st-loading">
-            청지기가 몫을 정리하고 있습니다
+            더치페이가 몫을 정리하고 있습니다
             <div style={{ marginTop: 12 }}>
               <span className="dot" /><span className="dot" /><span className="dot" />
             </div>

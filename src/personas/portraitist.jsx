@@ -12,6 +12,7 @@ const CSS = `
 .pr-persona h1 { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:32px; margin:0; font-weight:500; }
 .pr-persona .en { font-size:12px; color:var(--muted); margin-top:4px; }
 .pr-tagline { font-family:'Gowun Batang',serif; font-size:16px; line-height:1.6; color:var(--paper); text-align:center; margin:0 0 24px; }
+.pr-persona-header { font-family:'Gowun Batang',serif; font-size:15px; line-height:1.6; color:#f6ecda; text-align:center; margin:0 0 20px; font-weight:600; }
 .pr-subject { font-size:12px; color:var(--open); border-left:2px solid rgba(214,167,86,.5); padding-left:10px; margin-bottom:20px; line-height:1.6; }
 .pr-step-label { font-size:11px; color:var(--muted); letter-spacing:.08em; margin-bottom:8px; }
 .pr-q { font-family:'Gowun Batang',serif; font-size:18px; line-height:1.65; margin:0 0 6px; font-weight:400; }
@@ -167,7 +168,7 @@ export default function PortraitistLens({ onComplete } = {}) {
     <div className="pr-root">
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <div className="pr-shell">
-        <div className="pr-eyebrow">르네상스의 그 거울 · III</div>
+        <div className="pr-eyebrow">돌 하나를 얹다</div>
         <div className="pr-persona">
           <h1>초상화가</h1>
           <div className="en">The Portraitist</div>
@@ -176,6 +177,7 @@ export default function PortraitistLens({ onComplete } = {}) {
         {step === "intro" && (
           <>
             <p className="pr-tagline">한 번의 일로 나를 정했다면,<br />다른 때의 나는 어땠을까.</p>
+            <p className="pr-persona-header">이 경험이 그린 나의 모습을 봅시다.</p>
             <p className="pr-hint">열 개의 질문을 지나갑니다.</p>
             <button className="pr-next" onClick={() => setStep("s0")}>시작하기</button>
           </>

@@ -134,6 +134,11 @@ async function main() {
 
   // Lectio 결과 화면의 "Meditatio로 계속하기" 버튼으로 이동 (자동 이동 아님 — 결과를 실제로 볼 수 있어야 하므로)
   await page.click("text=Meditatio로 계속하기");
+
+  // 신설된 Meditatio 시작 안내 화면 (claude/돌하나를-얹다-app-spec-v1.md "2. MEDITATIO 시작 화면")
+  await page.waitForSelector("text=나는 어떻게 판단하는가?");
+  console.log("[ok] Meditatio intro screen rendered with confirmed header");
+  await page.click("text=시작하기");
   await page.waitForSelector("text=Read the Judgment");
   console.log("[ok] Meditatio home rendered");
 
@@ -144,7 +149,7 @@ async function main() {
   let guard = 0;
   while (guard < 80) {
     guard++;
-    const onResult = await page.locator("text=당신의 판단 흐름").count();
+    const onResult = await page.locator("text=지금, 나는 이렇게 판단합니다").count();
     if (onResult > 0) break;
 
     // 카드 목록 화면이면 첫 카드를 클릭해서 들어간다
@@ -172,8 +177,8 @@ async function main() {
     }
   }
 
-  await page.waitForSelector("text=당신의 판단 흐름", { timeout: 5000 });
-  console.log("[ok] Meditatio result reached after", guard, "steps");
+  await page.waitForSelector("text=지금, 나는 이렇게 판단합니다", { timeout: 5000 });
+  console.log("[ok] Meditatio result reached after", guard, "steps (header: 지금, 나는 이렇게 판단합니다)");
 
   const finalState = await page.evaluate(() => JSON.parse(localStorage.getItem("pebbletrail.userState.v1")));
   if (!finalState.meditatio.completedAt) throw new Error("Meditatio completedAt not set");
@@ -184,37 +189,48 @@ async function main() {
   console.log("[ok] Meditatio derived.pressure:", JSON.stringify(finalState.meditatio.derived.pressure));
   console.log("[ok] Meditatio narrative (first 120 chars):", finalState.meditatio.derived.narrative.slice(0, 120));
 
-  // Speculum — Meditatio 결과 화면의 "Speculum으로 이동" 버튼으로 이동
+  // Speculum으로 가기 전에 신설된 "지금의 판단" 화면 (claude/돌하나를-얹다-app-spec-v1.md "4")을 거친다.
   await page.click("text=Speculum으로 이동");
-  await page.waitForSelector("text=열린 Family 후보");
-  console.log("[ok] Speculum routing screen rendered (Family candidates shown)");
+  await page.waitForSelector("text=지금의 판단");
+  console.log("[ok] '지금의 판단' screen rendered");
+  const CONCERN_TEXT = "새로운 일을 맡을지 계속 고민하고 있다.";
+  const INITIAL_JUDGMENT_TEXT = "지금은 맡지 않는 편이 낫다고 생각한다.";
+  const textareas = page.locator("textarea");
+  await textareas.nth(0).fill(CONCERN_TEXT);
+  await textareas.nth(1).fill(INITIAL_JUDGMENT_TEXT);
+  await page.click("text=다음");
+
+  // Speculum — Operation 선택 화면. Family 이름/점수는 더 이상 노출되지 않는다.
+  await page.waitForSelector("text=어떤 질문을 얹어볼까요?");
+  console.log("[ok] Speculum operation-selection screen rendered (Family labels hidden)");
 
   const speculumText = await page.locator("body").innerText();
-  if (!speculumText.includes("지금 제시할 수 있는 렌즈")) throw new Error("Speculum operation candidates section missing");
-  console.log("[ok] Speculum operation candidates section rendered");
+  if (speculumText.includes("열린 Family 후보") || speculumText.includes("Probability ·") || speculumText.includes("Distance ·")) {
+    throw new Error("Family label leaked into the Speculum operation-selection screen");
+  }
 
-  // 렌즈 후보 중 하나를 선택하면 "이 렌즈 열기" 버튼이 뜨고, 누르면 실제 18개 persona
-  // 컴포넌트 중 하나가 열려야 한다 (Task #14 — 더 이상 "아직 연결 안 됨" 안내가 아니다).
-  const personaCards = page.locator("button").filter({ hasText: "·" });
-  const cardCount = await personaCards.count();
-  if (cardCount === 0) throw new Error("No persona candidate cards rendered in Speculum");
+  // 렌즈 후보 중 하나를 선택하면 "다른 역할 입어보기" 확인 박스가 뜨고, "이 렌즈 열기"를 누르면
+  // 실제 18개 persona 컴포넌트 중 하나가 열려야 한다.
+  const operationCards = page.locator('[data-testid="operation-card"]');
+  const cardCount = await operationCards.count();
+  if (cardCount === 0) throw new Error("No operation candidate cards rendered in Speculum");
 
-  // 카드 후보 중 "장군"(General — AI 호출이 없어 결정론적으로 끝까지 진행 가능)이 있으면
+  // 후보 중 general(물류관리자 — AI 호출이 없어 결정론적으로 끝까지 진행 가능)이 있으면
   // 그것을 선택해서 완료까지 전체 플로우를 검증하고, 없으면 첫 번째 후보로 열림만 검증한다.
-  const generalCard = page.locator("button").filter({ hasText: "장군" });
+  const generalCard = page.locator('[data-testid="operation-card"][data-persona-id="general"]');
   const hasGeneral = (await generalCard.count()) > 0;
   if (hasGeneral) {
     await generalCard.first().click();
   } else {
-    await personaCards.first().click();
+    await operationCards.first().click();
   }
-  await page.waitForSelector("text=페르소나를 선택했습니다.");
+  await page.waitForSelector("text=다른 역할 입어보기");
   await page.click("text=이 렌즈 열기");
-  await page.waitForSelector("text=르네상스의 그 거울 · III");
-  console.log("[ok] Persona card opens the real questionnaire component (no more 'not yet connected' notice)");
+  await page.waitForSelector("text=돌 하나를 얹다");
+  console.log("[ok] Persona card opens the real questionnaire component (eyebrow shows new app name)");
 
   if (hasGeneral) {
-    // General(장군) 전체 플로우를 끝까지 진행해서 SpeculumSession이 실제로 저장되는지 확인한다.
+    // General(물류관리자) 전체 플로우를 끝까지 진행해서 SpeculumSession이 실제로 저장되는지 확인한다.
     await page.waitForSelector("text=The General");
     await page.click("text=시작하기");
     await page.waitForSelector("text=잘 모르겠다.");
@@ -235,8 +251,35 @@ async function main() {
     console.log("[ok] General persona flow reached its result screen");
 
     await page.click("text=완료하고 Speculum으로 돌아가기");
-    await page.waitForSelector("text=세션이 저장되었습니다.");
-    console.log("[ok] Completing a persona shows the saved-session confirmation");
+
+    // "7. PERSONA 질문을 마친 뒤 — 재판단" — 신설된 Rejudge 화면.
+    await page.waitForSelector("text=다시, 같은 질문 앞에서");
+    const initialJudgmentShown = await page.locator("body").innerText();
+    if (!initialJudgmentShown.includes(INITIAL_JUDGMENT_TEXT)) {
+      throw new Error("Rejudge screen did not show the Initial Judgment carried over from '지금의 판단'");
+    }
+    console.log("[ok] Rejudge screen rendered and shows the carried-over Initial Judgment");
+    const NEW_INFO_TEXT = "이 질문을 따라가며 몰랐던 부분을 새로 봤다.";
+    const REJUDGMENT_TEXT = "지금은 맡아도 괜찮을 것 같다고 생각한다.";
+    await page.locator("textarea").nth(0).fill(NEW_INFO_TEXT);
+    await page.click("text=다른 판단을 하게 되었습니다");
+    await page.locator("textarea").nth(1).fill(REJUDGMENT_TEXT);
+    await page.click("text=다음");
+
+    // "8. 한 번의 인지 시뮬레이션 결과" — 신설된 SessionResult 화면.
+    await page.waitForSelector("text=이번에 확인한 것");
+    const sessionResultText = await page.locator("body").innerText();
+    for (const expected of [INITIAL_JUDGMENT_TEXT, NEW_INFO_TEXT, REJUDGMENT_TEXT, "다른 판단을 하게 되었습니다"]) {
+      if (!sessionResultText.includes(expected)) {
+        throw new Error(`SessionResult screen missing expected text: ${expected}`);
+      }
+    }
+    console.log("[ok] SessionResult screen shows all 5 captured fields");
+    await page.click("text=돌 하나를 얹다");
+
+    // "10. 저장 완료" — 확정된 문장.
+    await page.waitForSelector("text=돌 하나가 더해졌습니다.");
+    console.log("[ok] Completing a persona shows the confirmed save confirmation sentence");
 
     const afterSpeculum = await page.evaluate(() => JSON.parse(localStorage.getItem("pebbletrail.userState.v1")));
     if (!Array.isArray(afterSpeculum.speculumSessions) || afterSpeculum.speculumSessions.length !== 1) {
@@ -244,10 +287,16 @@ async function main() {
     }
     const savedSession = afterSpeculum.speculumSessions[0];
     if (savedSession.personaId !== "general") throw new Error("saved session personaId != general: " + savedSession.personaId);
+    if (savedSession.initialJudgment !== INITIAL_JUDGMENT_TEXT) {
+      throw new Error("saved session initialJudgment != value from '지금의 판단' screen: " + savedSession.initialJudgment);
+    }
+    if (savedSession.newInformation !== NEW_INFO_TEXT) throw new Error("saved session newInformation mismatch: " + savedSession.newInformation);
+    if (savedSession.judgmentShift !== "different") throw new Error("saved session judgmentShift != different: " + savedSession.judgmentShift);
+    if (savedSession.rejudgment !== REJUDGMENT_TEXT) throw new Error("saved session rejudgment mismatch: " + savedSession.rejudgment);
     if (!savedSession.rawAnswers || savedSession.rawAnswers.reason !== "스모크 테스트 이유입니다.") {
       throw new Error("saved session rawAnswers missing expected reason field: " + JSON.stringify(savedSession.rawAnswers));
     }
-    console.log("[ok] SpeculumSession persisted to localStorage with expected personaId and rawAnswers:", savedSession.sessionId);
+    console.log("[ok] SpeculumSession persisted to localStorage with expected Initial/New/Shift/Rejudgment fields:", savedSession.sessionId);
 
     await page.click("text=다른 렌즈 보기");
   } else {
@@ -262,8 +311,17 @@ async function main() {
     } else {
       console.log("[ok] Generic auto-complete driver reached the result screen");
       await page.click("text=완료하고 Speculum으로 돌아가기");
-      await page.waitForSelector("text=세션이 저장되었습니다.");
-      console.log("[ok] Completing a persona shows the saved-session confirmation");
+
+      await page.waitForSelector("text=다시, 같은 질문 앞에서");
+      await page.locator("textarea").nth(0).fill("이번 질문에서 새롭게 본 것입니다.");
+      await page.click("text=처음과 같은 판단입니다");
+      await page.locator("textarea").nth(1).fill("지금의 판단입니다.");
+      await page.click("text=다음");
+
+      await page.waitForSelector("text=이번에 확인한 것");
+      await page.click("text=돌 하나를 얹다");
+      await page.waitForSelector("text=돌 하나가 더해졌습니다.");
+      console.log("[ok] Completing a persona shows the confirmed save confirmation sentence");
 
       const afterSpeculum = await page.evaluate(() => JSON.parse(localStorage.getItem("pebbletrail.userState.v1")));
       if (!Array.isArray(afterSpeculum.speculumSessions) || afterSpeculum.speculumSessions.length !== 1) {
@@ -282,17 +340,21 @@ async function main() {
     }
   }
 
-  // Studiolo — 상단 네비게이션의 "The Studiolo" 버튼으로 이동
-  await page.locator("button", { hasText: "The Studiolo" }).first().click();
+  // 현재의 돌탑 — 상단 네비게이션 버튼으로 이동
+  await page.locator("button", { hasText: "현재의 돌탑" }).first().click();
   await page.waitForSelector(".st-shell");
   const studioloText = await page.locator(".st-shell").innerText();
+  if (!studioloText.includes("현재의 돌탑")) throw new Error("Studiolo title not renamed to 현재의 돌탑");
   if (!studioloText.includes("자연스럽게 가능한 행동")) throw new Error("Studiolo Lectio section missing");
   if (studioloText.includes("아직 Meditatio를 완료하지 않았습니다")) throw new Error("Studiolo did not pick up Meditatio result");
-  console.log("[ok] Studiolo shows both Lectio and Meditatio results");
+  if (!studioloText.includes("지금까지 얹은 돌")) throw new Error("Studiolo missing renamed '지금까지 얹은 돌' section");
+  if (!studioloText.includes("쌓이면서 드러난 것")) throw new Error("Studiolo missing renamed '쌓이면서 드러난 것' section");
+  if (studioloText.includes("아직 얹은 돌이 없습니다")) throw new Error("Studiolo did not pick up the saved Speculum session");
+  console.log("[ok] Studiolo (현재의 돌탑) shows Lectio, Meditatio, and the saved Speculum session under the renamed sections");
 
   // 새로고침 후 영속성 확인
   await page.reload();
-  await page.waitForSelector("text=The Studiolo");
+  await page.waitForSelector("text=현재의 돌탑");
   const afterReload = await page.evaluate(() => JSON.parse(localStorage.getItem("pebbletrail.userState.v1")));
   if (!afterReload.meditatio.completedAt) throw new Error("State did not survive reload");
   console.log("[ok] State survives reload (localStorage persistence confirmed)");

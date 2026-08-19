@@ -12,6 +12,7 @@ const CSS = `
 .mc-persona h1 { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:32px; margin:0; font-weight:500; }
 .mc-persona .en { font-size:12px; color:var(--muted); margin-top:4px; }
 .mc-tagline { font-family:'Gowun Batang',serif; font-size:16px; line-height:1.6; color:var(--paper); text-align:center; margin:0 0 24px; }
+.mc-persona-header { font-family:'Gowun Batang',serif; font-size:15px; line-height:1.6; color:#f6ecda; text-align:center; margin:0 0 20px; font-weight:600; }
 .mc-subject { font-size:12px; color:var(--open); border-left:2px solid rgba(214,167,86,.5); padding-left:10px; margin-bottom:20px; line-height:1.6; }
 .mc-step-label { font-size:11px; color:var(--muted); letter-spacing:.08em; margin-bottom:8px; }
 .mc-q { font-family:'Gowun Batang',serif; font-size:18px; line-height:1.65; margin:0 0 6px; font-weight:400; }
@@ -143,15 +144,16 @@ export default function MerchantLens({ onComplete } = {}) {
     <div className="mc-root">
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <div className="mc-shell">
-        <div className="mc-eyebrow">르네상스의 그 거울 · III</div>
+        <div className="mc-eyebrow">돌 하나를 얹다</div>
         <div className="mc-persona">
-          <h1>대상인</h1>
+          <h1>전문경영인</h1>
           <div className="en">The Merchant</div>
         </div>
 
         {step === "intro" && (
           <>
             <p className="mc-tagline">이걸 계속하려고 나는 뭘 쓰고 있고,<br />그 대신 뭘 놓치고 있을까.</p>
+            <p className="mc-persona-header">이 선택을 계속 유지하는 데 무엇이 들어가는지 봅시다.</p>
             <div className="mc-subject">"{answers.judgment}"</div>
             <p className="mc-hint">여덟 개의 질문을 지나갑니다.</p>
             <button className="mc-next" onClick={() => setStep("s1")}>시작하기</button>

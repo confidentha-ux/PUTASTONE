@@ -443,7 +443,7 @@ export default function Lectio({ onComplete }) {
     <div className="lc-root">
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <div className="lc-shell">
-        <div className="lc-eyebrow">르네상스의 그 거울 · I</div>
+        <div className="lc-eyebrow">돌 하나를 얹다</div>
 
         {screen === "intro" && (
           <div className="lc-intro">

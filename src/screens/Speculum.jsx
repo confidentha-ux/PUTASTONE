@@ -5,17 +5,8 @@ import { getCandidatePersonas } from "../speculum/personaRegistry";
 import { buildOperationCandidatesFromRankedFamilies } from "../speculum/operationDedup";
 import { getPersonaComponent } from "../personas";
 import { makeSpeculumSession, SCHEMA_VERSIONS } from "../state/schema";
-
-const FAMILY_LABEL = {
-  probability: "Probability · 예상과 확인된 것",
-  distance: "Distance · 한 걸음 떨어진 위치",
-  time: "Time · 시간이 해결해줄 것이라는 기대",
-  inversion: "Inversion · 보이지 않던 반대편",
-  scale: "Scale · 판단의 크기와 범위",
-  identity: "Identity · 자신에 대한 판단",
-  boundary: "Boundary · 어디까지가 내 몫인지",
-  criterion: "Criterion · 판단을 성립시키는 조건",
-};
+import Rejudge from "./Rejudge";
+import SessionResult from "./SessionResult";
 
 // 구조 문서 7번 "HOME → Speculum" — Family Routing(claude/family-routing-matrix-v1.md)과
 // 18 Persona Registry(src/speculum/personaRegistry.js)를 연결하는 화면.
@@ -24,12 +15,17 @@ const FAMILY_LABEL = {
 // 아직 서버 프록시가 없어 src/speculum/aiStub.js의 임시 mock으로 대신하고 있다 — 이 부분은
 // 여전히 다음 로드맵 항목이다. Persona Eligibility(자유 텍스트 판정)도 아직 없어서, 지금은
 // Family Routing으로 후보를 좁힌 뒤 사용자가 직접 하나를 선택하는 방식이다.
-export default function Speculum({ onNavigate }) {
+export default function Speculum({ onNavigate, currentJudgment }) {
   const { state, actions } = useUserState();
   const meditatioDerived = state.meditatio.derived;
+  const initialJudgment = currentJudgment?.initialJudgment ?? "";
   const [selectedPersonaId, setSelectedPersonaId] = useState(null);
   const [openPersonaId, setOpenPersonaId] = useState(null);
   const [justCompleted, setJustCompleted] = useState(null);
+  // Persona 질문을 마친 뒤 재판단(Rejudge)과 세션 결과(SessionResult) 두 화면을 지나야 실제로
+  // 저장된다 — claude/돌하나를-얹다-app-spec-v1.md "7~8" 참고. rejudgmentDone이 true가 되기 전엔
+  // Rejudge를, 그 후엔 SessionResult를 보여준다.
+  const [pendingResult, setPendingResult] = useState(null);
 
   const routing = useMemo(() => {
     if (!meditatioDerived) return null;
@@ -63,14 +59,50 @@ export default function Speculum({ onNavigate }) {
     return (
       <PersonaComponent
         onComplete={(answers) => {
-          const session = makeSpeculumSession({
-            sessionId: `${openPersonaId}-${Date.now()}`,
+          setPendingResult({
             personaId: openPersonaId,
+            personaName: personaMeta?.koreanName ?? openPersonaId,
+            answers: answers ?? {},
+          });
+          setOpenPersonaId(null);
+        }}
+      />
+    );
+  }
+
+  // "7. PERSONA 질문을 마친 뒤 — 재판단" — Persona가 끝나면 바로 저장하지 않고 먼저 재판단을 받는다.
+  if (pendingResult && !pendingResult.rejudgmentDone) {
+    return (
+      <Rejudge
+        initialJudgment={initialJudgment}
+        onComplete={({ newInformation, judgmentShift, rejudgment }) => {
+          setPendingResult({ ...pendingResult, newInformation, judgmentShift, rejudgment, rejudgmentDone: true });
+        }}
+      />
+    );
+  }
+
+  // "8. 한 번의 인지 시뮬레이션 결과" — 실제 저장은 이 화면의 [ 돌 하나를 얹다 ] 버튼을 눌러야 일어난다.
+  if (pendingResult && pendingResult.rejudgmentDone) {
+    return (
+      <SessionResult
+        personaName={pendingResult.personaName}
+        initialJudgment={initialJudgment}
+        newInformation={pendingResult.newInformation}
+        judgmentShift={pendingResult.judgmentShift}
+        rejudgment={pendingResult.rejudgment}
+        onSave={() => {
+          const session = makeSpeculumSession({
+            sessionId: `${pendingResult.personaId}-${Date.now()}`,
+            personaId: pendingResult.personaId,
             personaVersion: SCHEMA_VERSIONS.personaProtocolVersion,
-            initialJudgment: answers?.judgment ?? "",
-            operationData: answers ?? {},
-            reflection: answers?.suggestion ?? "",
-            rawAnswers: answers ?? {},
+            initialJudgment,
+            operationData: pendingResult.answers,
+            newInformation: pendingResult.newInformation,
+            judgmentShift: pendingResult.judgmentShift,
+            rejudgment: pendingResult.rejudgment,
+            reflection: pendingResult.answers?.suggestion ?? "",
+            rawAnswers: pendingResult.answers,
             routingMeta: {
               source: "user_selected",
               familyRoutingMatrixVersion: SCHEMA_VERSIONS.familyRoutingMatrixVersion,
@@ -79,8 +111,8 @@ export default function Speculum({ onNavigate }) {
             },
           });
           actions.addSpeculumSession(session);
-          setJustCompleted({ personaId: openPersonaId, koreanName: personaMeta?.koreanName ?? openPersonaId });
-          setOpenPersonaId(null);
+          setJustCompleted(true);
+          setPendingResult(null);
         }}
       />
     );
@@ -104,71 +136,60 @@ export default function Speculum({ onNavigate }) {
     );
   }
 
+  if (!initialJudgment) {
+    return (
+      <Shell>
+        <h1 style={titleStyle}>Speculum</h1>
+        <p style={bodyStyle}>
+          어떤 질문을 얹을지 정하기 전에, 지금 실제로 고민 중인 문제와 그 문제에 대한 현재 판단을 먼저
+          받아야 합니다.
+        </p>
+        <button style={primaryButtonStyle} onClick={() => onNavigate("judgment")}>
+          지금의 판단 적으러 가기
+        </button>
+      </Shell>
+    );
+  }
+
   const selectedPersona = routing.operationCandidates.find((p) => p.id === selectedPersonaId) ?? null;
 
+  // claude/돌하나를-얹다-app-spec-v1.md "5. Operation 선택 구간" — Family 이름이나 라우팅 계산은
+  // 사용자에게 보여주지 않는다. 사용자는 Persona를 먼저 고르지 않고, 자기 판단에 적용해보고 싶은
+  // Operation(질문 방식 = 각 persona의 operationHeader)을 먼저 고른다. 그 선택 뒤에야("6. PERSONA
+  // 구간") 그 질문을 쓰는 Persona가 등장한다.
   return (
     <Shell>
-      <h1 style={titleStyle}>Speculum</h1>
+      <h1 style={titleStyle}>어떤 질문을 얹어볼까요?</h1>
       <p style={bodyStyle}>
-        Meditatio에서 읽은 판단 기준을 근거로, 지금 열어볼 수 있는 렌즈 후보를 계산했습니다. 렌즈는 사람을
-        분석하는 도구가 아니라, 같은 판단을 다른 조건으로 다시 보게 만드는 도구입니다.
+        지금의 판단에 적용해볼 수 있는 질문 방식입니다. 사람을 고르는 것이 아니라, 이번에 따라가 볼 질문
+        하나를 고르는 것입니다.
       </p>
 
       {justCompleted && (
         <div style={completedBoxStyle}>
-          <div style={{ fontSize: 13.5, marginBottom: 6 }}>
-            {justCompleted.koreanName} 세션이 저장되었습니다.
-          </div>
-          <div style={{ fontSize: 12.5, color: "#7d7489", marginBottom: 10 }}>
-            판단이 바뀌었는지 여부와 상관없이, 판단 기준을 확인한 것 자체가 이번 세션의 결과입니다. 다른 렌즈를
-            더 열어보거나, The Studiolo에서 지금까지의 기록을 확인할 수 있습니다.
-          </div>
+          {/* claude/돌하나를-얹다-app-spec-v1.md "10. 저장 완료" — 확정된 문장 그대로, 해석을 덧붙이지 않는다. */}
+          <div style={{ fontSize: 14, marginBottom: 14 }}>돌 하나가 더해졌습니다.</div>
           <div style={{ display: "flex", gap: 10 }}>
-            <button style={primaryButtonStyle} onClick={() => onNavigate("studiolo")}>The Studiolo로 이동</button>
+            <button style={primaryButtonStyle} onClick={() => onNavigate("studiolo")}>현재의 돌탑으로 이동</button>
             <button style={secondaryButtonStyle} onClick={() => setJustCompleted(null)}>다른 렌즈 보기</button>
           </div>
         </div>
       )}
 
-      <SectionLabel>1. 열린 Family 후보</SectionLabel>
-      <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 24 }}>
-        {routing.ranked
-          .filter((r) => r.candidate)
-          .map((r) => (
-            <div key={r.family} style={familyRowStyle}>
-              <div>
-                <div style={{ fontSize: 13.5 }}>{FAMILY_LABEL[r.family] ?? r.family}</div>
-                {(r.boostedBy.defaultStrategy || r.boostedBy.affectSignals.length > 0) && (
-                  <div style={{ fontSize: 11, color: "#7d7489", marginTop: 2 }}>
-                    보강: {[r.boostedBy.defaultStrategy, ...r.boostedBy.affectSignals].filter(Boolean).join(", ")}
-                  </div>
-                )}
-              </div>
-              <div style={{ fontSize: 12, color: "#d6a756" }}>{r.score}점</div>
-            </div>
-          ))}
-      </div>
-
-      <SectionLabel>2. 지금 제시할 수 있는 렌즈 {routing.operationCandidates.length}개</SectionLabel>
-      <p style={{ ...bodyStyle, fontSize: 12.5, color: "#7d7489" }}>
-        같은 것을 비슷한 방식으로 보는 렌즈는 중복 제거했습니다 (claude/operation-dedup-rules-v1.md).
-      </p>
       <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 24 }}>
         {routing.operationCandidates.map((persona) => (
           <button
             key={persona.id}
+            data-testid="operation-card"
+            data-persona-id={persona.id}
             onClick={() => setSelectedPersonaId(persona.id)}
             style={{
               ...personaCardStyle,
               borderColor: selectedPersonaId === persona.id ? "#d6a756" : "rgba(236,231,222,0.14)",
             }}
           >
-            <div style={{ fontFamily: "'Gowun Batang', serif", fontSize: 16 }}>
-              {persona.koreanName} <span style={{ color: "#7d7489", fontSize: 12.5 }}>· {persona.englishName}</span>
-            </div>
-            <div style={{ fontSize: 12.5, color: "#7d7489", marginTop: 4 }}>{persona.eligibilityDescription}</div>
-            <div style={{ fontSize: 11, color: "#5c5468", marginTop: 6 }}>
-              {FAMILY_LABEL[persona.family] ?? persona.family}
+            <div style={{ fontFamily: "'Gowun Batang', serif", fontSize: 15.5, lineHeight: 1.5 }}>
+              {persona.operationHeader}
             </div>
           </button>
         ))}
@@ -176,11 +197,12 @@ export default function Speculum({ onNavigate }) {
 
       {selectedPersona && (
         <div style={noticeBoxStyle}>
-          <div style={{ fontSize: 13.5, marginBottom: 6 }}>
-            {selectedPersona.koreanName} 페르소나를 선택했습니다.
+          <SectionLabel>다른 역할 입어보기</SectionLabel>
+          <div style={{ fontSize: 13, color: "#7d7489", marginBottom: 12 }}>
+            다른 사람들의 인지구조를 따라가 봅니다.
           </div>
-          <div style={{ fontSize: 12.5, color: "#7d7489", marginBottom: 12 }}>
-            {selectedPersona.eligibilityDescription}
+          <div style={{ fontFamily: "'Gowun Batang', serif", fontSize: 16, marginBottom: 12 }}>
+            {selectedPersona.koreanName}
           </div>
           <button style={primaryButtonStyle} onClick={() => setOpenPersonaId(selectedPersona.id)}>
             이 렌즈 열기
@@ -244,15 +266,6 @@ const completedBoxStyle = {
   background: "rgba(214,167,86,0.1)",
   border: "1px solid rgba(214,167,86,0.35)",
   marginBottom: 20,
-};
-const familyRowStyle = {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  padding: "10px 14px",
-  borderRadius: 3,
-  background: "rgba(236,231,222,0.035)",
-  border: "1px solid rgba(236,231,222,0.1)",
 };
 const personaCardStyle = {
   textAlign: "left",

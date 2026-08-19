@@ -1,15 +1,19 @@
-# PebbleTrail (르네상스의 그 거울) — App Shell v2
+# PebbleTrail (르네상스의 그 거울) — App Shell v3
 
-실행 가능한 React 앱입니다. v1(App Shell + 공통 User State + Meditatio v1.0)에 이어, 이번 단계에서
-**Family Routing 엔진 + 18 Persona Registry + Operation Dedup + Speculum 라우팅 화면**을 추가했습니다.
+실행 가능한 React 앱입니다. v2(Family Routing 엔진 + 18 Persona Registry + Operation Dedup + Speculum
+라우팅 화면)에 이어, 이번 단계(Task #14)에서 **18개 Speculum Persona 컴포넌트를 실제로 화면에 연결**했습니다.
+이제 Speculum에서 렌즈를 선택하면 "아직 연결 안 됨" 안내가 아니라 실제 질문지가 열리고, 끝까지 마치면
+세션이 저장됩니다.
 
-1. **App Shell** — Start → Lectio → Meditatio → Speculum(라우팅) → The Studiolo → Home으로 이어지는 상위 라우팅 (`src/App.jsx`)
+1. **App Shell** — Start → Lectio → Meditatio → Speculum(라우팅 + 렌즈 실행) → The Studiolo → Home으로 이어지는 상위 라우팅 (`src/App.jsx`)
 2. **공통 User State** — Lectio / Meditatio / Speculum Sessions / Judgment Paths를 담는 단일 스키마 + localStorage 영속화 (`src/state/`)
 3. **Meditatio v1.0 데이터 구조** — "메디테티오"(MEDITATIO v1.0 — FINAL) 문서의 4개 Section·33문항·176개 선택지를 태그(Object/Affect Signal/Domain/Default)까지 그대로 코드로 옮긴 것 (`src/data/meditatioV1.js`)
 4. **Family Routing 엔진** — `claude/family-routing-matrix-v1.md`의 점수표를 그대로 코드화 (`src/speculum/familyWeights.js`, `familyRouting.js`)
 5. **18 Persona Registry** — `claude/18-persona-eligibility-spec-v1.md`의 Family/Eligibility 조건 + `claude/speculum-questionnaire-schema.js`(질문지 원문)를 그대로 옮긴 메타데이터 (`src/speculum/personaRegistry.js`, `src/data/speculumSchema.js`)
 6. **Operation Dedup** — `claude/operation-dedup-rules-v1.md`의 2-of-3 중복 판정 + "충분히 다른 3번째" 규칙을 코드화 (`src/speculum/operationDedup.js`)
-7. **Speculum 화면** — Meditatio 결과 → Family 후보 → 렌즈(Operation) 후보 2~3개까지 보여주는 라우팅 화면 (`src/screens/Speculum.jsx`)
+7. **Speculum 화면** — Meditatio 결과 → Family 후보 → 렌즈(Operation) 후보 2~3개까지 보여주고, 이제 하나를 선택하면 **실제 18개 persona 컴포넌트 중 하나가 열립니다** (`src/screens/Speculum.jsx`)
+8. **18개 Speculum Persona 컴포넌트** — `claude/speculum-*.jsx` 원본 18개를 그대로 이식 (`src/personas/*.jsx`, 아래 "이번 단계에서 한 일" 참고)
+9. **AI 계층 임시 mock** — 원본이 브라우저에서 API 키 없이 Anthropic API를 직접 호출하던 부분을 대신하는 `mockCallClaude` (`src/speculum/aiStub.js`)
 
 ## 실행
 
@@ -18,8 +22,30 @@ npm install
 npm run dev
 ```
 
-`http://localhost:5173` 접속. 순서: 시작 → Lectio(14장) → Meditatio(4개 장, 33문항) → Speculum(렌즈 후보 확인) → The Studiolo.
-완료할 때마다 "계속하기" 버튼을 직접 눌러야 다음 화면으로 넘어갑니다(자동 이동시키면 방금 만든 결과 화면을 볼 새도 없이 넘어가 버리는 문제가 있어서 의도적으로 그렇게 만들었습니다).
+`http://localhost:5173` 접속. 순서: 시작 → Lectio(14장) → Meditatio(4개 장, 33문항) → Speculum(렌즈 후보 확인 → 렌즈 열기 → 질문지 진행 → 완료) → The Studiolo.
+완료할 때마다 "계속하기"/"완료하고 Speculum으로 돌아가기" 버튼을 직접 눌러야 다음 화면으로 넘어갑니다(자동 이동시키면 방금 만든 결과 화면을 볼 새도 없이 넘어가 버리는 문제가 있어서 의도적으로 그렇게 만들었습니다).
+
+## 이번 단계(Task #14)에서 한 일
+
+`claude/speculum-*.jsx` 18개 원본 파일(Project 문서)을 `src/personas/*.jsx`로 그대로 이식했습니다. 각 파일은
+원본과 비교해 딱 두 가지만 기계적으로 바뀌었습니다:
+
+1. 브라우저에서 API 키 없이 `https://api.anthropic.com/v1/messages`를 직접 fetch하던 로컬 `callClaude()`를
+   `src/speculum/aiStub.js`의 `mockCallClaude()`로 교체했습니다. 이 stub은 실제 AI 판단을 하지 않습니다 —
+   원본 프롬프트가 전부 `- 라벨: "값"` 형태로 사용자의 실제 답변을 나열하는 동일한 템플릿을 쓴다는 점을
+   이용해서, 그 줄들을 파싱해 그대로 옮겨 담은 결과(및 "이것은 임시 화면"이라는 안내 문구)를 돌려줍니다.
+2. 결과 화면에 `onComplete(answers)`를 호출하는 "완료하고 Speculum으로 돌아가기" 버튼을 추가했습니다(기존
+   "처음부터 다시" 버튼은 그대로 둠). `Speculum.jsx`가 이 콜백을 받아 `makeSpeculumSession()`으로 세션을
+   만들고 `actions.addSpeculumSession()`으로 저장한 뒤, 저장 확인 화면을 보여줍니다.
+
+원본 소스에 있던 오타 두 개도 이식하면서 바로잡았습니다(로직에는 영향 없었지만 남겨두면 혼란스러워서):
+`speculum-gatekeeper.jsx`(수문장)의 내부 컴포넌트가 실제 Guardian(파수꾼) 파일과 이름이 겹치는
+`GuardianLens`로 export되어 있어서 `GatekeeperLens`로, `speculum-chronicler.jsx`(기록자)는
+`DetectiveLens`로 export되어 있어서 `ChroniclerLens`로 고쳤습니다. CSS 클래스 프리픽스(`gd-`, `dt-`)는
+원본과의 대조를 쉽게 하려고 그대로 두었습니다.
+
+Korean 질문 문구, 옵션, 분기 로직, CSS 값은 전혀 바꾸지 않았습니다 — "질문 문장을 바꾸지 않는다"는
+프로젝트 원칙을 지켰습니다.
 
 ## 폴더 구조
 
@@ -27,12 +53,19 @@ npm run dev
 src/
   data/
     meditatioV1.js           Meditatio v1.0 문항 데이터 (33문항/176보기 + 태그)
-    speculumSchema.js         18개 Speculum Persona 질문지 원문 (claude/speculum-questionnaire-schema.js 그대로)
+    speculumSchema.js         18개 Speculum Persona 질문지 원문 (claude/speculum-questionnaire-schema.js 그대로, 이상적 스키마 — 실제 컴포넌트 내부 필드명(stepN 등)과는 다를 수 있음)
   speculum/
     familyWeights.js           Family Routing 점수표 (claude/family-routing-matrix-v1.md 그대로)
     familyRouting.js            scoreFamilies / rankFamilies / getFamilyCandidates
     personaRegistry.js          18 Persona 메타데이터 (family, eligibilityField, operationSignature)
     operationDedup.js           Operation 중복 제거 + "충분히 다른 3번째" 후보 선정
+    aiStub.js                   18개 persona가 공통으로 쓰는 임시 AI mock (mockCallClaude)
+  personas/
+    patron.jsx, novelist.jsx, oracle.jsx, timeTraveler.jsx, merchant.jsx, guardian.jsx,
+    witness.jsx, general.jsx, artisan.jsx, surveyor.jsx, pioneer.jsx, portraitist.jsx,
+    chronicler.jsx, gatekeeper.jsx, steward.jsx, anatomist.jsx, magistrate.jsx, magician.jsx
+                                18개 Speculum Persona 실제 질문지 컴포넌트 (claude/speculum-*.jsx 이식)
+    index.js                    personaRegistry.js의 id → 컴포넌트 매핑 (PERSONA_COMPONENTS, getPersonaComponent)
   state/
     schema.js                공통 User State 스키마 (Lectio/Meditatio/Speculum/JudgmentPaths)
     UserStateContext.jsx      Provider + localStorage 영속화
@@ -44,7 +77,7 @@ src/
     Start.jsx, Home.jsx, Studiolo.jsx, Speculum.jsx
   App.jsx                     App Shell(라우팅)
 scripts/
-  smoke-test.mjs               Playwright 스모크 테스트 (전체 플로우, 아래 참고)
+  smoke-test.mjs               Playwright 스모크 테스트 (전체 플로우 + persona 완료/세션 저장, 아래 참고)
   family-routing-selftest.mjs  Family Routing / Persona Registry / Dedup 자기검증 (문서의 worked example과 대조)
 ```
 
@@ -72,24 +105,16 @@ npx playwright install chromium   # 브라우저가 없다면
 node scripts/smoke-test.mjs
 ```
 
-확인된 것: Lectio 14개 항목 저장, Meditatio 33/33 문항 응답 + `defaultStrategy`/`pressure`(trigger·response·maintenance·release) 구조 정확히 생성, 결과 문장(narrative) 생성, **Speculum 화면이 Family 후보와 렌즈(Operation) 후보를 보여주고 페르소나 카드를 선택하면 안내 문구가 뜨는 것**, The Studiolo가 Lectio·Meditatio 결과를 함께 보여줌, 새로고침 후에도 localStorage로 상태 유지.
+확인된 것: Lectio 14개 항목 저장, Meditatio 33/33 문항 응답 + `defaultStrategy`/`pressure`(trigger·response·maintenance·release) 구조 정확히 생성, 결과 문장(narrative) 생성, **Speculum 화면이 Family 후보와 렌즈(Operation) 후보를 보여주고, 페르소나 카드를 선택해 "이 렌즈 열기"를 누르면 실제 18개 persona 컴포넌트 중 하나가 열리는 것**, **(오늘 후보에 "장군"이 있으면) General 페르소나를 끝까지 진행해 결과 화면·세션 저장 확인 화면까지 도달하고 localStorage의 `speculumSessions`에 정확한 personaId/rawAnswers로 세션이 추가되는 것을 확인**, **(장군이 후보에 없으면) 공용 자동 진행 드라이버로 실제로 열린 persona가 무엇이든 최대한 끝까지 진행해 같은 방식으로 세션 저장을 검증**(브랜치가 복잡한 일부 페르소나에서는 끝까지 못 갈 수 있는데, 그 경우는 실패로 치지 않고 "열림" 확인까지만 통과 처리), The Studiolo가 Lectio·Meditatio 결과를 함께 보여줌, 새로고침 후에도 localStorage로 상태 유지.
 
-콘솔에 뜨는 `ERR_TUNNEL_CONNECTION_FAILED`는 CSS의 Google Fonts(`Cormorant Garamond`, `Gowun Batang`)/Pretendard CDN `@import`가 이 실행 환경(샌드박스)의 네트워크 제한으로 막혀서 나는 것이지 앱 로직 문제가 아닙니다 — 실제 배포 환경에서는 문제없이 로드되거나, 폰트를 프로젝트에 직접 포함시키면(self-host) 이 의존성 자체를 없앨 수 있습니다.
-
-## Speculum 화면이 아직 하지 않는 것
-
-지금 Speculum 화면(`src/screens/Speculum.jsx`)은 **Family Routing까지만** 한다 — 어떤 렌즈(Persona)가
-왜 열렸는지 보여주고, 사용자가 그중 하나를 선택하면 "아직 이 페르소나의 실제 질문지는 연결되지 않았다"는
-안내만 보여준다. Persona Eligibility(자유 텍스트를 읽고 실제 작동 가능 여부를 판정하는 것)는 AI 계층이
-있어야 하는데 아직 없어서, `personaRegistry.js`의 `eligibilityField`는 메타데이터로만 존재하고 실제
-판정 로직은 없다. 18개 persona jsx 컴포넌트를 이 화면에 연결하는 것(로드맵 아래 항목)이 다음 단계다.
+콘솔에 뜨는 `ERR_TUNNEL_CONNECTION_FAILED`는 CSS의 Google Fonts(`Cormorant Garamond`, `Gowun Batang`)/Pretendard CDN `@import`가 이 실행 환경(샌드박스)의 네트워크 제한으로 막혀서 나는 것이지 앱 로직 문제가 아닙니다 — 실제 배포 환경에서는 문제없이 로드되거나, 폰트를 프로젝트에 직접 포함시키면(self-host) 이 의존성 자체를 없앨 수 있습니다. 이 때문에 스크립트의 마지막 콘솔 에러 카운트가 0이 아니어서 종료 코드가 1이 되는데, 이는 v2 때부터 있던 동일한 환경 제약이며 이번 단계에서 새로 생긴 문제가 아닙니다.
 
 ## 아직 안 된 것 (다음 로드맵, `claude/app-build-readiness-v1.md` 참고)
 
-- 18개 Speculum Persona 컴포넌트를 이 registry/dedup 결과에 실제로 연결 + Operation 선택 → Persona reveal(실제 질문지 실행) 흐름
-- Persona Eligibility 판정(자유 텍스트 읽기)을 위한 AI 계층 — 지금은 Family Routing까지만 deterministic하게 작동
+- **AI 계층을 서버 프록시로 이전** — 지금 18개 persona가 쓰는 `mockCallClaude`(`src/speculum/aiStub.js`)는 실제 AI 판단이 아니라, 사용자가 쓴 답변을 그대로 나열해 돌려주는 임시 stub이다. 진짜 Claude API 호출은 서버(API 키를 숨길 수 있는 곳)를 통해야 한다.
+- **Persona Eligibility 판정(자유 텍스트 읽기)을 위한 AI 계층** — 지금은 Family Routing까지만 deterministic하게 작동하고, 사용자가 후보 중 하나를 직접 고른다. `personaRegistry.js`의 `eligibilityField`는 메타데이터로만 존재.
+- **`speculumSchema.js`(이상적 질문 스키마)의 `saveAs` 필드명과 실제 컴포넌트 내부 상태(`stepN` 등) 필드명이 다르다** — 지금은 각 세션의 `operationData`/`rawAnswers`에 컴포넌트가 실제로 쓰는 원본 키(step1, step2 …)를 그대로 저장한다. `initialJudgment`/`judgmentShift` 같은 정규화된 필드를 페르소나별로 정확히 채우는 것은 다음 단계.
 - Speculum Session 기록 → Judgment Paths 생성 로직 (스키마는 이미 있음, `src/state/schema.js`의 `makeSpeculumSession`)
-- AI 계층을 서버 프록시로 이전 (지금 각 Persona 컴포넌트의 `callClaude()`는 브라우저에서 API 키 없이 직접 fetch하는 방식이라 그대로 쓰면 안 됨)
 - 로그인/백엔드(로컬 단일 사용자 가정을 벗어나는 단계)
 
 ## 데이터 무결성 확인

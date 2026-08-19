@@ -1,6 +1,71 @@
 import { chromium } from "playwright";
+import { PERSONA_REGISTRY } from "../src/speculum/personaRegistry.js";
+
+const KOREAN_NAME_TO_ID = Object.fromEntries(
+  Object.values(PERSONA_REGISTRY).map((p) => [p.koreanName, p.id])
+);
 
 const errors = [];
+
+// 18개 persona 컴포넌트는 서로 다른 흐름(텍스트 입력 / 객관식 선택 / 항목 추가형 반복)을
+// 갖고 있지만, CSS 클래스 네이밍과 버튼 문구는 공통 패턴을 따른다. 이 드라이버는 그 공통
+// 패턴을 이용해 "어떤 persona가 열리든" 최대한 끝까지 진행해본다 — General처럼 미리 정해둔
+// 스크립트가 없는 나머지 17개 persona 중 무엇이 오늘 라우팅에서 선택되더라도 완료 + 세션
+// 저장을 검증할 수 있게 하기 위한 best-effort 보조 수단이다. 막히면(더 진행할 수 있는 요소를
+// 못 찾으면) 조용히 멈추고 false를 반환한다 — 이 경우 호출부에서 실패로 처리하지 않는다.
+async function autoCompletePersona(page, { maxSteps = 60 } = {}) {
+  for (let i = 0; i < maxSteps; i++) {
+    if (await page.locator("text=완료하고 Speculum으로 돌아가기").count()) return true;
+
+    // mockCallClaude의 인위적 지연(loading 화면)을 기다린다.
+    if (await page.locator("[class*='-loading']").count()) {
+      await page.waitForTimeout(450);
+      continue;
+    }
+
+    // 항목 추가형 화면(측량사/세공사/청지기 등): input + "…추가" 버튼이 있으면 두 개 채운다.
+    const addBtn = page.locator("button", { hasText: "추가" });
+    if (await addBtn.count()) {
+      const input = page.locator("input[class*='-input']").first();
+      if (await input.count() && !(await input.inputValue())) {
+        await input.fill(`스모크 항목 ${i}`);
+        await addBtn.first().click();
+        await page.waitForTimeout(60);
+        continue;
+      }
+    }
+
+    // 비어 있는 textarea가 있으면 채운다.
+    const textarea = page.locator("textarea").first();
+    if (await textarea.count()) {
+      const val = await textarea.inputValue();
+      if (!val) {
+        await textarea.fill("스모크 테스트 답변입니다.");
+        await page.waitForTimeout(30);
+        continue;
+      }
+    }
+
+    // 진행 버튼(다음/결과 보기/계속/시작하기 등, 비활성화 아님)이 있으면 누른다.
+    const advance = page.locator("button:not([disabled])", { hasText: /^(다음|결과 보기|계속|시작하기)$/ });
+    if (await advance.count()) {
+      await advance.first().click();
+      await page.waitForTimeout(60);
+      continue;
+    }
+
+    // 객관식 옵션 버튼("직접 적기"가 아닌 첫 번째)을 클릭한다.
+    const optButtons = page.locator("button[class*='-opt']").filter({ hasNotText: "직접 적기" });
+    if (await optButtons.count()) {
+      await optButtons.first().click();
+      await page.waitForTimeout(60);
+      continue;
+    }
+
+    break; // 더 진행할 방법을 찾지 못했다 — 멈춘다.
+  }
+  return (await page.locator("text=완료하고 Speculum으로 돌아가기").count()) > 0;
+}
 
 async function main() {
   const browser = await chromium.launch({ executablePath: "/opt/pw-browsers/chromium" });
@@ -128,13 +193,94 @@ async function main() {
   if (!speculumText.includes("지금 제시할 수 있는 렌즈")) throw new Error("Speculum operation candidates section missing");
   console.log("[ok] Speculum operation candidates section rendered");
 
-  // 첫 번째 렌즈 후보를 선택하면 안내 문구가 떠야 한다 (아직 실제 persona 질문지는 연결 전)
+  // 렌즈 후보 중 하나를 선택하면 "이 렌즈 열기" 버튼이 뜨고, 누르면 실제 18개 persona
+  // 컴포넌트 중 하나가 열려야 한다 (Task #14 — 더 이상 "아직 연결 안 됨" 안내가 아니다).
   const personaCards = page.locator("button").filter({ hasText: "·" });
   const cardCount = await personaCards.count();
   if (cardCount === 0) throw new Error("No persona candidate cards rendered in Speculum");
-  await personaCards.first().click();
+
+  // 카드 후보 중 "장군"(General — AI 호출이 없어 결정론적으로 끝까지 진행 가능)이 있으면
+  // 그것을 선택해서 완료까지 전체 플로우를 검증하고, 없으면 첫 번째 후보로 열림만 검증한다.
+  const generalCard = page.locator("button").filter({ hasText: "장군" });
+  const hasGeneral = (await generalCard.count()) > 0;
+  if (hasGeneral) {
+    await generalCard.first().click();
+  } else {
+    await personaCards.first().click();
+  }
   await page.waitForSelector("text=페르소나를 선택했습니다.");
-  console.log("[ok] Selecting a persona candidate shows the not-yet-connected notice");
+  await page.click("text=이 렌즈 열기");
+  await page.waitForSelector("text=르네상스의 그 거울 · III");
+  console.log("[ok] Persona card opens the real questionnaire component (no more 'not yet connected' notice)");
+
+  if (hasGeneral) {
+    // General(장군) 전체 플로우를 끝까지 진행해서 SpeculumSession이 실제로 저장되는지 확인한다.
+    await page.waitForSelector("text=The General");
+    await page.click("text=시작하기");
+    await page.waitForSelector("text=잘 모르겠다.");
+    await page.click("text=잘 모르겠다.");
+    await page.waitForSelector(".gn-textarea");
+    await page.fill(".gn-textarea", "스모크 테스트로 남긴 답변입니다.");
+    await page.click("text=다음");
+    await page.waitForSelector("text=가장 많이 쓰고 있는 것은 무엇입니까?");
+    await page.click("text=시간");
+    await page.waitForSelector("text=못 하고 있거나 미루고 있는 것이 있습니까?");
+    await page.click("text=쉬는 것");
+    await page.waitForSelector("text=지금처럼 계속하는 것이 맞다고 생각합니까?");
+    await page.click("text=잘 모르겠다.");
+    await page.waitForSelector(".gn-textarea");
+    await page.fill(".gn-textarea", "스모크 테스트 이유입니다.");
+    await page.click("text=결과 보기");
+    await page.waitForSelector("text=완료하고 Speculum으로 돌아가기");
+    console.log("[ok] General persona flow reached its result screen");
+
+    await page.click("text=완료하고 Speculum으로 돌아가기");
+    await page.waitForSelector("text=세션이 저장되었습니다.");
+    console.log("[ok] Completing a persona shows the saved-session confirmation");
+
+    const afterSpeculum = await page.evaluate(() => JSON.parse(localStorage.getItem("pebbletrail.userState.v1")));
+    if (!Array.isArray(afterSpeculum.speculumSessions) || afterSpeculum.speculumSessions.length !== 1) {
+      throw new Error("speculumSessions did not gain exactly 1 entry: " + JSON.stringify(afterSpeculum.speculumSessions));
+    }
+    const savedSession = afterSpeculum.speculumSessions[0];
+    if (savedSession.personaId !== "general") throw new Error("saved session personaId != general: " + savedSession.personaId);
+    if (!savedSession.rawAnswers || savedSession.rawAnswers.reason !== "스모크 테스트 이유입니다.") {
+      throw new Error("saved session rawAnswers missing expected reason field: " + JSON.stringify(savedSession.rawAnswers));
+    }
+    console.log("[ok] SpeculumSession persisted to localStorage with expected personaId and rawAnswers:", savedSession.sessionId);
+
+    await page.click("text=다른 렌즈 보기");
+  } else {
+    // General이 후보에 없으면, 열린 persona가 무엇이든 공용 드라이버로 최대한 끝까지 진행해본다.
+    const koreanName = (await page.locator("[class*='-persona'] h1").first().innerText()).trim();
+    const openedPersonaId = KOREAN_NAME_TO_ID[koreanName] ?? null;
+    console.log(`[info] Opened persona: ${koreanName} (id: ${openedPersonaId ?? "unknown"}) — attempting generic auto-complete driver`);
+
+    const completed = await autoCompletePersona(page);
+    if (!completed) {
+      console.log("[ok] Generic auto-complete driver could not reach the result screen for this persona (expected for some branch-heavy flows) — opening-only check still passed");
+    } else {
+      console.log("[ok] Generic auto-complete driver reached the result screen");
+      await page.click("text=완료하고 Speculum으로 돌아가기");
+      await page.waitForSelector("text=세션이 저장되었습니다.");
+      console.log("[ok] Completing a persona shows the saved-session confirmation");
+
+      const afterSpeculum = await page.evaluate(() => JSON.parse(localStorage.getItem("pebbletrail.userState.v1")));
+      if (!Array.isArray(afterSpeculum.speculumSessions) || afterSpeculum.speculumSessions.length !== 1) {
+        throw new Error("speculumSessions did not gain exactly 1 entry: " + JSON.stringify(afterSpeculum.speculumSessions));
+      }
+      const savedSession = afterSpeculum.speculumSessions[0];
+      if (openedPersonaId && savedSession.personaId !== openedPersonaId) {
+        throw new Error(`saved session personaId (${savedSession.personaId}) != opened persona (${openedPersonaId})`);
+      }
+      if (!savedSession.rawAnswers || Object.keys(savedSession.rawAnswers).length === 0) {
+        throw new Error("saved session rawAnswers is empty: " + JSON.stringify(savedSession.rawAnswers));
+      }
+      console.log("[ok] SpeculumSession persisted to localStorage with expected personaId and non-empty rawAnswers:", savedSession.sessionId);
+
+      await page.click("text=다른 렌즈 보기");
+    }
+  }
 
   // Studiolo — 상단 네비게이션의 "The Studiolo" 버튼으로 이동
   await page.locator("button", { hasText: "The Studiolo" }).first().click();

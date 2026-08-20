@@ -1,4 +1,5 @@
 import React from "react";
+import { PaperGrain } from "../components/PaperGrain";
 
 // claude/renaissance-mirror-full-copy-v1.md "## 세 가지 경험" — 라틴어 이름(Lectio/Meditatio/Speculum)만
 // 확정된 한국어 섹션명(선택/판단/다른 역할)으로 교체, 설명 문장은 그대로.
@@ -14,6 +15,8 @@ export default function ThreeExperiences({ onDone }) {
       style={{
         flex: 1,
         minHeight: 0,
+        position: "relative",
+        overflow: "hidden",
         background: "radial-gradient(120% 90% at 50% 0%, #f2eee0 0%, #eae6da 62%)",
         color: "#1c1a17",
         fontFamily: "Pretendard, -apple-system, sans-serif",
@@ -26,7 +29,8 @@ export default function ThreeExperiences({ onDone }) {
         textAlign: "center",
       }}
     >
-      <div style={{ maxWidth: 380, flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 30 }}>
+      <PaperGrain seed={9} baseFrequency={0.6} octaves={3} opacity={0.14} />
+      <div style={{ position: "relative", maxWidth: 380, flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 30 }}>
         <p style={{ fontWeight: 300, fontSize: 14, color: "#847c6b", margin: 0 }}>
           돌 하나를 얹다에는 세 가지 경험이 있습니다.
         </p>
@@ -40,6 +44,7 @@ export default function ThreeExperiences({ onDone }) {
       </div>
       <button
         style={{
+          position: "relative",
           width: "100%", maxWidth: 320, padding: 16, borderRadius: 2, marginTop: 30,
           background: "rgba(28,26,23,0.92)", border: "none", color: "#eae6da",
           fontWeight: 600, fontSize: 15, fontFamily: "inherit", cursor: "pointer",

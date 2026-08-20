@@ -297,7 +297,7 @@ export default function MeditatioV1({ onComplete }) {
             </div>
 
             <button className="mv-next" disabled={!canProceed} onClick={nextQuestion}>
-              {groupIdx === GROUPS.length - 1 && qIdx === group.questions.length - 1 ? "Meditatio 마치기" : "다음"}
+              {groupIdx === GROUPS.length - 1 && qIdx === group.questions.length - 1 ? "판단 마치기" : "다음"}
             </button>
             {isMulti && (
               <button className="mv-skip" onClick={nextQuestion}>
@@ -328,7 +328,7 @@ export default function MeditatioV1({ onComplete }) {
 
             {onComplete && (
               <button className="mv-next" onClick={() => onComplete(derived)}>
-                Speculum으로 이동
+                다른 역할로 이동
               </button>
             )}
             <button className="mv-restart" onClick={() => setView("home")}>

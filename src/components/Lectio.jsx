@@ -639,7 +639,7 @@ export default function Lectio({ onComplete }) {
 
             {onComplete && (
               <button className="lc-next" onClick={() => onComplete({ items, dominantDomain })}>
-                Meditatio로 계속하기
+                판단으로 계속하기
               </button>
             )}
             <div className="lc-foot">

@@ -43,7 +43,7 @@ export default function App() {
             gap: 4,
             padding: "10px 16px",
             background: "#0f0d14",
-            borderBottom: "1px solid rgba(236,231,222,0.1)",
+            borderBottom: "1px solid rgba(49,53,45,0.1)",
           }}
         >
           {NAV.map((item) => (
@@ -54,8 +54,8 @@ export default function App() {
                 padding: "6px 12px",
                 borderRadius: 20,
                 border: "none",
-                background: screen === item.key ? "#d6a756" : "transparent",
-                color: screen === item.key ? "#1b1509" : "#7d7489",
+                background: screen === item.key ? "#5c7a5e" : "transparent",
+                color: screen === item.key ? "#f2f4ef" : "#5f6354",
                 fontSize: 12.5,
                 cursor: "pointer",
                 fontFamily: "Pretendard, sans-serif",

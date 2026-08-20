@@ -1,50 +1,50 @@
 import React, { useState } from "react";
 import { mockCallClaude } from "../speculum/aiStub";
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Gowun+Batang:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=Gowun+Batang:wght@400;700&display=swap');
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
-.st-root { --ground:#16131c; --paper:#ece7de; --ink:#221d2b; --muted:#7d7489; --open:#d6a756; --line:rgba(236,231,222,.14);
-  min-height:100%; background:radial-gradient(120% 90% at 50% 0%,#241d2f 0%,var(--ground) 62%); color:var(--paper);
+.st-root { --ground:#e4e2db; --paper:#31352d; --ink:#31352d; --muted:#5f6354; --open:#5c7a5e; --line:rgba(49,53,45,.14);
+  min-height:100%; background:radial-gradient(120% 90% at 50% 0%,#f2f0ea 0%,var(--ground) 62%); color:var(--paper);
   font-family:Pretendard,-apple-system,sans-serif; display:flex; flex-direction:column; align-items:center; padding:28px 20px 44px; box-sizing:border-box; }
 .st-shell { width:100%; max-width:460px; display:flex; flex-direction:column; flex:1; }
 .st-eyebrow { font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); text-align:center; margin-bottom:6px; }
 .st-persona { text-align:center; margin-bottom:24px; }
-.st-persona h1 { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:32px; margin:0; font-weight:500; }
+.st-persona h1 { font-family:'Source Serif 4',serif;  font-size:32px; margin:0; font-weight:500; }
 .st-persona .en { font-size:12px; color:var(--muted); margin-top:4px; }
 .st-tagline { font-family:'Gowun Batang',serif; font-size:16px; line-height:1.6; color:var(--paper); text-align:center; margin:0 0 24px; }
-.st-persona-header { font-family:'Gowun Batang',serif; font-size:15px; line-height:1.6; color:#f6ecda; text-align:center; margin:0 0 20px; font-weight:600; }
-.st-subject { font-size:12px; color:var(--open); border-left:2px solid rgba(214,167,86,.5); padding-left:10px; margin-bottom:20px; line-height:1.6; }
+.st-persona-header { font-family:'Gowun Batang',serif; font-size:15px; line-height:1.6; color:#2f4530; text-align:center; margin:0 0 20px; font-weight:600; }
+.st-subject { font-size:12px; color:var(--open); border-left:2px solid rgba(92,122,94,.5); padding-left:10px; margin-bottom:20px; line-height:1.6; }
 .st-step-label { font-size:11px; color:var(--muted); letter-spacing:.08em; margin-bottom:8px; }
 .st-q { font-family:'Gowun Batang',serif; font-size:18px; line-height:1.65; margin:0 0 6px; font-weight:400; }
 .st-hint { font-size:12.5px; color:var(--muted); margin:0 0 16px; line-height:1.6; }
-.st-textarea { width:100%; min-height:80px; background:rgba(236,231,222,.04); border:1px solid var(--line);
+.st-textarea { width:100%; min-height:80px; background:rgba(49,53,45,.04); border:1px solid var(--line);
   border-radius:2px; color:var(--paper); font-family:inherit; font-size:14px; padding:14px 15px; box-sizing:border-box; resize:vertical; margin-bottom:16px; }
-.st-textarea::placeholder { color:rgba(236,231,222,.28); }
+.st-textarea::placeholder { color:rgba(49,53,45,.28); }
 .st-opts { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; }
-.st-opt { text-align:left; padding:13px 15px; border-radius:2px; cursor:pointer; background:rgba(236,231,222,.035);
+.st-opt { text-align:left; padding:13px 15px; border-radius:2px; cursor:pointer; background:rgba(49,53,45,.035);
   border:1px solid var(--line); color:var(--paper); font-size:14px; font-family:inherit; }
-.st-opt:hover { background:rgba(236,231,222,.07); }
-.st-opt.sel { background:rgba(214,167,86,.13); border-color:var(--open); color:#f6ecda; }
-.st-next { width:100%; padding:14px; border-radius:2px; background:var(--open); border:none; color:#1b1509; font-weight:600; font-size:14.5px; cursor:pointer; font-family:inherit; }
-.st-next:disabled { background:rgba(236,231,222,.07); color:var(--muted); cursor:default; }
+.st-opt:hover { background:rgba(49,53,45,.07); }
+.st-opt.sel { background:rgba(92,122,94,.13); border-color:var(--open); color:#2f4530; }
+.st-next { width:100%; padding:14px; border-radius:2px; background:var(--open); border:none; color:#f2f4ef; font-weight:600; font-size:14.5px; cursor:pointer; font-family:inherit; }
+.st-next:disabled { background:rgba(49,53,45,.07); color:var(--muted); cursor:default; }
 .st-back { background:none; border:none; color:var(--muted); font-size:12px; cursor:pointer; padding:0; text-align:left; flex-shrink:0; }
 .st-actions-row { display:flex; align-items:center; gap:14px; }
 .st-actions-row .st-next { flex:1; }
 .st-item-input-row { display:flex; gap:8px; margin-bottom:14px; }
-.st-item-input { flex:1; background:rgba(236,231,222,.04); border:1px solid var(--line); border-radius:2px; color:var(--paper);
+.st-item-input { flex:1; background:rgba(49,53,45,.04); border:1px solid var(--line); border-radius:2px; color:var(--paper);
   font-family:inherit; font-size:14px; padding:12px 13px; box-sizing:border-box; }
-.st-item-input::placeholder { color:rgba(236,231,222,.28); }
-.st-item-add { padding:0 18px; border-radius:2px; background:var(--open); border:none; color:#1b1509; font-weight:600; font-size:14px; cursor:pointer; font-family:inherit; }
+.st-item-input::placeholder { color:rgba(49,53,45,.28); }
+.st-item-add { padding:0 18px; border-radius:2px; background:var(--open); border:none; color:#f2f4ef; font-weight:600; font-size:14px; cursor:pointer; font-family:inherit; }
 .st-item-list { display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
-.st-item-row { display:flex; align-items:center; justify-content:space-between; background:rgba(236,231,222,.04); border:1px solid var(--line);
+.st-item-row { display:flex; align-items:center; justify-content:space-between; background:rgba(49,53,45,.04); border:1px solid var(--line);
   border-radius:2px; padding:10px 13px; font-size:14px; }
 .st-item-remove { background:none; border:none; color:var(--muted); cursor:pointer; font-size:16px; line-height:1; padding:0 4px; }
 .st-progress { font-size:11px; color:var(--muted); letter-spacing:.06em; margin-bottom:8px; }
-.st-summary-card { background:linear-gradient(160deg,#f2eee6,#e4ded3); color:var(--ink); border-radius:3px; padding:18px 20px;
+.st-summary-card { background:linear-gradient(160deg,#f7f5ee,#ddd8ca); color:var(--ink); border-radius:3px; padding:18px 20px;
   font-family:Pretendard,sans-serif; font-size:13.5px; line-height:1.7; margin-bottom:20px; box-shadow:0 8px 20px rgba(0,0,0,.28); }
 .st-summary-row { margin-bottom:12px; }
 .st-summary-row:last-child { margin-bottom:0; }
-.st-summary-label { font-size:10.5px; color:#8a8070; letter-spacing:.04em; margin-bottom:3px; }
+.st-summary-label { font-size:10.5px; color:#6b6a5c; letter-spacing:.04em; margin-bottom:3px; }
 .st-summary-value { font-family:'Gowun Batang',serif; font-size:14.5px; line-height:1.6; }
 .st-loading { text-align:center; padding:60px 0; color:var(--muted); font-size:13px; }
 .st-loading .dot { display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--open); margin:0 3px; animation:st-pulse 1.2s infinite ease-in-out; }
@@ -53,12 +53,12 @@ const CSS = `
 @keyframes st-pulse { 0%,80%,100%{opacity:.2;} 40%{opacity:1;} }
 .st-result-block { margin-bottom:16px; }
 .st-result-label { font-size:11px; color:var(--muted); letter-spacing:.06em; margin-bottom:8px; }
-.st-result-card { background:linear-gradient(160deg,#f2eee6,#e4ded3); color:var(--ink); border-radius:3px; padding:16px 18px;
+.st-result-card { background:linear-gradient(160deg,#f7f5ee,#ddd8ca); color:var(--ink); border-radius:3px; padding:16px 18px;
   font-family:'Gowun Batang',serif; font-size:14.5px; line-height:1.7; box-shadow:0 6px 18px rgba(0,0,0,.25); }
 .st-final-label { font-size:11px; color:var(--open); letter-spacing:.06em; margin:20px 0 8px; }
-.st-final-text { font-size:14px; line-height:1.85; color:#e8e2d6; }
+.st-final-text { font-size:14px; line-height:1.85; color:#31352d; }
 .st-restart { width:100%; padding:14px; margin-top:24px; background:transparent; border:1px solid var(--line); color:var(--muted); font-size:13px; cursor:pointer; border-radius:2px; font-family:inherit; }
-.st-complete { width:100%; padding:14px; margin-top:24px; background:var(--open); border:none; color:#1b1509; font-weight:600; font-size:14.5px; cursor:pointer; border-radius:2px; font-family:inherit; }
+.st-complete { width:100%; padding:14px; margin-top:24px; background:var(--open); border:none; color:#f2f4ef; font-weight:600; font-size:14.5px; cursor:pointer; border-radius:2px; font-family:inherit; }
 `;
 
 const Q1_OPTS = ["있다.", "비슷한 일이 떠오른다.", "없다."];
@@ -345,7 +345,7 @@ export default function StewardLens({ onComplete } = {}) {
             <div className="st-subject">"{answers.step2}"</div>
             <p className="st-q">당신이 맡을 범위를 넘어서는 일은 누구의 몫입니까?</p>
             <textarea className="st-textarea" value={answers.step7} onChange={(e) => set("step7", e.target.value)} placeholder="예: 참석자 연락은 동생의 몫이다." />
-            {error && <p className="st-hint" style={{ color: "#e08a8a" }}>{error}</p>}
+            {error && <p className="st-hint" style={{ color: "#c85f5f" }}>{error}</p>}
             <div className="st-actions-row">
               <button className="st-back" onClick={() => setStep("s6")}>← 이전</button>
               <button className="st-next" disabled={!answers.step7.trim()} onClick={() => setStep("s8")}>다음</button>
@@ -389,7 +389,7 @@ export default function StewardLens({ onComplete } = {}) {
             <div className="st-subject">"{answers.step3}"</div>
             <p className="st-q">{q9Prompt(answers)}</p>
             <textarea className="st-textarea" value={answers.step9} onChange={(e) => set("step9", e.target.value)} />
-            {error && <p className="st-hint" style={{ color: "#e08a8a" }}>{error}</p>}
+            {error && <p className="st-hint" style={{ color: "#c85f5f" }}>{error}</p>}
             <div className="st-actions-row">
               <button className="st-back" onClick={() => setStep("s8")}>← 이전</button>
               <button className="st-next" disabled={!answers.step9.trim()} onClick={goToResult}>결과 보기</button>

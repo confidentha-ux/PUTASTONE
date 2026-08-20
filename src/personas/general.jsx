@@ -1,39 +1,39 @@
 import React, { useState } from "react";
 
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Gowun+Batang:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=Gowun+Batang:wght@400;700&display=swap');
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
-.gn-root { --ground:#16131c; --paper:#ece7de; --ink:#221d2b; --muted:#7d7489; --open:#d6a756; --line:rgba(236,231,222,.14);
-  min-height:100%; background:radial-gradient(120% 90% at 50% 0%,#241d2f 0%,var(--ground) 62%); color:var(--paper);
+.gn-root { --ground:#e4e2db; --paper:#31352d; --ink:#31352d; --muted:#5f6354; --open:#5c7a5e; --line:rgba(49,53,45,.14);
+  min-height:100%; background:radial-gradient(120% 90% at 50% 0%,#f2f0ea 0%,var(--ground) 62%); color:var(--paper);
   font-family:Pretendard,-apple-system,sans-serif; display:flex; flex-direction:column; align-items:center; padding:28px 20px 44px; box-sizing:border-box; }
 .gn-shell { width:100%; max-width:460px; display:flex; flex-direction:column; flex:1; }
 .gn-eyebrow { font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); text-align:center; margin-bottom:6px; }
 .gn-persona { text-align:center; margin-bottom:24px; }
-.gn-persona h1 { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:32px; margin:0; font-weight:500; }
+.gn-persona h1 { font-family:'Source Serif 4',serif;  font-size:32px; margin:0; font-weight:500; }
 .gn-persona .en { font-size:12px; color:var(--muted); margin-top:4px; }
-.gn-subject { font-size:12px; color:var(--open); border-left:2px solid rgba(214,167,86,.5); padding-left:10px; margin-bottom:20px; line-height:1.6; }
+.gn-subject { font-size:12px; color:var(--open); border-left:2px solid rgba(92,122,94,.5); padding-left:10px; margin-bottom:20px; line-height:1.6; }
 .gn-step-label { font-size:11px; color:var(--muted); letter-spacing:.08em; margin-bottom:8px; }
 .gn-q { font-family:'Gowun Batang',serif; font-size:18px; line-height:1.65; margin:0 0 6px; font-weight:400; }
-.gn-persona-header { font-family:'Gowun Batang',serif; font-size:15px; line-height:1.6; color:#f6ecda; text-align:center; margin:0 0 20px; font-weight:600; }
+.gn-persona-header { font-family:'Gowun Batang',serif; font-size:15px; line-height:1.6; color:#2f4530; text-align:center; margin:0 0 20px; font-weight:600; }
 .gn-hint { font-size:12.5px; color:var(--muted); margin:0 0 16px; line-height:1.6; }
-.gn-textarea { width:100%; min-height:80px; background:rgba(236,231,222,.04); border:1px solid var(--line);
+.gn-textarea { width:100%; min-height:80px; background:rgba(49,53,45,.04); border:1px solid var(--line);
   border-radius:2px; color:var(--paper); font-family:inherit; font-size:14px; padding:14px 15px; box-sizing:border-box; resize:vertical; margin-bottom:16px; }
-.gn-textarea::placeholder { color:rgba(236,231,222,.28); }
+.gn-textarea::placeholder { color:rgba(49,53,45,.28); }
 .gn-opts { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; }
-.gn-opt { text-align:left; padding:13px 15px; border-radius:2px; cursor:pointer; background:rgba(236,231,222,.035);
+.gn-opt { text-align:left; padding:13px 15px; border-radius:2px; cursor:pointer; background:rgba(49,53,45,.035);
   border:1px solid var(--line); color:var(--paper); font-size:14px; font-family:inherit; }
-.gn-opt:hover { background:rgba(236,231,222,.07); }
-.gn-opt.sel { background:rgba(214,167,86,.13); border-color:var(--open); color:#f6ecda; }
-.gn-next { width:100%; padding:14px; border-radius:2px; background:var(--open); border:none; color:#1b1509; font-weight:600; font-size:14.5px; cursor:pointer; font-family:inherit; }
-.gn-next:disabled { background:rgba(236,231,222,.07); color:var(--muted); cursor:default; }
+.gn-opt:hover { background:rgba(49,53,45,.07); }
+.gn-opt.sel { background:rgba(92,122,94,.13); border-color:var(--open); color:#2f4530; }
+.gn-next { width:100%; padding:14px; border-radius:2px; background:var(--open); border:none; color:#f2f4ef; font-weight:600; font-size:14.5px; cursor:pointer; font-family:inherit; }
+.gn-next:disabled { background:rgba(49,53,45,.07); color:var(--muted); cursor:default; }
 .gn-back { background:none; border:none; color:var(--muted); font-size:12px; cursor:pointer; padding:0; text-align:left; flex-shrink:0; }
 .gn-actions-row { display:flex; align-items:center; gap:14px; }
 .gn-actions-row .gn-next { flex:1; }
-.gn-condition-card { background:linear-gradient(160deg,#f2eee6,#e4ded3); color:var(--ink); border-radius:3px; padding:20px;
+.gn-condition-card { background:linear-gradient(160deg,#f7f5ee,#ddd8ca); color:var(--ink); border-radius:3px; padding:20px;
   font-family:'Gowun Batang',serif; font-size:15.5px; line-height:1.75; margin-bottom:20px; box-shadow:0 10px 26px rgba(0,0,0,.3); }
-.gn-condition-label { font-size:11px; color:#8a8070; font-family:Pretendard,sans-serif; margin-bottom:8px; letter-spacing:.04em; }
+.gn-condition-label { font-size:11px; color:#6b6a5c; font-family:Pretendard,sans-serif; margin-bottom:8px; letter-spacing:.04em; }
 .gn-restart { width:100%; padding:14px; margin-top:24px; background:transparent; border:1px solid var(--line); color:var(--muted); font-size:13px; cursor:pointer; border-radius:2px; font-family:inherit; }
-.gn-complete { width:100%; padding:14px; margin-top:24px; background:var(--open); border:none; color:#1b1509; font-weight:600; font-size:14.5px; cursor:pointer; border-radius:2px; font-family:inherit; }
+.gn-complete { width:100%; padding:14px; margin-top:24px; background:var(--open); border:none; color:#f2f4ef; font-weight:600; font-size:14.5px; cursor:pointer; border-radius:2px; font-family:inherit; }
 `;
 
 const INPUT_OPTIONS = ["시간", "체력", "신경", "돈", "다른 일을 할 기회", "잘 모르겠다", "직접 적기"];

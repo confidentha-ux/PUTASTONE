@@ -1,40 +1,40 @@
 import React, { useState } from "react";
 import { mockCallClaude } from "../speculum/aiStub";
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Gowun+Batang:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=Gowun+Batang:wght@400;700&display=swap');
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
-.pt-root { --ground:#16131c; --paper:#ece7de; --ink:#221d2b; --muted:#7d7489; --open:#d6a756; --line:rgba(236,231,222,.14);
-  min-height:100%; background:radial-gradient(120% 90% at 50% 0%,#241d2f 0%,var(--ground) 62%); color:var(--paper);
+.pt-root { --ground:#e4e2db; --paper:#31352d; --ink:#31352d; --muted:#5f6354; --open:#5c7a5e; --line:rgba(49,53,45,.14);
+  min-height:100%; background:radial-gradient(120% 90% at 50% 0%,#f2f0ea 0%,var(--ground) 62%); color:var(--paper);
   font-family:Pretendard,-apple-system,sans-serif; display:flex; flex-direction:column; align-items:center; padding:28px 20px 44px; box-sizing:border-box; }
 .pt-shell { width:100%; max-width:460px; display:flex; flex-direction:column; flex:1; }
 .pt-eyebrow { font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); text-align:center; margin-bottom:6px; }
 .pt-persona { text-align:center; margin-bottom:24px; }
-.pt-persona h1 { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:32px; margin:0; font-weight:500; }
+.pt-persona h1 { font-family:'Source Serif 4',serif;  font-size:32px; margin:0; font-weight:500; }
 .pt-persona .en { font-size:12px; color:var(--muted); margin-top:4px; }
 .pt-tagline { font-family:'Gowun Batang',serif; font-size:16px; line-height:1.6; color:var(--paper); text-align:center; margin:0 0 24px; }
-.pt-persona-header { font-family:'Gowun Batang',serif; font-size:15px; line-height:1.6; color:#f6ecda; text-align:center; margin:0 0 20px; font-weight:600; }
-.pt-subject { font-size:12px; color:var(--open); border-left:2px solid rgba(214,167,86,.5); padding-left:10px; margin-bottom:20px; line-height:1.6; }
+.pt-persona-header { font-family:'Gowun Batang',serif; font-size:15px; line-height:1.6; color:#2f4530; text-align:center; margin:0 0 20px; font-weight:600; }
+.pt-subject { font-size:12px; color:var(--open); border-left:2px solid rgba(92,122,94,.5); padding-left:10px; margin-bottom:20px; line-height:1.6; }
 .pt-step-label { font-size:11px; color:var(--muted); letter-spacing:.08em; margin-bottom:8px; }
 .pt-q { font-family:'Gowun Batang',serif; font-size:18px; line-height:1.65; margin:0 0 6px; font-weight:400; }
 .pt-hint { font-size:12.5px; color:var(--muted); margin:0 0 16px; line-height:1.6; }
-.pt-textarea { width:100%; min-height:80px; background:rgba(236,231,222,.04); border:1px solid var(--line);
+.pt-textarea { width:100%; min-height:80px; background:rgba(49,53,45,.04); border:1px solid var(--line);
   border-radius:2px; color:var(--paper); font-family:inherit; font-size:14px; padding:14px 15px; box-sizing:border-box; resize:vertical; margin-bottom:16px; }
-.pt-textarea::placeholder { color:rgba(236,231,222,.28); }
+.pt-textarea::placeholder { color:rgba(49,53,45,.28); }
 .pt-opts { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; }
-.pt-opt { text-align:left; padding:13px 15px; border-radius:2px; cursor:pointer; background:rgba(236,231,222,.035);
+.pt-opt { text-align:left; padding:13px 15px; border-radius:2px; cursor:pointer; background:rgba(49,53,45,.035);
   border:1px solid var(--line); color:var(--paper); font-size:14px; font-family:inherit; }
-.pt-opt:hover { background:rgba(236,231,222,.07); }
-.pt-opt.sel { background:rgba(214,167,86,.13); border-color:var(--open); color:#f6ecda; }
-.pt-next { width:100%; padding:14px; border-radius:2px; background:var(--open); border:none; color:#1b1509; font-weight:600; font-size:14.5px; cursor:pointer; font-family:inherit; }
-.pt-next:disabled { background:rgba(236,231,222,.07); color:var(--muted); cursor:default; }
+.pt-opt:hover { background:rgba(49,53,45,.07); }
+.pt-opt.sel { background:rgba(92,122,94,.13); border-color:var(--open); color:#2f4530; }
+.pt-next { width:100%; padding:14px; border-radius:2px; background:var(--open); border:none; color:#f2f4ef; font-weight:600; font-size:14.5px; cursor:pointer; font-family:inherit; }
+.pt-next:disabled { background:rgba(49,53,45,.07); color:var(--muted); cursor:default; }
 .pt-back { background:none; border:none; color:var(--muted); font-size:12px; cursor:pointer; padding:0; text-align:left; flex-shrink:0; }
 .pt-actions-row { display:flex; align-items:center; gap:14px; }
 .pt-actions-row .pt-next { flex:1; }
-.pt-summary-card { background:linear-gradient(160deg,#f2eee6,#e4ded3); color:var(--ink); border-radius:3px; padding:18px 20px;
+.pt-summary-card { background:linear-gradient(160deg,#f7f5ee,#ddd8ca); color:var(--ink); border-radius:3px; padding:18px 20px;
   font-family:Pretendard,sans-serif; font-size:13.5px; line-height:1.7; margin-bottom:20px; box-shadow:0 8px 20px rgba(0,0,0,.28); }
 .pt-summary-row { margin-bottom:12px; }
 .pt-summary-row:last-child { margin-bottom:0; }
-.pt-summary-label { font-size:10.5px; color:#8a8070; letter-spacing:.04em; margin-bottom:3px; }
+.pt-summary-label { font-size:10.5px; color:#6b6a5c; letter-spacing:.04em; margin-bottom:3px; }
 .pt-summary-value { font-family:'Gowun Batang',serif; font-size:14.5px; line-height:1.6; }
 .pt-loading { text-align:center; padding:60px 0; color:var(--muted); font-size:13px; }
 .pt-loading .dot { display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--open); margin:0 3px; animation:pt-pulse 1.2s infinite ease-in-out; }
@@ -43,12 +43,12 @@ const CSS = `
 @keyframes pt-pulse { 0%,80%,100%{opacity:.2;} 40%{opacity:1;} }
 .pt-result-block { margin-bottom:16px; }
 .pt-result-label { font-size:11px; color:var(--muted); letter-spacing:.06em; margin-bottom:8px; }
-.pt-result-card { background:linear-gradient(160deg,#f2eee6,#e4ded3); color:var(--ink); border-radius:3px; padding:16px 18px;
+.pt-result-card { background:linear-gradient(160deg,#f7f5ee,#ddd8ca); color:var(--ink); border-radius:3px; padding:16px 18px;
   font-family:'Gowun Batang',serif; font-size:14.5px; line-height:1.7; box-shadow:0 6px 18px rgba(0,0,0,.25); }
 .pt-final-label { font-size:11px; color:var(--open); letter-spacing:.06em; margin:20px 0 8px; }
-.pt-final-text { font-size:14px; line-height:1.85; color:#e8e2d6; }
+.pt-final-text { font-size:14px; line-height:1.85; color:#31352d; }
 .pt-restart { width:100%; padding:14px; margin-top:24px; background:transparent; border:1px solid var(--line); color:var(--muted); font-size:13px; cursor:pointer; border-radius:2px; font-family:inherit; }
-.pt-complete { width:100%; padding:14px; margin-top:24px; background:var(--open); border:none; color:#1b1509; font-weight:600; font-size:14.5px; cursor:pointer; border-radius:2px; font-family:inherit; }
+.pt-complete { width:100%; padding:14px; margin-top:24px; background:var(--open); border:none; color:#f2f4ef; font-weight:600; font-size:14.5px; cursor:pointer; border-radius:2px; font-family:inherit; }
 `;
 
 const APPLY_SAME = "그대로 적용할 수 있다.";
@@ -234,7 +234,7 @@ export default function PatronLens({ onComplete } = {}) {
             <div className="pt-step-label">STEP 3</div>
             <p className="pt-q">{branchLabel}</p>
             <textarea className="pt-textarea" value={answers.step4b} onChange={(e) => set("step4b", e.target.value)} />
-            {error && <p className="pt-hint" style={{ color: "#e08a8a" }}>{error}</p>}
+            {error && <p className="pt-hint" style={{ color: "#c85f5f" }}>{error}</p>}
             <div className="pt-actions-row">
               <button className="pt-back" onClick={() => setStep("s3")}>← 이전</button>
               <button className="pt-next" disabled={!answers.step4b.trim()} onClick={() => setStep("s5")}>다음</button>
@@ -263,7 +263,7 @@ export default function PatronLens({ onComplete } = {}) {
             <div className="pt-step-label">STEP 5</div>
             <p className="pt-q">{Q6_PROMPT[answers.step5] || "그렇게 판단한 이유는 무엇입니까?"}</p>
             <textarea className="pt-textarea" value={answers.step6} onChange={(e) => set("step6", e.target.value)} />
-            {error && <p className="pt-hint" style={{ color: "#e08a8a" }}>{error}</p>}
+            {error && <p className="pt-hint" style={{ color: "#c85f5f" }}>{error}</p>}
             <div className="pt-actions-row">
               <button className="pt-back" onClick={() => setStep("s5")}>← 이전</button>
               <button className="pt-next" disabled={!answers.step6.trim()} onClick={goToResult}>결과 보기</button>

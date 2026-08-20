@@ -1,40 +1,40 @@
 import React, { useState } from "react";
 import { mockCallClaude } from "../speculum/aiStub";
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Gowun+Batang:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=Gowun+Batang:wght@400;700&display=swap');
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
-.gu-root { --ground:#16131c; --paper:#ece7de; --ink:#221d2b; --muted:#7d7489; --open:#d6a756; --line:rgba(236,231,222,.14);
-  min-height:100%; background:radial-gradient(120% 90% at 50% 0%,#241d2f 0%,var(--ground) 62%); color:var(--paper);
+.gu-root { --ground:#e4e2db; --paper:#31352d; --ink:#31352d; --muted:#5f6354; --open:#5c7a5e; --line:rgba(49,53,45,.14);
+  min-height:100%; background:radial-gradient(120% 90% at 50% 0%,#f2f0ea 0%,var(--ground) 62%); color:var(--paper);
   font-family:Pretendard,-apple-system,sans-serif; display:flex; flex-direction:column; align-items:center; padding:28px 20px 44px; box-sizing:border-box; }
 .gu-shell { width:100%; max-width:460px; display:flex; flex-direction:column; flex:1; }
 .gu-eyebrow { font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); text-align:center; margin-bottom:6px; }
 .gu-persona { text-align:center; margin-bottom:24px; }
-.gu-persona h1 { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:32px; margin:0; font-weight:500; }
+.gu-persona h1 { font-family:'Source Serif 4',serif;  font-size:32px; margin:0; font-weight:500; }
 .gu-persona .en { font-size:12px; color:var(--muted); margin-top:4px; }
 .gu-tagline { font-family:'Gowun Batang',serif; font-size:16px; line-height:1.6; color:var(--paper); text-align:center; margin:0 0 24px; }
-.gu-persona-header { font-family:'Gowun Batang',serif; font-size:15px; line-height:1.6; color:#f6ecda; text-align:center; margin:0 0 20px; font-weight:600; }
-.gu-subject { font-size:12px; color:var(--open); border-left:2px solid rgba(214,167,86,.5); padding-left:10px; margin-bottom:20px; line-height:1.6; }
+.gu-persona-header { font-family:'Gowun Batang',serif; font-size:15px; line-height:1.6; color:#2f4530; text-align:center; margin:0 0 20px; font-weight:600; }
+.gu-subject { font-size:12px; color:var(--open); border-left:2px solid rgba(92,122,94,.5); padding-left:10px; margin-bottom:20px; line-height:1.6; }
 .gu-step-label { font-size:11px; color:var(--muted); letter-spacing:.08em; margin-bottom:8px; }
 .gu-q { font-family:'Gowun Batang',serif; font-size:18px; line-height:1.65; margin:0 0 6px; font-weight:400; }
 .gu-hint { font-size:12.5px; color:var(--muted); margin:0 0 16px; line-height:1.6; }
-.gu-textarea { width:100%; min-height:80px; background:rgba(236,231,222,.04); border:1px solid var(--line);
+.gu-textarea { width:100%; min-height:80px; background:rgba(49,53,45,.04); border:1px solid var(--line);
   border-radius:2px; color:var(--paper); font-family:inherit; font-size:14px; padding:14px 15px; box-sizing:border-box; resize:vertical; margin-bottom:16px; }
-.gu-textarea::placeholder { color:rgba(236,231,222,.28); }
+.gu-textarea::placeholder { color:rgba(49,53,45,.28); }
 .gu-opts { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; }
-.gu-opt { text-align:left; padding:13px 15px; border-radius:2px; cursor:pointer; background:rgba(236,231,222,.035);
+.gu-opt { text-align:left; padding:13px 15px; border-radius:2px; cursor:pointer; background:rgba(49,53,45,.035);
   border:1px solid var(--line); color:var(--paper); font-size:14px; font-family:inherit; }
-.gu-opt:hover { background:rgba(236,231,222,.07); }
-.gu-opt.sel { background:rgba(214,167,86,.13); border-color:var(--open); color:#f6ecda; }
-.gu-next { width:100%; padding:14px; border-radius:2px; background:var(--open); border:none; color:#1b1509; font-weight:600; font-size:14.5px; cursor:pointer; font-family:inherit; }
-.gu-next:disabled { background:rgba(236,231,222,.07); color:var(--muted); cursor:default; }
+.gu-opt:hover { background:rgba(49,53,45,.07); }
+.gu-opt.sel { background:rgba(92,122,94,.13); border-color:var(--open); color:#2f4530; }
+.gu-next { width:100%; padding:14px; border-radius:2px; background:var(--open); border:none; color:#f2f4ef; font-weight:600; font-size:14.5px; cursor:pointer; font-family:inherit; }
+.gu-next:disabled { background:rgba(49,53,45,.07); color:var(--muted); cursor:default; }
 .gu-back { background:none; border:none; color:var(--muted); font-size:12px; cursor:pointer; padding:0; text-align:left; flex-shrink:0; }
 .gu-actions-row { display:flex; align-items:center; gap:14px; }
 .gu-actions-row .gu-next { flex:1; }
-.gu-summary-card { background:linear-gradient(160deg,#f2eee6,#e4ded3); color:var(--ink); border-radius:3px; padding:18px 20px;
+.gu-summary-card { background:linear-gradient(160deg,#f7f5ee,#ddd8ca); color:var(--ink); border-radius:3px; padding:18px 20px;
   font-family:Pretendard,sans-serif; font-size:13.5px; line-height:1.7; margin-bottom:20px; box-shadow:0 8px 20px rgba(0,0,0,.28); }
 .gu-summary-row { margin-bottom:12px; }
 .gu-summary-row:last-child { margin-bottom:0; }
-.gu-summary-label { font-size:10.5px; color:#8a8070; letter-spacing:.04em; margin-bottom:3px; }
+.gu-summary-label { font-size:10.5px; color:#6b6a5c; letter-spacing:.04em; margin-bottom:3px; }
 .gu-summary-value { font-family:'Gowun Batang',serif; font-size:14.5px; line-height:1.6; }
 .gu-loading { text-align:center; padding:60px 0; color:var(--muted); font-size:13px; }
 .gu-loading .dot { display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--open); margin:0 3px; animation:gu-pulse 1.2s infinite ease-in-out; }
@@ -43,12 +43,12 @@ const CSS = `
 @keyframes gu-pulse { 0%,80%,100%{opacity:.2;} 40%{opacity:1;} }
 .gu-result-block { margin-bottom:16px; }
 .gu-result-label { font-size:11px; color:var(--muted); letter-spacing:.06em; margin-bottom:8px; }
-.gu-result-card { background:linear-gradient(160deg,#f2eee6,#e4ded3); color:var(--ink); border-radius:3px; padding:16px 18px;
+.gu-result-card { background:linear-gradient(160deg,#f7f5ee,#ddd8ca); color:var(--ink); border-radius:3px; padding:16px 18px;
   font-family:'Gowun Batang',serif; font-size:14.5px; line-height:1.7; box-shadow:0 6px 18px rgba(0,0,0,.25); }
 .gu-final-label { font-size:11px; color:var(--open); letter-spacing:.06em; margin:20px 0 8px; }
-.gu-final-text { font-size:14px; line-height:1.85; color:#e8e2d6; }
+.gu-final-text { font-size:14px; line-height:1.85; color:#31352d; }
 .gu-restart { width:100%; padding:14px; margin-top:24px; background:transparent; border:1px solid var(--line); color:var(--muted); font-size:13px; cursor:pointer; border-radius:2px; font-family:inherit; }
-.gu-complete { width:100%; padding:14px; margin-top:24px; background:var(--open); border:none; color:#1b1509; font-weight:600; font-size:14.5px; cursor:pointer; border-radius:2px; font-family:inherit; }
+.gu-complete { width:100%; padding:14px; margin-top:24px; background:var(--open); border:none; color:#f2f4ef; font-weight:600; font-size:14.5px; cursor:pointer; border-radius:2px; font-family:inherit; }
 `;
 
 const Q1_OPTS = ["있다.", "잘 모르겠다.", "없다."];
@@ -243,7 +243,7 @@ export default function GuardianLens({ onComplete } = {}) {
             {answers.step5 === "직접 적기" && (
               <textarea className="gu-textarea" value={answers.step5b} onChange={(e) => set("step5b", e.target.value)} placeholder="편하게 적어주세요." />
             )}
-            {error && <p className="gu-hint" style={{ color: "#e08a8a" }}>{error}</p>}
+            {error && <p className="gu-hint" style={{ color: "#c85f5f" }}>{error}</p>}
             <div className="gu-actions-row">
               <button className="gu-back" onClick={() => setStep("s4")}>← 이전</button>
               <button className="gu-next" disabled={!q5Ready} onClick={() => setStep("s6")}>다음</button>
@@ -300,7 +300,7 @@ export default function GuardianLens({ onComplete } = {}) {
             <div className="gu-subject">"{answers.step2}"</div>
             <p className="gu-q">처음에는 {answers.step2}을(를) 놓기 어렵다고 생각했습니다. 지금 돌아보면, 가장 놓기 어려웠던 것은 무엇입니까?</p>
             <textarea className="gu-textarea" value={answers.step8} onChange={(e) => set("step8", e.target.value)} />
-            {error && <p className="gu-hint" style={{ color: "#e08a8a" }}>{error}</p>}
+            {error && <p className="gu-hint" style={{ color: "#c85f5f" }}>{error}</p>}
             <div className="gu-actions-row">
               <button className="gu-back" onClick={() => setStep("s7")}>← 이전</button>
               <button className="gu-next" disabled={!answers.step8.trim()} onClick={goToResult}>결과 보기</button>

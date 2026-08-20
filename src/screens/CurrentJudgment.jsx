@@ -52,8 +52,8 @@ function Shell({ children }) {
     <div
       style={{
         minHeight: "100%",
-        background: "#16131c",
-        color: "#ece7de",
+        background: "#e4e2db",
+        color: "#31352d",
         fontFamily: "Pretendard, -apple-system, sans-serif",
         padding: "40px 20px",
         boxSizing: "border-box",
@@ -65,15 +65,15 @@ function Shell({ children }) {
 }
 
 const titleStyle = { fontFamily: "'Gowun Batang', serif", fontWeight: 400, fontSize: 22, marginBottom: 12 };
-const bodyStyle = { fontSize: 13.5, lineHeight: 1.6, marginBottom: 24, color: "#ece7de" };
-const labelStyle = { display: "block", fontSize: 12.5, color: "#7d7489", marginBottom: 8 };
+const bodyStyle = { fontSize: 13.5, lineHeight: 1.6, marginBottom: 24, color: "#31352d" };
+const labelStyle = { display: "block", fontSize: 12.5, color: "#5f6354", marginBottom: 8 };
 const textareaStyle = {
   width: "100%",
   padding: "12px 14px",
   borderRadius: 3,
-  background: "rgba(236,231,222,0.035)",
-  border: "1px solid rgba(236,231,222,0.14)",
-  color: "#ece7de",
+  background: "rgba(49,53,45,0.035)",
+  border: "1px solid rgba(49,53,45,0.14)",
+  color: "#31352d",
   fontSize: 13.5,
   lineHeight: 1.6,
   fontFamily: "inherit",
@@ -85,8 +85,8 @@ const primaryButtonStyle = {
   padding: "12px 20px",
   borderRadius: 3,
   border: "none",
-  background: "#d6a756",
-  color: "#1b1509",
+  background: "#5c7a5e",
+  color: "#f2f4ef",
   fontSize: 13.5,
   cursor: "pointer",
   fontFamily: "inherit",

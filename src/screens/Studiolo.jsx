@@ -17,19 +17,19 @@ function formatSessionDate(timestamp) {
 }
 
 const CSS = `
-.st-root { min-height: 100%; background: #16131c; color: #ece7de; font-family: Pretendard, -apple-system, sans-serif; padding: 32px 20px 60px; box-sizing: border-box; }
+.st-root { min-height: 100%; background: #e4e2db; color: #31352d; font-family: Pretendard, -apple-system, sans-serif; padding: 32px 20px 60px; box-sizing: border-box; }
 .st-shell { max-width: 560px; margin: 0 auto; }
 .st-title { font-family: 'Gowun Batang', serif; font-size: 26px; margin: 0 0 6px; }
-.st-sub { color: #7d7489; font-size: 13px; margin: 0 0 32px; }
+.st-sub { color: #5f6354; font-size: 13px; margin: 0 0 32px; }
 .st-section { margin-bottom: 28px; }
-.st-section h2 { font-family: 'Gowun Batang', serif; font-size: 16px; font-weight: 400; color: #d6a756; margin: 0 0 12px; }
-.st-card { background: rgba(236,231,222,0.04); border: 1px solid rgba(236,231,222,0.14); border-radius: 4px; padding: 16px 18px; font-size: 13.5px; line-height: 1.8; white-space: pre-line; }
-.st-empty { color: #7d7489; font-size: 13px; font-style: italic; }
+.st-section h2 { font-family: 'Gowun Batang', serif; font-size: 16px; font-weight: 400; color: #5c7a5e; margin: 0 0 12px; }
+.st-card { background: rgba(49,53,45,0.04); border: 1px solid rgba(49,53,45,0.14); border-radius: 4px; padding: 16px 18px; font-size: 13.5px; line-height: 1.8; white-space: pre-line; }
+.st-empty { color: #5f6354; font-size: 13px;  }
 .st-tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-.st-tag { font-size: 11px; padding: 4px 9px; border-radius: 20px; border: 1px solid rgba(236,231,222,0.14); color: #7d7489; }
-.st-item { padding: 10px 0; border-bottom: 1px solid rgba(236,231,222,0.08); font-size: 13.5px; }
+.st-tag { font-size: 11px; padding: 4px 9px; border-radius: 20px; border: 1px solid rgba(49,53,45,0.14); color: #5f6354; }
+.st-item { padding: 10px 0; border-bottom: 1px solid rgba(49,53,45,0.08); font-size: 13.5px; }
 .st-item:last-child { border-bottom: none; }
-.st-item .k { color: #d6a756; font-size: 11px; letter-spacing: 0.04em; display: block; margin-bottom: 2px; }
+.st-item .k { color: #5c7a5e; font-size: 11px; letter-spacing: 0.04em; display: block; margin-bottom: 2px; }
 `;
 
 export default function Studiolo() {

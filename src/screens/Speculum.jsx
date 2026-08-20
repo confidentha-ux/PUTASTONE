@@ -125,7 +125,7 @@ export default function Speculum({ onNavigate, currentJudgment }) {
         <p style={bodyStyle}>
           Speculum은 Meditatio에서 읽은 판단 기준을 바탕으로, 지금의 판단을 다른 렌즈로 다시 보게 해줍니다.
         </p>
-        <p style={{ ...bodyStyle, color: "#7d7489" }}>
+        <p style={{ ...bodyStyle, color: "#5f6354" }}>
           아직 Meditatio를 완료하지 않아서, 어떤 렌즈를 열어야 할지 정할 근거가 없습니다. Meditatio를 먼저
           완료해 주세요.
         </p>
@@ -185,7 +185,7 @@ export default function Speculum({ onNavigate, currentJudgment }) {
             onClick={() => setSelectedPersonaId(persona.id)}
             style={{
               ...personaCardStyle,
-              borderColor: selectedPersonaId === persona.id ? "#d6a756" : "rgba(236,231,222,0.14)",
+              borderColor: selectedPersonaId === persona.id ? "#5c7a5e" : "rgba(49,53,45,0.14)",
             }}
           >
             <div style={{ fontFamily: "'Gowun Batang', serif", fontSize: 15.5, lineHeight: 1.5 }}>
@@ -198,7 +198,7 @@ export default function Speculum({ onNavigate, currentJudgment }) {
       {selectedPersona && (
         <div style={noticeBoxStyle}>
           <SectionLabel>다른 역할 입어보기</SectionLabel>
-          <div style={{ fontSize: 13, color: "#7d7489", marginBottom: 12 }}>
+          <div style={{ fontSize: 13, color: "#5f6354", marginBottom: 12 }}>
             다른 사람들의 인지구조를 따라가 봅니다.
           </div>
           <div style={{ fontFamily: "'Gowun Batang', serif", fontSize: 16, marginBottom: 12 }}>
@@ -218,8 +218,8 @@ function Shell({ children }) {
     <div
       style={{
         minHeight: "100%",
-        background: "#16131c",
-        color: "#ece7de",
+        background: "#e4e2db",
+        color: "#31352d",
         fontFamily: "Pretendard, -apple-system, sans-serif",
         padding: "40px 20px",
         boxSizing: "border-box",
@@ -232,20 +232,20 @@ function Shell({ children }) {
 
 function SectionLabel({ children }) {
   return (
-    <div style={{ fontSize: 12, color: "#d6a756", letterSpacing: 0.4, marginBottom: 10, marginTop: 4 }}>
+    <div style={{ fontSize: 12, color: "#5c7a5e", letterSpacing: 0.4, marginBottom: 10, marginTop: 4 }}>
       {children}
     </div>
   );
 }
 
 const titleStyle = { fontFamily: "'Gowun Batang', serif", fontWeight: 400, fontSize: 22, marginBottom: 12 };
-const bodyStyle = { fontSize: 13.5, lineHeight: 1.6, marginBottom: 16, color: "#ece7de" };
+const bodyStyle = { fontSize: 13.5, lineHeight: 1.6, marginBottom: 16, color: "#31352d" };
 const primaryButtonStyle = {
   padding: "12px 20px",
   borderRadius: 3,
   border: "none",
-  background: "#d6a756",
-  color: "#1b1509",
+  background: "#5c7a5e",
+  color: "#f2f4ef",
   fontSize: 13.5,
   cursor: "pointer",
   fontFamily: "inherit",
@@ -253,9 +253,9 @@ const primaryButtonStyle = {
 const secondaryButtonStyle = {
   padding: "12px 20px",
   borderRadius: 3,
-  border: "1px solid rgba(236,231,222,0.2)",
+  border: "1px solid rgba(49,53,45,0.2)",
   background: "transparent",
-  color: "#ece7de",
+  color: "#31352d",
   fontSize: 13.5,
   cursor: "pointer",
   fontFamily: "inherit",
@@ -263,23 +263,23 @@ const secondaryButtonStyle = {
 const completedBoxStyle = {
   padding: "14px 16px",
   borderRadius: 3,
-  background: "rgba(214,167,86,0.1)",
-  border: "1px solid rgba(214,167,86,0.35)",
+  background: "rgba(92,122,94,0.1)",
+  border: "1px solid rgba(92,122,94,0.35)",
   marginBottom: 20,
 };
 const personaCardStyle = {
   textAlign: "left",
   padding: "16px 18px",
   borderRadius: 3,
-  background: "rgba(236,231,222,0.035)",
-  border: "1px solid rgba(236,231,222,0.14)",
-  color: "#ece7de",
+  background: "rgba(49,53,45,0.035)",
+  border: "1px solid rgba(49,53,45,0.14)",
+  color: "#31352d",
   cursor: "pointer",
   fontFamily: "inherit",
 };
 const noticeBoxStyle = {
   padding: "14px 16px",
   borderRadius: 3,
-  background: "rgba(214,167,86,0.08)",
-  border: "1px solid rgba(214,167,86,0.3)",
+  background: "rgba(92,122,94,0.08)",
+  border: "1px solid rgba(92,122,94,0.3)",
 };

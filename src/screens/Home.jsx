@@ -18,8 +18,8 @@ export default function Home({ onNavigate }) {
     <div
       style={{
         minHeight: "100%",
-        background: "#16131c",
-        color: "#ece7de",
+        background: "#e4e2db",
+        color: "#31352d",
         fontFamily: "Pretendard, -apple-system, sans-serif",
         padding: "40px 20px",
         boxSizing: "border-box",
@@ -29,7 +29,7 @@ export default function Home({ onNavigate }) {
         <h1 style={{ fontFamily: "'Gowun Batang', serif", fontWeight: 400, fontSize: 22, marginBottom: 6 }}>
           오늘은 무엇을 해볼까요?
         </h1>
-        <p style={{ color: "#7d7489", fontSize: 13, marginBottom: 28 }}>
+        <p style={{ color: "#5f6354", fontSize: 13, marginBottom: 28 }}>
           Lectio {lectioDone ? "완료" : "미완료"} · Meditatio {meditatioDone ? "완료" : "미완료"}
         </p>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -41,15 +41,15 @@ export default function Home({ onNavigate }) {
                 textAlign: "left",
                 padding: "18px 18px",
                 borderRadius: 3,
-                background: "rgba(236,231,222,0.035)",
-                border: "1px solid rgba(236,231,222,0.14)",
-                color: "#ece7de",
+                background: "rgba(49,53,45,0.035)",
+                border: "1px solid rgba(49,53,45,0.14)",
+                color: "#31352d",
                 cursor: "pointer",
                 fontFamily: "inherit",
               }}
             >
               <div style={{ fontFamily: "'Gowun Batang', serif", fontSize: 16 }}>{item.title}</div>
-              <div style={{ fontSize: 12.5, color: "#7d7489", marginTop: 4 }}>{item.desc}</div>
+              <div style={{ fontSize: 12.5, color: "#5f6354", marginTop: 4 }}>{item.desc}</div>
             </button>
           ))}
         </div>

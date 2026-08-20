@@ -91,7 +91,7 @@ const CSS = `
 .mv-opt.sel { background: rgba(28,26,23,0.13); border-color: var(--open); color: #1c1a17; }
 .mv-hint { font-size: 12px; color: var(--muted); margin: -12px 0 18px; }
 
-.mv-next { width: 100%; padding: 15px; border-radius: 2px; background: var(--open); border: none; color: #eae6da; font-weight: 600; font-size: 14.5px; cursor: pointer; font-family: inherit; }
+.mv-next { width: 100%; padding: 15px; border-radius: 2px; background: rgba(28,26,23,0.92); border: none; color: #eae6da; font-weight: 600; font-size: 14.5px; cursor: pointer; font-family: inherit; }
 .mv-next:disabled { background: rgba(49,53,45,0.07); color: var(--muted); cursor: default; }
 .mv-skip { width: 100%; padding: 12px; margin-top: 8px; background: none; border: none; color: var(--muted); font-size: 12.5px; cursor: pointer; text-decoration: underline; }
 

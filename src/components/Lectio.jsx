@@ -287,15 +287,32 @@ const CSS = `
 .lc-tick { width: 12px; height: 2px; background: var(--line); border-radius: 2px; }
 .lc-tick.done { background: rgba(28,26,23, 0.7); }
 .lc-tick.now { background: var(--open); }
-.lc-stage { display: flex; align-items: center; justify-content: center; position: relative; min-height: 220px; margin-top: 24px; }
+.lc-stage { display: flex; align-items: center; justify-content: center; position: relative; min-height: 240px; margin-top: 24px; }
+.lc-deck { position: relative; width: 88%; max-width: 330px; min-height: 220px; }
+.lc-deck-ghost {
+  position: absolute; inset: 0; border: 1px solid rgba(28,26,23,0.08);
+  border-radius: 2px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.lc-postmark { position: absolute; top: 8px; right: 6px; transform: rotate(-9deg); filter: url(#lc-postmark-ink); opacity: 0.22; }
 .lc-card {
-  position: relative; width: 88%; max-width: 330px; min-height: 220px;
+  position: relative; min-height: 220px;
   background: #f5f2e6; overflow: hidden;
   color: var(--ink); border-radius: 2px; display: flex; align-items: center; justify-content: center;
   padding: 34px 26px; box-sizing: border-box; text-align: center;
   border: 1px solid rgba(28,26,23,0.14);
-  box-shadow: 0 16px 32px rgba(0,0,0,0.22);
-  transform: rotate(-1.2deg);
+  box-shadow: 0 16px 32px rgba(0,0,0,0.24);
+  mask-image:
+    radial-gradient(circle 3px at 14px 0px, transparent 3px, black 3.5px),
+    radial-gradient(circle 3px at 38px 0px, transparent 3px, black 3.5px),
+    radial-gradient(circle 3px at 62px 0px, transparent 3px, black 3.5px),
+    radial-gradient(circle 3px at 86px 0px, transparent 3px, black 3.5px),
+    radial-gradient(circle 3px at 110px 0px, transparent 3px, black 3.5px);
+  -webkit-mask-image:
+    radial-gradient(circle 3px at 14px 0px, transparent 3px, black 3.5px),
+    radial-gradient(circle 3px at 38px 0px, transparent 3px, black 3.5px),
+    radial-gradient(circle 3px at 62px 0px, transparent 3px, black 3.5px),
+    radial-gradient(circle 3px at 86px 0px, transparent 3px, black 3.5px),
+    radial-gradient(circle 3px at 110px 0px, transparent 3px, black 3.5px);
 }
 .lc-card-text { position: relative; font-family: Pretendard, sans-serif; font-size: 22px; line-height: 1.6; white-space: pre-line; font-weight: 500; letter-spacing: -0.01em; }
 .lc-actions { display: flex; gap: 10px; margin-top: 18px; }
@@ -311,7 +328,7 @@ const CSS = `
 }
 .lc-opt.sel { background: rgba(28,26,23,0.13); border-color: var(--open); color: #1c1a17; }
 .lc-opt.last { color: var(--muted); }
-.lc-next { width: 100%; padding: 16px; border-radius: 2px; margin-top: 4px; background: var(--open); border: none; color: #eae6da; font-weight: 600; font-size: 15px; font-family: inherit; cursor: pointer; }
+.lc-next { width: 100%; padding: 16px; border-radius: 2px; margin-top: 4px; background: rgba(28,26,23,0.92); border: none; color: #eae6da; font-weight: 600; font-size: 15px; font-family: inherit; cursor: pointer; }
 .lc-next:disabled { background: rgba(49,53,45,0.07); color: var(--muted); cursor: default; }
 .lc-count { display: flex; gap: 12px; margin: 4px 0 0; }
 .lc-count-box { flex: 1; border: 1px solid var(--line); border-radius: 2px; padding: 18px 14px; }
@@ -327,6 +344,36 @@ const CSS = `
 .lc-foot { text-align: center; margin-top: 26px; }
 .lc-restart { background: none; border: none; color: var(--muted); font-size: 12px; cursor: pointer; text-decoration: underline; }
 `;
+
+// 카드마다 매번 똑같은 각도면 "의도한 기울기"가 아니라 "깨진 정렬"처럼 보인다.
+// idx에 따라 순환하며 다른 각도를 준다.
+const CARD_ANGLES = [-2.4, 1.8, -1.3, 2.6, -3.1, 1.1, -1.8, 2.2];
+
+// 뒤에 쌓인 카드 — idx가 늘어날수록 한 장씩 붙되 4장에서 멈춘다(그 이상은 항상 "두꺼운 더미").
+const GHOST_LAYERS = [
+  { bg: "#ece7d6", rotate: -3.5, tx: -2, ty: 3 },
+  { bg: "#e6e1d0", rotate: 6, tx: 4, ty: 6 },
+  { bg: "#e0dbc7", rotate: -7, tx: -5, ty: 8 },
+  { bg: "#dad4bd", rotate: 8.5, tx: 6, ty: 10 },
+];
+
+function Postmark({ number }) {
+  return (
+    <svg width="64" height="52" viewBox="0 0 64 52" className="lc-postmark" aria-hidden="true">
+      <circle cx="22" cy="22" r="16" fill="none" stroke="#a13d2e" strokeWidth="1.3" />
+      <circle cx="22" cy="22" r="12.5" fill="none" stroke="#a13d2e" strokeWidth="0.8" />
+      <text x="22" y="26" textAnchor="middle" fontFamily="Pretendard" fontSize="13" fontWeight="800" fill="#a13d2e">
+        {number}
+      </text>
+      <path d="M6 8 Q10 4 14 8 T22 8 T30 8" stroke="#a13d2e" strokeWidth="0.6" fill="none" />
+      <path d="M6 36 Q10 32 14 36 T22 36 T30 36" stroke="#a13d2e" strokeWidth="0.6" fill="none" />
+      <line x1="40" y1="12" x2="60" y2="6" stroke="#a13d2e" strokeWidth="1" />
+      <line x1="40" y1="20" x2="62" y2="16" stroke="#a13d2e" strokeWidth="1" />
+      <line x1="40" y1="28" x2="62" y2="30" stroke="#a13d2e" strokeWidth="1" />
+      <line x1="40" y1="36" x2="60" y2="42" stroke="#a13d2e" strokeWidth="1" />
+    </svg>
+  );
+}
 
 const shuffle = (arr) => {
   const a = [...arr];
@@ -472,9 +519,28 @@ export default function Lectio({ onComplete }) {
               ))}
             </div>
             <div className="lc-stage">
-              <div className="lc-card">
-                <PaperGrain seed={7} baseFrequency={0.9} octaves={2} opacity={0.1} />
-                <span className="lc-card-text">{order[idx].label}</span>
+              <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
+                <filter id="lc-postmark-ink">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4" result="n" />
+                  <feDisplacementMap in="SourceGraphic" in2="n" scale="1.5" />
+                </filter>
+              </svg>
+              <div className="lc-deck">
+                {Array.from({ length: Math.min(idx, GHOST_LAYERS.length) }, (_, i) => Math.min(idx, GHOST_LAYERS.length) - 1 - i).map((layerIdx) => {
+                  const layer = GHOST_LAYERS[layerIdx];
+                  return (
+                    <div
+                      key={layerIdx}
+                      className="lc-deck-ghost"
+                      style={{ background: layer.bg, transform: `rotate(${layer.rotate}deg) translate(${layer.tx}px, ${layer.ty}px)` }}
+                    />
+                  );
+                })}
+                <div className="lc-card" style={{ transform: `rotate(${CARD_ANGLES[idx % CARD_ANGLES.length]}deg)` }}>
+                  <PaperGrain seed={7} baseFrequency={0.9} octaves={2} opacity={0.1} />
+                  <Postmark number={String(idx + 1).padStart(2, "0")} />
+                  <span className="lc-card-text">{order[idx].label}</span>
+                </div>
               </div>
             </div>
             <div className="lc-actions">

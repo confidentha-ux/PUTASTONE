@@ -49,7 +49,7 @@ export default function Speculum({ onNavigate, currentJudgment }) {
       // 이론상 일어나지 않아야 하지만(registry와 personas/index.js가 어긋난 경우 대비) 방어적으로 처리.
       return (
         <Shell>
-          <h1 style={titleStyle}>Speculum</h1>
+          <h1 style={titleStyle}>다른 역할 입어보기</h1>
           <p style={bodyStyle}>이 페르소나({openPersonaId})의 컴포넌트를 찾지 못했습니다.</p>
           <button style={primaryButtonStyle} onClick={() => setOpenPersonaId(null)}>돌아가기</button>
         </Shell>
@@ -121,16 +121,17 @@ export default function Speculum({ onNavigate, currentJudgment }) {
   if (!meditatioDerived) {
     return (
       <Shell>
-        <h1 style={titleStyle}>Speculum</h1>
+        <h1 style={titleStyle}>다른 역할 입어보기</h1>
         <p style={bodyStyle}>
-          Speculum은 Meditatio에서 읽은 판단 기준을 바탕으로, 지금의 판단을 다른 렌즈로 다시 보게 해줍니다.
+          다른 역할 입어보기는 나는 어떻게 판단하는가에서 읽은 판단 기준을 바탕으로, 지금의 판단을 다른
+          렌즈로 다시 보게 해줍니다.
         </p>
         <p style={{ ...bodyStyle, color: "#5f6354" }}>
-          아직 Meditatio를 완료하지 않아서, 어떤 렌즈를 열어야 할지 정할 근거가 없습니다. Meditatio를 먼저
+          아직 나는 어떻게 판단하는가를 완료하지 않아서, 어떤 렌즈를 열어야 할지 정할 근거가 없습니다. 먼저
           완료해 주세요.
         </p>
         <button style={primaryButtonStyle} onClick={() => onNavigate("meditatio")}>
-          Meditatio 하러 가기
+          나는 어떻게 판단하는가 하러 가기
         </button>
       </Shell>
     );
@@ -139,7 +140,7 @@ export default function Speculum({ onNavigate, currentJudgment }) {
   if (!initialJudgment) {
     return (
       <Shell>
-        <h1 style={titleStyle}>Speculum</h1>
+        <h1 style={titleStyle}>다른 역할 입어보기</h1>
         <p style={bodyStyle}>
           어떤 질문을 얹을지 정하기 전에, 지금 실제로 고민 중인 문제와 그 문제에 대한 현재 판단을 먼저
           받아야 합니다.
@@ -217,7 +218,8 @@ function Shell({ children }) {
   return (
     <div
       style={{
-        minHeight: "100%",
+        flex: 1,
+        minHeight: 0,
         background: "#e4e2db",
         color: "#31352d",
         fontFamily: "Pretendard, -apple-system, sans-serif",

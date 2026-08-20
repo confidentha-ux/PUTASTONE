@@ -270,7 +270,7 @@ const CSS = `
 .lc-root {
   --ground: #e4e2db; --paper: #31352d; --ink: #31352d; --ink-soft: #5f6354;
   --muted: #5f6354; --open: #5c7a5e; --line: rgba(49,53,45, 0.14);
-  min-height: 100%;
+  flex: 1; min-height: 0;
   background: radial-gradient(120% 90% at 50% 0%, #f2f0ea 0%, var(--ground) 62%);
   color: var(--paper); font-family: Pretendard, -apple-system, sans-serif;
   display: flex; flex-direction: column; align-items: center; padding: 28px 20px 40px; box-sizing: border-box;

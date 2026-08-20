@@ -24,7 +24,8 @@ export default function Start({ onStart }) {
   return (
     <div
       style={{
-        minHeight: "100%",
+        flex: 1,
+        minHeight: 0,
         background: "radial-gradient(120% 90% at 50% 0%, #f2f0ea 0%, #e4e2db 62%)",
         color: "#31352d",
         fontFamily: "Pretendard, -apple-system, sans-serif",

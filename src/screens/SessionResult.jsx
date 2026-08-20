@@ -49,7 +49,8 @@ function Shell({ children }) {
   return (
     <div
       style={{
-        minHeight: "100%",
+        flex: 1,
+        minHeight: 0,
         background: "#e4e2db",
         color: "#31352d",
         fontFamily: "Pretendard, -apple-system, sans-serif",

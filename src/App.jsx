@@ -17,9 +17,9 @@ import MeditatioV1 from "./components/MeditatioV1";
 
 const NAV = [
   { key: "home", label: "홈" },
-  { key: "lectio", label: "Lectio" },
-  { key: "meditatio", label: "Meditatio" },
-  { key: "speculum", label: "Speculum" },
+  { key: "lectio", label: "선택" },
+  { key: "meditatio", label: "판단" },
+  { key: "speculum", label: "다른 역할" },
   { key: "studiolo", label: "현재의 돌탑" },
 ];
 
@@ -42,7 +42,7 @@ export default function App() {
             display: "flex",
             gap: 4,
             padding: "10px 16px",
-            background: "#0f0d14",
+            background: "#f2f0ea",
             borderBottom: "1px solid rgba(49,53,45,0.1)",
           }}
         >
@@ -67,7 +67,7 @@ export default function App() {
         </div>
       )}
 
-      <div style={{ flex: 1 }}>
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
         {screen === "start" && <Start onStart={() => goTo("lectio")} />}
         {screen === "home" && <Home onNavigate={goTo} />}
         {screen === "lectio" && <Lectio onComplete={() => goTo("meditatio")} />}

@@ -2,8 +2,8 @@ import React from "react";
 import { useUserState } from "../state/UserStateContext";
 
 const NAV_ITEMS = [
-  { key: "lectio", title: "내가 할 수 있는 선택", desc: "Lectio — 지금 자연스럽게 할 수 있는 선택을 확인합니다" },
-  { key: "meditatio", title: "나는 어떻게 판단하는가?", desc: "Meditatio — 내가 판단하는 방식을 살펴봅니다" },
+  { key: "lectio", title: "내가 할 수 있는 선택", desc: "지금 자연스럽게 할 수 있는 선택을 확인합니다" },
+  { key: "meditatio", title: "나는 어떻게 판단하는가?", desc: "내가 판단하는 방식을 살펴봅니다" },
   { key: "speculum", title: "다른 역할 입어보기", desc: "지금의 판단에 다른 질문을 얹어봅니다" },
   { key: "studiolo", title: "현재의 돌탑", desc: "지금까지 얹은 돌과, 쌓이면서 드러난 것" },
 ];
@@ -17,7 +17,8 @@ export default function Home({ onNavigate }) {
   return (
     <div
       style={{
-        minHeight: "100%",
+        flex: 1,
+        minHeight: 0,
         background: "#e4e2db",
         color: "#31352d",
         fontFamily: "Pretendard, -apple-system, sans-serif",
@@ -30,7 +31,7 @@ export default function Home({ onNavigate }) {
           오늘은 무엇을 해볼까요?
         </h1>
         <p style={{ color: "#5f6354", fontSize: 13, marginBottom: 28 }}>
-          Lectio {lectioDone ? "완료" : "미완료"} · Meditatio {meditatioDone ? "완료" : "미완료"}
+          내가 할 수 있는 선택 {lectioDone ? "완료" : "미완료"} · 나는 어떻게 판단하는가 {meditatioDone ? "완료" : "미완료"}
         </p>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {NAV_ITEMS.map((item) => (

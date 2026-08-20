@@ -41,7 +41,7 @@ const CSS = `
 .mv-root {
   --ground: #e4e2db; --paper: #31352d; --ink: #31352d; --muted: #5f6354;
   --open: #5c7a5e; --line: rgba(49,53,45,0.14);
-  min-height: 100%;
+  flex: 1; min-height: 0;
   background: radial-gradient(120% 90% at 50% 0%, #f2f0ea 0%, var(--ground) 62%);
   color: var(--paper); font-family: Pretendard, -apple-system, sans-serif;
   display: flex; flex-direction: column; align-items: center; padding: 28px 20px 44px; box-sizing: border-box;
@@ -197,25 +197,23 @@ export default function MeditatioV1({ onComplete }) {
         <div className="mv-eyebrow">돌 하나를 얹다</div>
 
         {view === "intro" && (
-          <div className="mv-intro">
-            <div>
-              <h1 className="mv-open-h1">나는 어떻게 판단하는가?</h1>
-              <p className="mv-open-desc">
-                내가 무엇을 보고, 무엇을 기억하며, 어떤 과정을 거쳐 판단을 내리는지 살펴봅니다.
-              </p>
+          <>
+            <div className="mv-intro">
+              <div>
+                <h1 className="mv-open-h1">나는 어떻게 판단하는가?</h1>
+                <p className="mv-open-desc">
+                  내가 무엇을 보고, 무엇을 기억하며, 어떤 과정을 거쳐 판단을 내리는지 살펴봅니다.
+                </p>
+              </div>
             </div>
-            <button className="mv-next" onClick={() => setView("home")}>
+            <button className="mv-next" style={{ marginTop: 24 }} onClick={() => setView("home")}>
               시작하기
             </button>
-          </div>
+          </>
         )}
 
         {view === "home" && (
           <div className="mv-intro">
-            <div>
-              <h1>Meditatio</h1>
-              <div className="sub">Read the Judgment</div>
-            </div>
             <p>
               4개의 장, 총 {TOTAL_QUESTIONS}문항입니다.
               <br />

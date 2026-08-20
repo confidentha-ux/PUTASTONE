@@ -17,7 +17,7 @@ function formatSessionDate(timestamp) {
 }
 
 const CSS = `
-.st-root { min-height: 100%; background: #e4e2db; color: #31352d; font-family: Pretendard, -apple-system, sans-serif; padding: 32px 20px 60px; box-sizing: border-box; }
+.st-root { flex: 1; min-height: 0; background: #e4e2db; color: #31352d; font-family: Pretendard, -apple-system, sans-serif; padding: 32px 20px 60px; box-sizing: border-box; }
 .st-shell { max-width: 560px; margin: 0 auto; }
 .st-title { font-family: 'Gowun Batang', serif; font-size: 26px; margin: 0 0 6px; }
 .st-sub { color: #5f6354; font-size: 13px; margin: 0 0 32px; }
@@ -47,9 +47,9 @@ export default function Studiolo() {
         <p className="st-sub">처음 판단과 지금까지 쌓인 판단 사이에서 확인된 것들.</p>
 
         <div className="st-section">
-          <h2>I. 내가 열어둔 판단 공간 — Lectio</h2>
+          <h2>I. 내가 열어둔 판단 공간</h2>
           {lectio.items.length === 0 ? (
-            <div className="st-empty">아직 Lectio를 완료하지 않았습니다.</div>
+            <div className="st-empty">아직 내가 할 수 있는 선택을 완료하지 않았습니다.</div>
           ) : (
             <div className="st-card">
               자연스럽게 가능한 행동 {openItems.length}개, 조건이 붙는 행동 {closedItems.length}개.
@@ -70,9 +70,9 @@ export default function Studiolo() {
         </div>
 
         <div className="st-section">
-          <h2>II · III. 판단이 만들어지는 방식 / 중요한 순간의 판단 — Meditatio</h2>
+          <h2>II · III. 판단이 만들어지는 방식 / 중요한 순간의 판단</h2>
           {!meditatio.derived ? (
-            <div className="st-empty">아직 Meditatio를 완료하지 않았습니다.</div>
+            <div className="st-empty">아직 나는 어떻게 판단하는가를 완료하지 않았습니다.</div>
           ) : (
             <div className="st-card">{meditatio.derived.narrative}</div>
           )}
@@ -99,7 +99,7 @@ export default function Studiolo() {
           <h2>쌓이면서 드러난 것</h2>
           {judgmentPaths.length === 0 ? (
             <div className="st-empty">
-              Judgment Path는 Speculum 세션이 쌓인 뒤에 생성됩니다(Final Analysis Architecture v1.2 — Evidence Rule).
+              여러 번의 판단 경험이 쌓인 뒤에, 반복해서 나타나는 흐름이 여기 보입니다.
             </div>
           ) : (
             judgmentPaths.map((p) => (

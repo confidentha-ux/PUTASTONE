@@ -2,6 +2,8 @@ import React, { useMemo, useState } from "react";
 import { MEDITATIO_SECTIONS } from "../data/meditatioV1";
 import { deriveMeditatioResult, DOMAIN_COPY } from "../state/deriveMeditatio";
 import { useUserState } from "../state/UserStateContext";
+import { PaperGrain } from "./PaperGrain";
+import { SectionMark } from "./SectionMark";
 
 // Section을 "그룹" 단위로 평탄화한다.
 // Section 2(카드 5개)는 카드 하나가 그룹, Section 1/3/4는 Section 전체가 그룹 하나.
@@ -39,10 +41,11 @@ const CSS = `
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
 
 .mv-root {
-  --ground: #e4e2db; --paper: #31352d; --ink: #31352d; --muted: #5f6354;
-  --open: #5c7a5e; --line: rgba(49,53,45,0.14);
+  --ground: #eae6da; --paper: #1c1a17; --ink: #1c1a17; --muted: #847c6b;
+  --open: #1c1a17; --line: rgba(49,53,45,0.14);
+  position: relative;
   flex: 1; min-height: 0;
-  background: radial-gradient(120% 90% at 50% 0%, #f2f0ea 0%, var(--ground) 62%);
+  background: radial-gradient(120% 90% at 50% 0%, #f2eee0 0%, var(--ground) 62%);
   color: var(--paper); font-family: Pretendard, -apple-system, sans-serif;
   display: flex; flex-direction: column; align-items: center; padding: 28px 20px 44px; box-sizing: border-box;
 }
@@ -50,15 +53,15 @@ const CSS = `
 .mv-eyebrow { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); text-align: center; margin-bottom: 18px; }
 
 .mv-intro { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 24px; text-align: center; }
-.mv-intro h1 { font-family: 'Source Serif 4', serif;  font-weight: 500; font-size: 42px; line-height: 1.3; margin: 0; letter-spacing: 0.02em; }
+.mv-intro h1 { font-family: Pretendard, sans-serif;  font-weight: 500; font-size: 42px; line-height: 1.3; margin: 0; letter-spacing: 0.02em; }
 .mv-intro .sub { font-size: 13px; color: var(--muted); margin-top: 8px; }
-.mv-intro p { color: var(--muted); font-size: 14px; line-height: 1.85; margin: 0; }
+.mv-intro p { color: var(--muted); font-weight: 300; font-size: 14px; line-height: 2; letter-spacing: 0.01em; margin: 0; }
 
-.mv-open-h1 { font-family: 'Gowun Batang', serif; font-weight: 400; font-size: 24px; line-height: 1.4; margin: 0 0 14px; }
-.mv-open-desc { color: var(--muted); font-size: 14px; line-height: 1.85; margin: 0; }
+.mv-open-h1 { font-family: Pretendard, sans-serif; font-weight: 800; letter-spacing: -0.02em; font-size: 24px; line-height: 1.3; margin: 0 0 14px; }
+.mv-open-desc { color: var(--muted); font-weight: 300; font-size: 14px; line-height: 2; letter-spacing: 0.01em; margin: 0; }
 
 .mv-back { background: none; border: none; color: var(--muted); font-size: 12px; cursor: pointer; margin-bottom: 16px; padding: 0; text-align: left; }
-.mv-section-h { font-family: 'Gowun Batang', serif; font-size: 18px; margin: 0 0 4px; font-weight: 400; }
+.mv-section-h { font-family: Pretendard, sans-serif; font-size: 18px; margin: 0 0 4px; font-weight: 700; }
 .mv-section-tag { font-size: 11px; color: var(--open); letter-spacing: 0.1em; margin-bottom: 20px; display: block; }
 
 .mv-cardlist { display: flex; flex-direction: column; gap: 8px; }
@@ -76,7 +79,7 @@ const CSS = `
 .mv-progress-fill { height: 100%; background: var(--open); transition: width 300ms; }
 .mv-progress-label { font-size: 11px; color: var(--muted); margin-top: 8px; text-align: center; }
 
-.mv-q { font-family: 'Gowun Batang', serif; font-size: 18px; line-height: 1.65; margin: 0 0 18px; font-weight: 400; }
+.mv-q { font-family: Pretendard, sans-serif; font-size: 18px; line-height: 1.65; margin: 0 0 18px; font-weight: 400; }
 .mv-opts { display: flex; flex-direction: column; gap: 8px; margin-bottom: 22px; }
 .mv-opt {
   text-align: left; padding: 14px 16px; border-radius: 2px; cursor: pointer;
@@ -84,17 +87,17 @@ const CSS = `
   color: var(--paper); font-size: 14px; line-height: 1.6; font-family: inherit;
 }
 .mv-opt:hover { background: rgba(49,53,45,0.07); }
-.mv-opt.sel { background: rgba(92,122,94,0.13); border-color: var(--open); color: #2f4530; }
+.mv-opt.sel { background: rgba(28,26,23,0.13); border-color: var(--open); color: #1c1a17; }
 .mv-hint { font-size: 12px; color: var(--muted); margin: -12px 0 18px; }
 
-.mv-next { width: 100%; padding: 15px; border-radius: 2px; background: var(--open); border: none; color: #f2f4ef; font-weight: 600; font-size: 14.5px; cursor: pointer; font-family: inherit; }
+.mv-next { width: 100%; padding: 15px; border-radius: 2px; background: var(--open); border: none; color: #eae6da; font-weight: 600; font-size: 14.5px; cursor: pointer; font-family: inherit; }
 .mv-next:disabled { background: rgba(49,53,45,0.07); color: var(--muted); cursor: default; }
 .mv-skip { width: 100%; padding: 12px; margin-top: 8px; background: none; border: none; color: var(--muted); font-size: 12.5px; cursor: pointer; text-decoration: underline; }
 
 .mv-result { display: flex; flex-direction: column; gap: 18px; }
-.mv-result h2 { font-family: 'Gowun Batang', serif; font-weight: 400; font-size: 20px; margin: 0; }
+.mv-result h2 { font-family: Pretendard, sans-serif; font-weight: 700; font-size: 20px; margin: 0; }
 .mv-result-card { background: linear-gradient(160deg,#f7f5ee,#ddd8ca); color: var(--ink); border-radius: 3px; padding: 18px 20px;
-  font-family:'Gowun Batang',serif; font-size:14.5px; line-height:1.85; box-shadow: 0 6px 18px rgba(0,0,0,.25); white-space: pre-line; }
+  font-family:Pretendard,sans-serif; font-size:14.5px; line-height:1.85; box-shadow: 0 6px 18px rgba(0,0,0,.25); white-space: pre-line; }
 .mv-affect-tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .mv-affect-tag { font-size: 11px; padding: 4px 9px; border-radius: 20px; border: 1px solid var(--line); color: var(--muted); }
 .mv-restart { width: 100%; padding: 14px; margin-top: 8px; background: transparent; border: 1px solid var(--line); color: var(--muted); font-size: 13px; cursor: pointer; border-radius: 2px; font-family: inherit; }
@@ -193,16 +196,17 @@ export default function MeditatioV1({ onComplete }) {
   return (
     <div className="mv-root">
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
+      <PaperGrain seed={11} baseFrequency={0.55} octaves={3} opacity={0.07} />
       <div className="mv-shell">
-        <div className="mv-eyebrow">돌 하나를 얹다</div>
+        <SectionMark number="02" title="나는 어떻게 판단하는가" />
 
         {view === "intro" && (
           <>
             <div className="mv-intro">
               <div>
-                <h1 className="mv-open-h1">나는 어떻게 판단하는가?</h1>
                 <p className="mv-open-desc">
-                  내가 무엇을 보고, 무엇을 기억하며, 어떤 과정을 거쳐 판단을 내리는지 살펴봅니다.
+                  <span style={{ fontSize: 26, fontWeight: 800, color: "#1c1a17", float: "left", lineHeight: 0.8, margin: "4px 4px 0 0" }}>내</span>
+                  가 무엇을 보고, 무엇을 기억하며, 어떤 과정을 거쳐 판단을 내리는지 살펴봅니다.
                 </p>
               </div>
             </div>

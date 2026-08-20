@@ -42,7 +42,7 @@ export default function App() {
             display: "flex",
             gap: 4,
             padding: "10px 16px",
-            background: "#f2f0ea",
+            background: "#f2eee0",
             borderBottom: "1px solid rgba(49,53,45,0.1)",
           }}
         >
@@ -52,10 +52,10 @@ export default function App() {
               onClick={() => goTo(item.key)}
               style={{
                 padding: "6px 12px",
-                borderRadius: 20,
+                borderRadius: 2,
                 border: "none",
-                background: screen === item.key ? "#5c7a5e" : "transparent",
-                color: screen === item.key ? "#f2f4ef" : "#5f6354",
+                background: screen === item.key ? "#1c1a17" : "transparent",
+                color: screen === item.key ? "#eae6da" : "#847c6b",
                 fontSize: 12.5,
                 cursor: "pointer",
                 fontFamily: "Pretendard, sans-serif",

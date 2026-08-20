@@ -51,8 +51,8 @@ function Shell({ children }) {
       style={{
         flex: 1,
         minHeight: 0,
-        background: "#e4e2db",
-        color: "#31352d",
+        background: "#eae6da",
+        color: "#1c1a17",
         fontFamily: "Pretendard, -apple-system, sans-serif",
         padding: "40px 20px",
         boxSizing: "border-box",
@@ -63,8 +63,8 @@ function Shell({ children }) {
   );
 }
 
-const titleStyle = { fontFamily: "'Gowun Batang', serif", fontWeight: 400, fontSize: 22, marginBottom: 20 };
-const labelStyle = { fontSize: 12.5, color: "#5f6354", marginBottom: 8 };
+const titleStyle = { fontFamily: "Pretendard, sans-serif", fontWeight: 400, fontSize: 22, marginBottom: 20 };
+const labelStyle = { fontSize: 12.5, color: "#847c6b", marginBottom: 8 };
 const quoteBoxStyle = {
   padding: "12px 14px",
   borderRadius: 3,
@@ -78,8 +78,8 @@ const primaryButtonStyle = {
   padding: "12px 20px",
   borderRadius: 3,
   border: "none",
-  background: "#5c7a5e",
-  color: "#f2f4ef",
+  background: "#1c1a17",
+  color: "#eae6da",
   fontSize: 13.5,
   cursor: "pointer",
   fontFamily: "inherit",

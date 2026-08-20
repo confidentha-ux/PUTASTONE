@@ -19,18 +19,18 @@ export default function Home({ onNavigate }) {
       style={{
         flex: 1,
         minHeight: 0,
-        background: "#e4e2db",
-        color: "#31352d",
+        background: "#eae6da",
+        color: "#1c1a17",
         fontFamily: "Pretendard, -apple-system, sans-serif",
         padding: "40px 20px",
         boxSizing: "border-box",
       }}
     >
       <div style={{ maxWidth: 420, margin: "0 auto" }}>
-        <h1 style={{ fontFamily: "'Gowun Batang', serif", fontWeight: 400, fontSize: 22, marginBottom: 6 }}>
+        <h1 style={{ fontFamily: "Pretendard, sans-serif", fontWeight: 400, fontSize: 22, marginBottom: 6 }}>
           오늘은 무엇을 해볼까요?
         </h1>
-        <p style={{ color: "#5f6354", fontSize: 13, marginBottom: 28 }}>
+        <p style={{ color: "#847c6b", fontSize: 13, marginBottom: 28 }}>
           내가 할 수 있는 선택 {lectioDone ? "완료" : "미완료"} · 나는 어떻게 판단하는가 {meditatioDone ? "완료" : "미완료"}
         </p>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -44,13 +44,13 @@ export default function Home({ onNavigate }) {
                 borderRadius: 3,
                 background: "rgba(49,53,45,0.035)",
                 border: "1px solid rgba(49,53,45,0.14)",
-                color: "#31352d",
+                color: "#1c1a17",
                 cursor: "pointer",
                 fontFamily: "inherit",
               }}
             >
-              <div style={{ fontFamily: "'Gowun Batang', serif", fontSize: 16 }}>{item.title}</div>
-              <div style={{ fontSize: 12.5, color: "#5f6354", marginTop: 4 }}>{item.desc}</div>
+              <div style={{ fontFamily: "Pretendard, sans-serif", fontSize: 16 }}>{item.title}</div>
+              <div style={{ fontSize: 12.5, color: "#847c6b", marginTop: 4 }}>{item.desc}</div>
             </button>
           ))}
         </div>

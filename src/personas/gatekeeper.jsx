@@ -3,19 +3,19 @@ import { mockCallClaude } from "../speculum/aiStub";
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=Gowun+Batang:wght@400;700&display=swap');
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
-.gd-root { --ground:#e4e2db; --paper:#31352d; --ink:#31352d; --muted:#5f6354; --open:#5c7a5e; --line:rgba(49,53,45,.14);
-  flex: 1; min-height: 0; background:radial-gradient(120% 90% at 50% 0%,#f2f0ea 0%,var(--ground) 62%); color:var(--paper);
+.gd-root { --ground:#eae6da; --paper:#1c1a17; --ink:#1c1a17; --muted:#847c6b; --open:#1c1a17; --line:rgba(49,53,45,.14);
+  flex: 1; min-height: 0; background:radial-gradient(120% 90% at 50% 0%,#f2eee0 0%,var(--ground) 62%); color:var(--paper);
   font-family:Pretendard,-apple-system,sans-serif; display:flex; flex-direction:column; align-items:center; padding:28px 20px 44px; box-sizing:border-box; }
 .gd-shell { width:100%; max-width:460px; display:flex; flex-direction:column; flex:1; }
 .gd-eyebrow { font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); text-align:center; margin-bottom:6px; }
 .gd-persona { text-align:center; margin-bottom:24px; }
-.gd-persona h1 { font-family:'Source Serif 4',serif;  font-size:32px; margin:0; font-weight:500; }
+.gd-persona h1 { font-family:Pretendard,sans-serif;  font-size:32px; margin:0; font-weight:500; }
 .gd-persona .en { font-size:12px; color:var(--muted); margin-top:4px; }
-.gd-tagline { font-family:'Gowun Batang',serif; font-size:16px; line-height:1.6; color:var(--paper); text-align:center; margin:0 0 24px; }
-.gd-persona-header { font-family:'Gowun Batang',serif; font-size:15px; line-height:1.6; color:#2f4530; text-align:center; margin:0 0 20px; font-weight:600; }
-.gd-subject { font-size:12px; color:var(--open); border-left:2px solid rgba(92,122,94,.5); padding-left:10px; margin-bottom:20px; line-height:1.6; }
+.gd-tagline { font-family:Pretendard,sans-serif; font-size:16px; line-height:1.6; color:var(--paper); text-align:center; margin:0 0 24px; }
+.gd-persona-header { font-family:Pretendard,sans-serif; font-size:15px; line-height:1.6; color:#1c1a17; text-align:center; margin:0 0 20px; font-weight:600; }
+.gd-subject { font-size:12px; color:var(--open); border-left:2px solid rgba(28,26,23,.5); padding-left:10px; margin-bottom:20px; line-height:1.6; }
 .gd-step-label { font-size:11px; color:var(--muted); letter-spacing:.08em; margin-bottom:8px; }
-.gd-q { font-family:'Gowun Batang',serif; font-size:18px; line-height:1.65; margin:0 0 6px; font-weight:400; }
+.gd-q { font-family:Pretendard,sans-serif; font-size:18px; line-height:1.65; margin:0 0 6px; font-weight:400; }
 .gd-hint { font-size:12.5px; color:var(--muted); margin:0 0 16px; line-height:1.6; }
 .gd-textarea { width:100%; min-height:80px; background:rgba(49,53,45,.04); border:1px solid var(--line);
   border-radius:2px; color:var(--paper); font-family:inherit; font-size:14px; padding:14px 15px; box-sizing:border-box; resize:vertical; margin-bottom:16px; }
@@ -24,8 +24,8 @@ const CSS = `
 .gd-opt { text-align:left; padding:13px 15px; border-radius:2px; cursor:pointer; background:rgba(49,53,45,.035);
   border:1px solid var(--line); color:var(--paper); font-size:14px; font-family:inherit; }
 .gd-opt:hover { background:rgba(49,53,45,.07); }
-.gd-opt.sel { background:rgba(92,122,94,.13); border-color:var(--open); color:#2f4530; }
-.gd-next { width:100%; padding:14px; border-radius:2px; background:var(--open); border:none; color:#f2f4ef; font-weight:600; font-size:14.5px; cursor:pointer; font-family:inherit; }
+.gd-opt.sel { background:rgba(28,26,23,.13); border-color:var(--open); color:#1c1a17; }
+.gd-next { width:100%; padding:14px; border-radius:2px; background:var(--open); border:none; color:#eae6da; font-weight:600; font-size:14.5px; cursor:pointer; font-family:inherit; }
 .gd-next:disabled { background:rgba(49,53,45,.07); color:var(--muted); cursor:default; }
 .gd-back { background:none; border:none; color:var(--muted); font-size:12px; cursor:pointer; padding:0; text-align:left; flex-shrink:0; }
 .gd-actions-row { display:flex; align-items:center; gap:14px; }
@@ -35,7 +35,7 @@ const CSS = `
 .gd-summary-row { margin-bottom:12px; }
 .gd-summary-row:last-child { margin-bottom:0; }
 .gd-summary-label { font-size:10.5px; color:#6b6a5c; letter-spacing:.04em; margin-bottom:3px; }
-.gd-summary-value { font-family:'Gowun Batang',serif; font-size:14.5px; line-height:1.6; }
+.gd-summary-value { font-family:Pretendard,sans-serif; font-size:14.5px; line-height:1.6; }
 .gd-loading { text-align:center; padding:60px 0; color:var(--muted); font-size:13px; }
 .gd-loading .dot { display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--open); margin:0 3px; animation:gd-pulse 1.2s infinite ease-in-out; }
 .gd-loading .dot:nth-child(2) { animation-delay:.2s; }
@@ -44,11 +44,11 @@ const CSS = `
 .gd-result-block { margin-bottom:16px; }
 .gd-result-label { font-size:11px; color:var(--muted); letter-spacing:.06em; margin-bottom:8px; }
 .gd-result-card { background:linear-gradient(160deg,#f7f5ee,#ddd8ca); color:var(--ink); border-radius:3px; padding:16px 18px;
-  font-family:'Gowun Batang',serif; font-size:14.5px; line-height:1.7; box-shadow:0 6px 18px rgba(0,0,0,.25); }
+  font-family:Pretendard,sans-serif; font-size:14.5px; line-height:1.7; box-shadow:0 6px 18px rgba(0,0,0,.25); }
 .gd-final-label { font-size:11px; color:var(--open); letter-spacing:.06em; margin:20px 0 8px; }
-.gd-final-text { font-size:14px; line-height:1.85; color:#31352d; }
+.gd-final-text { font-size:14px; line-height:1.85; color:#1c1a17; }
 .gd-restart { width:100%; padding:14px; margin-top:24px; background:transparent; border:1px solid var(--line); color:var(--muted); font-size:13px; cursor:pointer; border-radius:2px; font-family:inherit; }
-.gd-complete { width:100%; padding:14px; margin-top:24px; background:var(--open); border:none; color:#f2f4ef; font-weight:600; font-size:14.5px; cursor:pointer; border-radius:2px; font-family:inherit; }
+.gd-complete { width:100%; padding:14px; margin-top:24px; background:var(--open); border:none; color:#eae6da; font-weight:600; font-size:14.5px; cursor:pointer; border-radius:2px; font-family:inherit; }
 `;
 
 const Q1_OPTS = ["있다.", "비슷한 일이 떠오른다.", "없다."];

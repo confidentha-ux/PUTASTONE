@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useUserState } from "../state/UserStateContext";
 import { makeLectioItemResult } from "../state/schema";
+import { PaperGrain } from "./PaperGrain";
+import { SectionMark } from "./SectionMark";
 
 // 원본 lectio-final.jsx의 ITEMS/CSS/흐름을 그대로 유지하되,
 // 결과를 컴포넌트 로컬 state에만 두지 않고 공통 User State(schema.js의 Lectio Object)로 저장하도록 바꿨다.
@@ -268,21 +270,22 @@ const AXIS_MEANING = {
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=Gowun+Batang:wght@400;700&display=swap');
 .lc-root {
-  --ground: #e4e2db; --paper: #31352d; --ink: #31352d; --ink-soft: #5f6354;
-  --muted: #5f6354; --open: #5c7a5e; --line: rgba(49,53,45, 0.14);
+  --ground: #eae6da; --paper: #1c1a17; --ink: #1c1a17; --ink-soft: #847c6b;
+  --muted: #847c6b; --open: #1c1a17; --line: rgba(49,53,45, 0.14);
+  position: relative;
   flex: 1; min-height: 0;
-  background: radial-gradient(120% 90% at 50% 0%, #f2f0ea 0%, var(--ground) 62%);
+  background: radial-gradient(120% 90% at 50% 0%, #f2eee0 0%, var(--ground) 62%);
   color: var(--paper); font-family: Pretendard, -apple-system, sans-serif;
   display: flex; flex-direction: column; align-items: center; padding: 28px 20px 40px; box-sizing: border-box;
 }
 .lc-shell { width: 100%; max-width: 420px; display: flex; flex-direction: column; flex: 1; }
 .lc-eyebrow { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); text-align: center; margin-bottom: 4px; }
 .lc-intro { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 26px; text-align: center; }
-.lc-intro h1 { font-family: 'Source Serif 4', 'Gowun Batang', serif; font-size: 26px; line-height: 1.35; margin: 0 0 18px; font-weight: 500; letter-spacing: 0.01em; }
-.lc-intro p { color: var(--muted); font-size: 14px; line-height: 1.85; margin: 0; }
+.lc-intro h1 { font-family: Pretendard, sans-serif; font-size: 26px; line-height: 1.3; margin: 0 0 18px; font-weight: 800; letter-spacing: -0.02em; }
+.lc-intro p { color: var(--muted); font-weight: 300; font-size: 14px; line-height: 2; letter-spacing: 0.01em; margin: 0; }
 .lc-progress { display: flex; justify-content: center; gap: 4px; margin-bottom: 26px; }
 .lc-tick { width: 12px; height: 2px; background: var(--line); border-radius: 2px; }
-.lc-tick.done { background: rgba(92,122,94, 0.7); }
+.lc-tick.done { background: rgba(28,26,23, 0.7); }
 .lc-tick.now { background: var(--paper); }
 .lc-stage { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; min-height: 260px; }
 .lc-card {
@@ -292,32 +295,32 @@ const CSS = `
   padding: 34px 26px; box-sizing: border-box; text-align: center;
   box-shadow: 0 18px 44px rgba(0,0,0,0.42);
 }
-.lc-card-text { font-family: 'Gowun Batang', serif; font-size: 22px; line-height: 1.6; white-space: pre-line; font-weight: 400; }
+.lc-card-text { font-family: Pretendard, sans-serif; font-size: 22px; line-height: 1.6; white-space: pre-line; font-weight: 400; }
 .lc-actions { display: flex; gap: 10px; margin-top: 30px; }
 .lc-btn { flex: 1; padding: 16px 10px; border-radius: 2px; font-size: 15px; font-family: inherit; cursor: pointer; background: rgba(49,53,45,0.06); border: 1px solid var(--line); color: var(--paper); }
 .lc-panel { flex: 1; display: flex; flex-direction: column; gap: 20px; padding-top: 8px; }
-.lc-q { font-family: 'Gowun Batang', serif; font-size: 19px; line-height: 1.62; margin: 0; font-weight: 400; }
-.lc-subject { font-size: 12px; color: var(--open); border-left: 2px solid rgba(92,122,94,0.5); padding-left: 10px; margin: 0; }
+.lc-q { font-family: Pretendard, sans-serif; font-size: 19px; line-height: 1.62; margin: 0; font-weight: 400; }
+.lc-subject { font-size: 12px; color: var(--open); border-left: 2px solid rgba(28,26,23,0.5); padding-left: 10px; margin: 0; }
 .lc-opts { display: flex; flex-direction: column; gap: 8px; }
 .lc-opt {
   text-align: left; padding: 15px 16px; border-radius: 2px; cursor: pointer;
   background: rgba(49,53,45,0.035); border: 1px solid var(--line);
   color: var(--paper); font-size: 14.5px; line-height: 1.6; font-family: inherit;
 }
-.lc-opt.sel { background: rgba(92,122,94,0.13); border-color: var(--open); color: #2f4530; }
+.lc-opt.sel { background: rgba(28,26,23,0.13); border-color: var(--open); color: #1c1a17; }
 .lc-opt.last { color: var(--muted); }
-.lc-next { width: 100%; padding: 16px; border-radius: 2px; margin-top: 4px; background: var(--open); border: none; color: #f2f4ef; font-weight: 600; font-size: 15px; font-family: inherit; cursor: pointer; }
+.lc-next { width: 100%; padding: 16px; border-radius: 2px; margin-top: 4px; background: var(--open); border: none; color: #eae6da; font-weight: 600; font-size: 15px; font-family: inherit; cursor: pointer; }
 .lc-next:disabled { background: rgba(49,53,45,0.07); color: var(--muted); cursor: default; }
 .lc-count { display: flex; gap: 12px; margin: 4px 0 0; }
 .lc-count-box { flex: 1; border: 1px solid var(--line); border-radius: 2px; padding: 18px 14px; }
-.lc-count-box .n { font-family: 'Gowun Batang', serif; font-size: 34px; line-height: 1; }
+.lc-count-box .n { font-family: Pretendard, sans-serif; font-size: 34px; line-height: 1; }
 .lc-count-box .l { font-size: 11px; color: var(--muted); margin-top: 8px; letter-spacing: 0.06em; }
 .lc-count-box.open .n { color: var(--open); }
 .lc-opened { display: flex; flex-direction: column; gap: 8px; }
-.lc-mini { padding: 15px 16px; border-radius: 2px; font-size: 14.5px; line-height: 1.5; background: linear-gradient(160deg, #f7f5ee, #ddd8ca); color: var(--ink); font-family: 'Gowun Batang', serif; }
+.lc-mini { padding: 15px 16px; border-radius: 2px; font-size: 14.5px; line-height: 1.5; background: linear-gradient(160deg, #f7f5ee, #ddd8ca); color: var(--ink); font-family: Pretendard, sans-serif; }
 .lc-note { font-size: 13px; color: var(--muted); line-height: 1.8; margin: 0; }
 .lc-cond { font-size: 12.5px; color: var(--ink-soft); margin-top: 8px; font-family: Pretendard, sans-serif; line-height: 1.6; }
-.lc-tally { background: rgba(92,122,94,.1); border: 1px solid rgba(92,122,94,.35); border-radius: 3px; padding: 14px 16px; font-size: 13px; line-height: 1.7; }
+.lc-tally { background: rgba(28,26,23,.1); border: 1px solid rgba(28,26,23,.35); border-radius: 3px; padding: 14px 16px; font-size: 13px; line-height: 1.7; }
 .lc-tally b { color: var(--open); }
 .lc-foot { text-align: center; margin-top: 26px; }
 .lc-restart { background: none; border: none; color: var(--muted); font-size: 12px; cursor: pointer; text-decoration: underline; }
@@ -442,15 +445,16 @@ export default function Lectio({ onComplete }) {
   return (
     <div className="lc-root">
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
+      <PaperGrain seed={3} />
       <div className="lc-shell">
-        <div className="lc-eyebrow">돌 하나를 얹다</div>
+        <SectionMark number="01" title="내가 할 수 있는 선택" />
 
         {screen === "intro" && (
           <>
             <div className="lc-intro">
-              <h1>내가 할 수 있는 선택</h1>
               <p>
-                지금 그 상황이 실제로 생긴다면
+                <span style={{ fontSize: 26, fontWeight: 800, color: "#1c1a17", float: "left", lineHeight: 0.8, margin: "4px 4px 0 0" }}>지</span>
+                금 그 상황이 실제로 생긴다면
                 <br />
                 어떤 행동을 할 수 있는지 골라 주세요.
               </p>

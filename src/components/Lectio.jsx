@@ -11,8 +11,8 @@ import { SectionMark } from "./SectionMark";
 const ITEMS = [
   {
     id: 1,
-    label: "오래된 사람의 부탁을\n거절하는 것",
-    plain: "오래된 사람의 부탁을 거절하는 것",
+    label: "오래 알고 지내는 사람의 부탁을\n거절하는 것",
+    plain: "오래 알고 지내는 사람의 부탁을 거절하는 것",
     q3: [
       { text: "거절하면 그 사람이 서운해할 거야.", axis: "relationship" },
       { text: "한 번 거절하면 관계가 달라져.", axis: "relationship" },
@@ -301,18 +301,12 @@ const CSS = `
   padding: 34px 26px; box-sizing: border-box; text-align: center;
   border: 1px solid rgba(28,26,23,0.14);
   box-shadow: 0 16px 32px rgba(0,0,0,0.24);
-  mask-image:
-    radial-gradient(circle 3px at 14px 0px, transparent 3px, black 3.5px),
-    radial-gradient(circle 3px at 38px 0px, transparent 3px, black 3.5px),
-    radial-gradient(circle 3px at 62px 0px, transparent 3px, black 3.5px),
-    radial-gradient(circle 3px at 86px 0px, transparent 3px, black 3.5px),
-    radial-gradient(circle 3px at 110px 0px, transparent 3px, black 3.5px);
-  -webkit-mask-image:
-    radial-gradient(circle 3px at 14px 0px, transparent 3px, black 3.5px),
-    radial-gradient(circle 3px at 38px 0px, transparent 3px, black 3.5px),
-    radial-gradient(circle 3px at 62px 0px, transparent 3px, black 3.5px),
-    radial-gradient(circle 3px at 86px 0px, transparent 3px, black 3.5px),
-    radial-gradient(circle 3px at 110px 0px, transparent 3px, black 3.5px);
+  mask-image: radial-gradient(circle 3px at 12px 0px, transparent 3px, black 3.5px);
+  mask-size: 24px 100%;
+  mask-repeat: repeat-x;
+  -webkit-mask-image: radial-gradient(circle 3px at 12px 0px, transparent 3px, black 3.5px);
+  -webkit-mask-size: 24px 100%;
+  -webkit-mask-repeat: repeat-x;
 }
 .lc-card-text { position: relative; font-family: Pretendard, sans-serif; font-size: 22px; line-height: 1.6; white-space: pre-line; font-weight: 500; letter-spacing: -0.01em; }
 .lc-actions { display: flex; gap: 10px; margin-top: 18px; }
@@ -320,6 +314,7 @@ const CSS = `
 .lc-panel { flex: 1; display: flex; flex-direction: column; gap: 20px; padding-top: 8px; }
 .lc-q { font-family: Pretendard, sans-serif; font-size: 19px; line-height: 1.62; margin: 0; font-weight: 400; }
 .lc-subject { font-size: 12px; color: var(--open); border-left: 2px solid rgba(28,26,23,0.5); padding-left: 10px; margin: 0; }
+.lc-counter { font-size: 11px; color: var(--muted); margin: 0 0 4px; letter-spacing: 0.04em; }
 .lc-opts { display: flex; flex-direction: column; gap: 8px; }
 .lc-opt {
   text-align: left; padding: 15px 16px; border-radius: 2px; cursor: pointer;
@@ -502,9 +497,19 @@ export default function Lectio({ onComplete }) {
           <>
             <div className="lc-intro">
               <p>
-                지금 그 상황이 실제로 생긴다면
+                나는 나를 위해 무엇을 선택할 수 있을까?
                 <br />
-                어떤 행동을 할 수 있는지 골라 주세요.
+                <br />
+                돈, 도움, 관계, 새로운 시작처럼
+                <br />
+                나 자신과 직접 연결된 선택을 살펴봅니다.
+                <br />
+                <br />
+                14개의 일상적인 장면을 통해
+                <br />
+                내가 나 자신에게 무엇까지 허용하고 있는지,
+                <br />
+                어떤 선택에는 조건이 붙는지 확인합니다.
               </p>
             </div>
             <button className="lc-next" style={{ marginTop: 24 }} onClick={start}>시작하기</button>
@@ -557,15 +562,20 @@ export default function Lectio({ onComplete }) {
               <div className="lc-count-box open"><div className="n">{openCount}</div><div className="l">할 수 있다</div></div>
               <div className="lc-count-box"><div className="n">{closed.length}</div><div className="l">어렵다</div></div>
             </div>
-            <p className="lc-note">
-              {closed.length > 0 ? "어렵다고 답한 것을 하나씩 살펴보겠습니다." : "어렵다고 넘긴 것이 없습니다."}
-            </p>
+            {closed.length > 0 && (
+              <p className="lc-note">
+                방금 '어렵다'고 답한 것은, 자동으로 그렇게 판단했을 수 있습니다. 다시 물어보면서 그
+                판단에 실제로 근거가 있는지 확인합니다.
+              </p>
+            )}
+            {closed.length === 0 && <p className="lc-note">어렵다고 넘긴 것이 없습니다.</p>}
             <button className="lc-next" onClick={() => (closed.length ? pick(closed[0]) : setScreen("result"))}>계속</button>
           </div>
         )}
 
         {screen === "q3" && current && (
           <div className="lc-panel">
+            <p className="lc-counter">{closed.findIndex((it) => it.id === current.id) + 1} / {closed.length}</p>
             <p className="lc-subject">{current.plain}</p>
             <p className="lc-q">그것을 하기 어렵다고 생각하는 주된 이유는 무엇입니까?</p>
             <div className="lc-opts">
@@ -579,6 +589,7 @@ export default function Lectio({ onComplete }) {
 
         {screen === "q4" && current && q3 !== null && (
           <div className="lc-panel">
+            <p className="lc-counter">{closed.findIndex((it) => it.id === current.id) + 1} / {closed.length}</p>
             <p className="lc-subject">{current.plain}</p>
             <p className="lc-q">{current.q4[q3].q}</p>
             <div className="lc-opts">
@@ -598,14 +609,22 @@ export default function Lectio({ onComplete }) {
 
         {screen === "result" && (
           <div className="lc-panel">
-            <p className="lc-q">오늘 {Object.keys(examined).length}개를 다시 살펴보셨습니다.</p>
-            <p className="lc-note">살펴본 것</p>
+            <p className="lc-q">오늘 {order.length}개의 장면에서, 내가 자연스럽게 선택하는 것과 조건이 필요한 것을 확인했습니다.</p>
+
+            <p className="lc-note">자연스럽게 선택하는 것</p>
+            <div className="lc-opened">
+              {items.filter((it) => it.status === "open").map((it) => (
+                <div key={it.itemId} className="lc-mini">{it.label}</div>
+              ))}
+            </div>
+
+            <p className="lc-note" style={{ marginTop: 22 }}>조건이 필요한 것</p>
             <div className="lc-opened">
               {items.filter((it) => it.status === "closed").map((it) => (
                 <div key={it.itemId} className="lc-mini">
                   {it.label}
-                  {it.closingLogic && <div className="lc-cond">— {it.closingLogic.text}</div>}
-                  {it.openingCondition && <div className="lc-cond">이럴 때는: {it.openingCondition}</div>}
+                  {it.closingLogic && <div className="lc-cond">그 선택을 어렵게 만든 생각 — {it.closingLogic.text}</div>}
+                  {it.openingCondition && <div className="lc-cond">이럴 때는 선택할 수 있습니다 — {it.openingCondition}</div>}
                 </div>
               ))}
             </div>

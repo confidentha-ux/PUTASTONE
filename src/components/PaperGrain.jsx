@@ -2,7 +2,7 @@ import React from "react";
 
 // 섹션마다 seed만 다르게 줘서 "같은 종이, 다른 장" 느낌을 낸다.
 // 이미지 파일 없이 SVG feTurbulence로 만들어서 용량이 들지 않는다.
-export function PaperGrain({ seed = 3, baseFrequency = 0.85, octaves = 2, opacity = 0.06 }) {
+export function PaperGrain({ seed = 3, baseFrequency = 0.85, octaves = 2, opacity = 0.14 }) {
   const id = `grain-${seed}`;
   return (
     <>

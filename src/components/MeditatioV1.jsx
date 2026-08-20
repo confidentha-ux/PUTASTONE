@@ -42,7 +42,7 @@ const CSS = `
 
 .mv-root {
   --ground: #eae6da; --paper: #1c1a17; --ink: #1c1a17; --muted: #847c6b;
-  --open: #1c1a17; --line: rgba(49,53,45,0.14);
+  --open: #a13d2e; --line: rgba(49,53,45,0.14);
   position: relative;
   flex: 1; min-height: 0;
   background: radial-gradient(120% 90% at 50% 0%, #f2eee0 0%, var(--ground) 62%);
@@ -50,9 +50,10 @@ const CSS = `
   display: flex; flex-direction: column; align-items: center; padding: 28px 20px 44px; box-sizing: border-box;
 }
 .mv-shell { width: 100%; max-width: 440px; display: flex; flex-direction: column; flex: 1; }
+.mv-root--cover { background: radial-gradient(120% 90% at 50% 0%, #f0e2dc 0%, #e8d9d3 62%); }
 .mv-eyebrow { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); text-align: center; margin-bottom: 18px; }
 
-.mv-intro { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 24px; text-align: center; }
+.mv-intro { display: flex; flex-direction: column; gap: 24px; text-align: center; padding-top: 56px; }
 .mv-intro h1 { font-family: Pretendard, sans-serif;  font-weight: 500; font-size: 42px; line-height: 1.3; margin: 0; letter-spacing: 0.02em; }
 .mv-intro .sub { font-size: 13px; color: var(--muted); margin-top: 8px; }
 .mv-intro p { color: var(--muted); font-weight: 300; font-size: 14px; line-height: 2; letter-spacing: 0.01em; margin: 0; }
@@ -194,9 +195,9 @@ export default function MeditatioV1({ onComplete }) {
   };
 
   return (
-    <div className="mv-root">
+    <div className={`mv-root${view === "intro" ? " mv-root--cover" : ""}`}>
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
-      <PaperGrain seed={11} baseFrequency={0.55} octaves={3} opacity={0.07} />
+      <PaperGrain seed={11} baseFrequency={0.55} octaves={3} opacity={0.14} />
       <div className="mv-shell">
         <SectionMark number="02" title="나는 어떻게 판단하는가" />
 
@@ -205,8 +206,7 @@ export default function MeditatioV1({ onComplete }) {
             <div className="mv-intro">
               <div>
                 <p className="mv-open-desc">
-                  <span style={{ fontSize: 26, fontWeight: 800, color: "#1c1a17", float: "left", lineHeight: 0.8, margin: "4px 4px 0 0" }}>내</span>
-                  가 무엇을 보고, 무엇을 기억하며, 어떤 과정을 거쳐 판단을 내리는지 살펴봅니다.
+                  내가 무엇을 보고, 무엇을 기억하며, 어떤 과정을 거쳐 판단을 내리는지 살펴봅니다.
                 </p>
               </div>
             </div>

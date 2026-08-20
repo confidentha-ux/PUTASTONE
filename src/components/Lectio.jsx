@@ -271,7 +271,7 @@ const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=Gowun+Batang:wght@400;700&display=swap');
 .lc-root {
   --ground: #eae6da; --paper: #1c1a17; --ink: #1c1a17; --ink-soft: #847c6b;
-  --muted: #847c6b; --open: #1c1a17; --line: rgba(49,53,45, 0.14);
+  --muted: #847c6b; --open: #a13d2e; --line: rgba(49,53,45, 0.14);
   position: relative;
   flex: 1; min-height: 0;
   background: radial-gradient(120% 90% at 50% 0%, #f2eee0 0%, var(--ground) 62%);
@@ -280,23 +280,25 @@ const CSS = `
 }
 .lc-shell { width: 100%; max-width: 420px; display: flex; flex-direction: column; flex: 1; }
 .lc-eyebrow { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); text-align: center; margin-bottom: 4px; }
-.lc-intro { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 26px; text-align: center; }
+.lc-intro { display: flex; flex-direction: column; gap: 26px; text-align: center; padding-top: 56px; }
 .lc-intro h1 { font-family: Pretendard, sans-serif; font-size: 26px; line-height: 1.3; margin: 0 0 18px; font-weight: 800; letter-spacing: -0.02em; }
 .lc-intro p { color: var(--muted); font-weight: 300; font-size: 14px; line-height: 2; letter-spacing: 0.01em; margin: 0; }
 .lc-progress { display: flex; justify-content: center; gap: 4px; margin-bottom: 26px; }
 .lc-tick { width: 12px; height: 2px; background: var(--line); border-radius: 2px; }
 .lc-tick.done { background: rgba(28,26,23, 0.7); }
-.lc-tick.now { background: var(--paper); }
-.lc-stage { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; min-height: 260px; }
+.lc-tick.now { background: var(--open); }
+.lc-stage { display: flex; align-items: center; justify-content: center; position: relative; min-height: 220px; margin-top: 24px; }
 .lc-card {
   position: relative; width: 88%; max-width: 330px; min-height: 220px;
-  background: linear-gradient(168deg, #f7f5ee 0%, #f0ece0 55%, #dbd6c8 100%);
-  color: var(--ink); border-radius: 3px; display: flex; align-items: center; justify-content: center;
+  background: #f5f2e6; overflow: hidden;
+  color: var(--ink); border-radius: 2px; display: flex; align-items: center; justify-content: center;
   padding: 34px 26px; box-sizing: border-box; text-align: center;
-  box-shadow: 0 18px 44px rgba(0,0,0,0.42);
+  border: 1px solid rgba(28,26,23,0.14);
+  box-shadow: 0 16px 32px rgba(0,0,0,0.22);
+  transform: rotate(-1.2deg);
 }
-.lc-card-text { font-family: Pretendard, sans-serif; font-size: 22px; line-height: 1.6; white-space: pre-line; font-weight: 400; }
-.lc-actions { display: flex; gap: 10px; margin-top: 30px; }
+.lc-card-text { position: relative; font-family: Pretendard, sans-serif; font-size: 22px; line-height: 1.6; white-space: pre-line; font-weight: 500; letter-spacing: -0.01em; }
+.lc-actions { display: flex; gap: 10px; margin-top: 18px; }
 .lc-btn { flex: 1; padding: 16px 10px; border-radius: 2px; font-size: 15px; font-family: inherit; cursor: pointer; background: rgba(49,53,45,0.06); border: 1px solid var(--line); color: var(--paper); }
 .lc-panel { flex: 1; display: flex; flex-direction: column; gap: 20px; padding-top: 8px; }
 .lc-q { font-family: Pretendard, sans-serif; font-size: 19px; line-height: 1.62; margin: 0; font-weight: 400; }
@@ -317,7 +319,7 @@ const CSS = `
 .lc-count-box .l { font-size: 11px; color: var(--muted); margin-top: 8px; letter-spacing: 0.06em; }
 .lc-count-box.open .n { color: var(--open); }
 .lc-opened { display: flex; flex-direction: column; gap: 8px; }
-.lc-mini { padding: 15px 16px; border-radius: 2px; font-size: 14.5px; line-height: 1.5; background: linear-gradient(160deg, #f7f5ee, #ddd8ca); color: var(--ink); font-family: Pretendard, sans-serif; }
+.lc-mini { padding: 15px 16px; border-radius: 2px; font-size: 14.5px; line-height: 1.5; background: #f5f2e6; border: 1px solid rgba(28,26,23,0.12); color: var(--ink); font-family: Pretendard, sans-serif; }
 .lc-note { font-size: 13px; color: var(--muted); line-height: 1.8; margin: 0; }
 .lc-cond { font-size: 12.5px; color: var(--ink-soft); margin-top: 8px; font-family: Pretendard, sans-serif; line-height: 1.6; }
 .lc-tally { background: rgba(28,26,23,.1); border: 1px solid rgba(28,26,23,.35); border-radius: 3px; padding: 14px 16px; font-size: 13px; line-height: 1.7; }
@@ -445,7 +447,7 @@ export default function Lectio({ onComplete }) {
   return (
     <div className="lc-root">
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
-      <PaperGrain seed={3} />
+      <PaperGrain seed={3} opacity={0.14} />
       <div className="lc-shell">
         <SectionMark number="01" title="내가 할 수 있는 선택" />
 
@@ -453,8 +455,7 @@ export default function Lectio({ onComplete }) {
           <>
             <div className="lc-intro">
               <p>
-                <span style={{ fontSize: 26, fontWeight: 800, color: "#1c1a17", float: "left", lineHeight: 0.8, margin: "4px 4px 0 0" }}>지</span>
-                금 그 상황이 실제로 생긴다면
+                지금 그 상황이 실제로 생긴다면
                 <br />
                 어떤 행동을 할 수 있는지 골라 주세요.
               </p>
@@ -472,6 +473,7 @@ export default function Lectio({ onComplete }) {
             </div>
             <div className="lc-stage">
               <div className="lc-card">
+                <PaperGrain seed={7} baseFrequency={0.9} octaves={2} opacity={0.1} />
                 <span className="lc-card-text">{order[idx].label}</span>
               </div>
             </div>

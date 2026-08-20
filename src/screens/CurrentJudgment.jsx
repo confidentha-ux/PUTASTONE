@@ -56,14 +56,14 @@ function Shell({ children }) {
         flex: 1,
         minHeight: 0,
         position: "relative",
-        background: "#eae6da",
+        background: "radial-gradient(120% 90% at 50% 0%, #dde2e2 0%, #d3dade 62%)",
         color: "#1c1a17",
         fontFamily: "Pretendard, -apple-system, sans-serif",
         padding: "40px 20px",
         boxSizing: "border-box",
       }}
     >
-      <PaperGrain seed={17} baseFrequency={0.7} octaves={2} opacity={0.06} />
+      <PaperGrain seed={17} baseFrequency={0.7} octaves={2} opacity={0.13} />
       <div style={{ maxWidth: 460, margin: "0 auto", position: "relative" }}>{children}</div>
     </div>
   );

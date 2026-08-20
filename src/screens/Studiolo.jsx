@@ -19,7 +19,7 @@ function formatSessionDate(timestamp) {
 }
 
 const CSS = `
-.st-root { flex: 1; min-height: 0; position: relative; background: #eae6da; color: #1c1a17; font-family: Pretendard, -apple-system, sans-serif; padding: 32px 20px 60px; box-sizing: border-box; }
+.st-root { flex: 1; min-height: 0; position: relative; background: radial-gradient(120% 90% at 50% 0%, #efe6d0 0%, #e8dcc0 62%); color: #1c1a17; font-family: Pretendard, -apple-system, sans-serif; padding: 32px 20px 60px; box-sizing: border-box; }
 .st-shell { max-width: 560px; margin: 0 auto; }
 .st-title { font-family: Pretendard, sans-serif; font-size: 26px; margin: 0 0 6px; }
 .st-sub { color: #847c6b; font-size: 13px; margin: 0 0 32px; }
@@ -44,7 +44,7 @@ export default function Studiolo() {
   return (
     <div className="st-root">
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
-      <PaperGrain seed={31} baseFrequency={0.5} octaves={2} opacity={0.06} />
+      <PaperGrain seed={31} baseFrequency={0.5} octaves={2} opacity={0.13} />
       <div className="st-shell">
         <SectionMark number="05" title="현재의 돌탑" />
         <p className="st-sub">처음 판단과 지금까지 쌓인 판단 사이에서 확인된 것들.</p>

@@ -14,7 +14,7 @@ export function SectionMark({ number, title }) {
       }}
     >
       <span style={{ fontSize: 13, fontWeight: 800, color: "#1c1a17", letterSpacing: "-0.01em" }}>{title}</span>
-      <span style={{ fontSize: 10, color: "#847c6b" }}>{number}</span>
+      <span style={{ fontSize: 10, color: "#a13d2e", fontWeight: 700 }}>{number}</span>
     </div>
   );
 }

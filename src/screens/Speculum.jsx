@@ -220,14 +220,14 @@ function Shell({ children }) {
         flex: 1,
         minHeight: 0,
         position: "relative",
-        background: "#eae6da",
+        background: "radial-gradient(120% 90% at 50% 0%, #e1e6da 0%, #d7ddd0 62%)",
         color: "#1c1a17",
         fontFamily: "Pretendard, -apple-system, sans-serif",
         padding: "40px 20px",
         boxSizing: "border-box",
       }}
     >
-      <PaperGrain seed={23} baseFrequency={0.65} octaves={3} opacity={0.06} />
+      <PaperGrain seed={23} baseFrequency={0.65} octaves={3} opacity={0.13} />
       <div style={{ maxWidth: 460, margin: "0 auto", position: "relative" }}>
         <SectionMark number="04" title="다른 역할 입어보기" />
         {children}

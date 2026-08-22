@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useUserState } from "./state/UserStateContext";
 import Login from "./screens/Login";
-import Purpose from "./screens/Purpose";
 import ThreeExperiences from "./screens/ThreeExperiences";
 import Start from "./screens/Start";
 import Home from "./screens/Home";
@@ -28,7 +27,7 @@ const NAV = [
   { key: "studiolo", label: "현재의 돌탑" },
 ];
 
-const ONBOARDING_SCREENS = ["login", "start", "purpose", "threeExperiences"];
+const ONBOARDING_SCREENS = ["login", "start", "threeExperiences"];
 
 export default function App() {
   const { state } = useUserState();
@@ -76,8 +75,7 @@ export default function App() {
 
       <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
         {screen === "login" && <Login onDone={() => goTo("start")} />}
-        {screen === "start" && <Start onStart={() => goTo("purpose")} />}
-        {screen === "purpose" && <Purpose onDone={() => goTo("threeExperiences")} />}
+        {screen === "start" && <Start onStart={() => goTo("threeExperiences")} />}
         {screen === "threeExperiences" && <ThreeExperiences onDone={() => goTo("lectio")} />}
         {screen === "home" && <Home onNavigate={goTo} />}
         {screen === "lectio" && <Lectio onComplete={() => goTo("meditatio")} />}

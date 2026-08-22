@@ -46,7 +46,7 @@ export default function Login({ onDone }) {
       </div>
       <h1 style={{ position: "relative", fontWeight: 800, letterSpacing: "-0.02em", fontSize: 26, margin: 0 }}>돌 하나를 얹다</h1>
       <p style={{ position: "relative", color: "#847c6b", fontWeight: 300, fontSize: 14, lineHeight: 1.8, marginTop: 14, marginBottom: 40 }}>
-        중요한 선택을 더 자세히 들여다봅니다.
+        내가 어떻게 판단하는지 알고, 무엇을 놓치는지 발견하게 됩니다.
       </p>
       <button
         style={{

@@ -325,6 +325,7 @@ const CSS = `
 .lc-closing-title { font-family: Pretendard, sans-serif; font-weight: 800; letter-spacing: -0.01em; font-size: 19px; line-height: 1.4; color: var(--ink); margin: 0; max-width: 220px; }
 .lc-closing-rule { width: 28px; height: 1px; background: rgba(28,26,23,0.3); margin: 22px 0; }
 .lc-closing-body { font-weight: 300; font-size: 13px; line-height: 2; letter-spacing: 0.01em; color: var(--muted); text-align: left; margin: 0 0 20px; }
+.lc-closing-prompt { font-weight: 700; font-size: 16px; line-height: 1.7; color: var(--ink); text-align: center; margin: 4px 0 24px; padding: 18px 16px; border-top: 1px solid rgba(28,26,23,0.14); border-bottom: 1px solid rgba(28,26,23,0.14); }
 .lc-closing-accent { color: var(--open); font-weight: 600; }
 .lc-closing-lead { font-weight: 500; font-size: 14px; line-height: 1.9; color: var(--ink); text-align: left; margin: 0 0 28px; }
 .lc-q { font-family: Pretendard, sans-serif; font-size: 19px; line-height: 1.62; margin: 0; font-weight: 400; }
@@ -515,13 +516,21 @@ export default function Lectio({ onComplete }) {
                 나는 나에게 무엇을 허락하고 있는가?
                 <br />
                 <br />
-                도움을 요청하는 것, 거절하는 것, 내가 원하는 것을 말하는 것, 내 몫을 요구하는 것.
+                도움을 요청하는 것, 거절하는 것,
                 <br />
-                이런 선택 앞에서는 내가 나 자신에게 어디까지 허락하고 있는지가 드러납니다.
+                내가 원하는 것을 말하는 것, 나를 위해 돈을 쓰는 것.
                 <br />
                 <br />
-                14개의 구체적인 선택을 통해 지금의 나를 받치고 있는 가장 아래의 돌부터
-                살펴봅니다.
+                평범해 보이는 선택이지만
+                <br />
+                막상 내가 해야 할 때는 이야기가 달라질 수 있습니다.
+                <br />
+                <br />
+                14개의 구체적인 상황을 지나며
+                <br />
+                지금의 나에게 어떤 선택은 가능하고,
+                <br />
+                어떤 선택은 어려운지 살펴봅니다.
               </p>
             </div>
             <button className="lc-next" style={{ marginTop: 24 }} onClick={start}>시작하기</button>
@@ -569,35 +578,34 @@ export default function Lectio({ onComplete }) {
 
         {screen === "summary" && (
           <div className="lc-panel">
-            <p className="lc-q">{order.length}장을 모두 보셨습니다.</p>
+            <p className="lc-q">14개의 선택을 모두 보았습니다.</p>
             <div className="lc-count">
               <div className="lc-count-box open"><div className="n">{openCount}</div><div className="l">할 수 있다</div></div>
               <div className="lc-count-box"><div className="n">{closed.length}</div><div className="l">어렵다</div></div>
             </div>
             {closed.length > 0 && (
               <p className="lc-note">
-                앞에서는 지금 내가 나 자신에게 무엇을 허락하고 있는지 살펴봤습니다. 이미
-                자연스럽게 하고 있는 선택은 다시 볼 이유가 없습니다.
+                앞에서는 지금의 나에게 어떤 선택이 가능하고 어떤 선택이 어려운지 살펴봤습니다.
                 <br />
                 <br />
-                '어렵다'고 답한 선택은 자동으로 그렇게 판단했을 수 있습니다. 그 판단에 실제로
-                근거가 있는지, 조건에 따라 달라질 수 있는 건지 지금부터 확인합니다.
+                이제 어렵다고 느낀 선택만 다시 봅니다.
                 <br />
                 <br />
-                같은 선택도 조건이 달라지면 판단이 달라질 수 있습니다. 지금의 선택을 결정하고 있는
-                조건을 하나씩 찾아봅니다.
+                무엇이 그 선택을 어렵게 하는지, 그리고 무엇이 달라지면 같은 선택이 가능해지는지
+                살펴봅니다.
               </p>
             )}
             {closed.length === 0 && <p className="lc-note">어렵다고 넘긴 것이 없습니다.</p>}
             <button className="lc-next" onClick={() => (closed.length ? pick(closed[0]) : setScreen("result"))}>
-              {closed.length ? "다시 살펴보기" : "계속"}
+              {closed.length ? "막힌 길 다시 보기" : "계속"}
             </button>
           </div>
         )}
 
+        {/* 내부적으로는 "Second Look" 단계 — 사용자에게는 항상 "막힌 길 다시 보기"로만 노출한다. */}
         {screen === "q3" && current && (
           <div className="lc-panel">
-            <p className="lc-counter">{closed.findIndex((it) => it.id === current.id) + 1} / {closed.length}</p>
+            <p className="lc-counter">막힌 길 다시 보기 · {closed.findIndex((it) => it.id === current.id) + 1}/{closed.length}</p>
             <p className="lc-subject">{current.plain}</p>
             <p className="lc-q">이 선택이 어려운 가장 큰 이유는 무엇인가요?</p>
             <div className="lc-opts">
@@ -611,7 +619,7 @@ export default function Lectio({ onComplete }) {
 
         {screen === "q4" && current && q3 !== null && (
           <div className="lc-panel">
-            <p className="lc-counter">{closed.findIndex((it) => it.id === current.id) + 1} / {closed.length}</p>
+            <p className="lc-counter">막힌 길 다시 보기 · {closed.findIndex((it) => it.id === current.id) + 1}/{closed.length}</p>
             <p className="lc-subject">{current.plain}</p>
             <p className="lc-q">{current.q4[q3].q}</p>
             <div className="lc-opts">
@@ -672,49 +680,51 @@ export default function Lectio({ onComplete }) {
 
         {screen === "closing" && (
           <div className="lc-closing">
-            <svg width="34" height="36" viewBox="30 25 180 195" aria-hidden="true">
-              <g stroke="#1c1a17" strokeOpacity="0.3" strokeWidth="1" strokeLinejoin="round">
-                <path d="M42,196 Q111,181 198,196 Q132,211 42,196 Z" fill="#2b2823" />
-                <path d="M49,177 Q123,163 177,177 Q105,191 49,177 Z" fill="#3d3a34" />
-                <path d="M75,160 Q121,147 179,160 Q135,173 75,160 Z" fill="#524e46" />
-                <path d="M70,121 Q106,109 160,121 Q124,133 70,121 Z" fill="#696459" />
-                <path d="M91,99 Q132,88 159,99 Q117,110 91,99 Z" fill="#827c6d" />
-                <path d="M94,79 Q110,69 142,79 Q126,89 94,79 Z" fill="#9c9584" />
-                <path d="M105,60 Q124,47 135,60 Q116,73 105,60 Z" fill="#b8b09c" />
-              </g>
+            <svg width="72" height="26" viewBox="30 175 180 42" aria-hidden="true">
+              <path
+                d="M42,196 Q111,181 198,196 Q132,211 42,196 Z"
+                fill="#2b2823"
+                stroke="#1c1a17"
+                strokeOpacity="0.3"
+                strokeWidth="1"
+                strokeLinejoin="round"
+              />
             </svg>
             <p className="lc-closing-title">나를 받치는 돌을 놓았습니다</p>
             <div className="lc-closing-rule" />
-            {closed.length > 0 ? (
-              <p className="lc-closing-body">
-                지금 어렵게 느껴지는 선택에도 <span className="lc-closing-accent">조건</span>이
-                있습니다. 오늘 열네 개 중 <b>{closed.length}개</b>에서 그 조건을 확인했고
-                {dominantDomain && (
-                  <>
-                    , 가장 많이 반복된 건 <b>'{AXIS_LABEL[dominantDomain.domain]}'</b>
-                    {wasSuffix(AXIS_LABEL[dominantDomain.domain])}
-                  </>
-                )}
-                .
-              </p>
-            ) : (
-              <p className="lc-closing-body">
-                지금 어렵게 느껴지는 선택에도{" "}
-                <span className="lc-closing-accent">조건</span>이 있습니다.
-              </p>
-            )}
-            {closed.length > 0 && (
-              <p className="lc-closing-body">
-                같은 선택도 조건이 갖춰지면 판단이 달라집니다. 다음에 같은 상황을 만나면, 무엇이
-                갖춰져야 하는지 이미 알고 시작하게 됩니다.
-              </p>
-            )}
+            <p className="lc-closing-body">
+              지금 어렵게 느껴지는 선택에는
+              <br />그 선택을 어렵게 만드는 <span className="lc-closing-accent">조건</span>이
+              있었습니다.
+            </p>
+            <p className="lc-closing-body">
+              그 조건을 하나씩 살펴보니,
+              <br />무엇이 달라져야 그 선택을 나에게 허락할 수 있는지도 보였습니다.
+            </p>
+            <p className="lc-closing-body">
+              앞으로 어떤 선택 앞에서 망설이게 될 때
+              <br />이렇게 한 번 물어보세요.
+            </p>
+            <p className="lc-closing-prompt">
+              무엇이 달라지면,
+              <br />나도 이 선택을 나에게 허락할 수 있을까?
+            </p>
+            <p className="lc-closing-body">
+              조건이 달라지면
+              <br />나에게 허락할 수 있는 선택도 늘어날 수 있습니다.
+            </p>
+            <p className="lc-closing-body">
+              조금 더 거절해도 되고,
+              <br />도움을 청해도 되고,
+              <br />원하는 것을 말해도 되고,
+              <br />나를 위해 선택해도 됩니다.
+            </p>
             <p className="lc-closing-lead">
-              내가 나에게 허락할 수 있는 선택을 하나씩 늘려가는 것 — 이것이 여기서부터
-              시작됩니다.
+              그렇게 나에게 허락하는 선택을 하나씩 늘려가는 것.
+              <br />그것이 나를 받치는 기초석이 됩니다.
             </p>
             <button className="lc-next" onClick={() => onComplete({ items, dominantDomain })}>
-              계속하기
+              다음 돌로 가기
             </button>
           </div>
         )}

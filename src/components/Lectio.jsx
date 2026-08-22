@@ -288,7 +288,8 @@ const CSS = `
 }
 .lc-shell { width: 100%; max-width: 420px; display: flex; flex-direction: column; flex: 1; }
 .lc-eyebrow { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); text-align: center; margin-bottom: 4px; }
-.lc-intro { display: flex; flex-direction: column; gap: 26px; text-align: center; padding-top: 56px; }
+.lc-intro { display: flex; flex-direction: column; gap: 22px; text-align: center; padding-top: 24px; }
+.lc-intro-question { font-family: Pretendard, sans-serif; font-weight: 800; letter-spacing: -0.01em; font-size: 19px; line-height: 1.4; color: var(--ink); margin: 0; }
 .lc-intro h1 { font-family: Pretendard, sans-serif; font-size: 26px; line-height: 1.3; margin: 0 0 18px; font-weight: 800; letter-spacing: -0.02em; }
 .lc-intro p { color: var(--muted); font-weight: 300; font-size: 14px; line-height: 2; letter-spacing: 0.01em; margin: 0; }
 .lc-progress { display: flex; justify-content: center; gap: 4px; margin-bottom: 26px; }
@@ -512,25 +513,33 @@ export default function Lectio({ onComplete }) {
         {screen === "intro" && (
           <>
             <div className="lc-intro">
+              <p className="lc-intro-question">나는 나에게 무엇을 허락하고 있는가?</p>
+
+              <div className="lc-stage" style={{ minHeight: 150, margin: 0 }}>
+                <div className="lc-deck" style={{ width: "72%", minHeight: 130 }}>
+                  <div className="lc-deck-ghost" style={{ background: "#ece7d6", transform: "rotate(4deg) translate(3px, 5px)" }} />
+                  <div className="lc-deck-ghost" style={{ background: "#f0ecdd", transform: "rotate(-3deg) translate(-2px, 3px)" }} />
+                  <div className="lc-card" style={{ minHeight: 130, padding: "22px 18px", transform: "rotate(-1.4deg)" }}>
+                    <PaperGrain seed={7} baseFrequency={0.9} octaves={2} opacity={0.1} />
+                    <span className="lc-card-text" style={{ fontSize: 17 }}>{ITEMS[0].label}</span>
+                  </div>
+                </div>
+              </div>
+
               <p>
-                나는 나에게 무엇을 허락하고 있는가?
+                도움을 요청하고, 거절하고,
+                <br />
+                원하는 것을 말하고, 나를 위해 선택하는 일.
                 <br />
                 <br />
-                도움을 요청하는 것, 거절하는 것,
+                평범해 보이지만
                 <br />
-                내가 원하는 것을 말하는 것, 나를 위해 돈을 쓰는 것.
-                <br />
-                <br />
-                평범해 보이는 선택이지만
-                <br />
-                막상 내가 해야 할 때는 이야기가 달라질 수 있습니다.
+                막상 내가 선택하려 하면 쉽게 허락되지 않는 것도 있습니다.
                 <br />
                 <br />
-                14개의 구체적인 상황을 지나며
+                14개의 상황을 지나며
                 <br />
-                지금의 나에게 어떤 선택은 가능하고,
-                <br />
-                어떤 선택은 어려운지 살펴봅니다.
+                지금 나에게 가능한 선택과 어려운 선택을 살펴봅니다.
               </p>
             </div>
             <button className="lc-next" style={{ marginTop: 24 }} onClick={start}>시작하기</button>

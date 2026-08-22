@@ -491,25 +491,22 @@ export default function Lectio({ onComplete }) {
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <PaperGrain seed={3} opacity={0.14} />
       <div className="lc-shell">
-        <SectionMark number="01" title="내가 할 수 있는 선택" />
+        <SectionMark number="01" title="나를 받치는 돌" />
 
         {screen === "intro" && (
           <>
             <div className="lc-intro">
               <p>
-                나는 나를 위해 무엇을 선택할 수 있을까?
+                나는 나에게 무엇을 허락하고 있는가?
                 <br />
                 <br />
-                돈, 도움, 관계, 새로운 시작처럼
+                도움을 요청하는 것, 거절하는 것, 내가 원하는 것을 말하는 것, 내 몫을 요구하는 것.
                 <br />
-                나 자신과 직접 연결된 선택을 살펴봅니다.
+                이런 선택 앞에서는 내가 나 자신에게 어디까지 허락하고 있는지가 드러납니다.
                 <br />
                 <br />
-                14개의 일상적인 장면을 통해
-                <br />
-                내가 나 자신에게 무엇까지 허용하고 있는지,
-                <br />
-                어떤 선택에는 조건이 붙는지 확인합니다.
+                14개의 구체적인 선택을 통해 지금의 나를 받치고 있는 가장 아래의 돌부터
+                살펴봅니다.
               </p>
             </div>
             <button className="lc-next" style={{ marginTop: 24 }} onClick={start}>시작하기</button>
@@ -564,12 +561,19 @@ export default function Lectio({ onComplete }) {
             </div>
             {closed.length > 0 && (
               <p className="lc-note">
-                방금 '어렵다'고 답한 것은, 자동으로 그렇게 판단했을 수 있습니다. 다시 물어보면서 그
-                판단에 실제로 근거가 있는지 확인합니다.
+                앞에서는 지금 내가 나 자신에게 무엇을 허락하고 있는지 살펴봤습니다. 이제 어렵다고
+                답한 선택만 다시 보면서, 무엇이 그 선택을 어렵게 만드는지 확인합니다. 그다음 무엇이
+                달라지면 같은 선택을 할 수 있는지도 살펴봅니다.
+                <br />
+                <br />
+                같은 선택도 조건이 달라지면 판단이 달라질 수 있습니다. 지금의 선택을 결정하고 있는
+                조건을 하나씩 찾아봅니다.
               </p>
             )}
             {closed.length === 0 && <p className="lc-note">어렵다고 넘긴 것이 없습니다.</p>}
-            <button className="lc-next" onClick={() => (closed.length ? pick(closed[0]) : setScreen("result"))}>계속</button>
+            <button className="lc-next" onClick={() => (closed.length ? pick(closed[0]) : setScreen("result"))}>
+              {closed.length ? "다시 살펴보기" : "계속"}
+            </button>
           </div>
         )}
 
@@ -577,7 +581,7 @@ export default function Lectio({ onComplete }) {
           <div className="lc-panel">
             <p className="lc-counter">{closed.findIndex((it) => it.id === current.id) + 1} / {closed.length}</p>
             <p className="lc-subject">{current.plain}</p>
-            <p className="lc-q">그것을 하기 어렵다고 생각하는 주된 이유는 무엇입니까?</p>
+            <p className="lc-q">이 선택이 어려운 가장 큰 이유는 무엇인가요?</p>
             <div className="lc-opts">
               {current.q3.map((c, i) => (
                 <button key={i} className={`lc-opt ${q3 === i ? "sel" : ""}`} onClick={() => chooseQ3(i)}>{c.text}</button>
@@ -638,13 +642,36 @@ export default function Lectio({ onComplete }) {
             )}
 
             {onComplete && (
-              <button className="lc-next" onClick={() => onComplete({ items, dominantDomain })}>
-                판단으로 계속하기
+              <button className="lc-next" onClick={() => setScreen("closing")}>
+                계속
               </button>
             )}
             <div className="lc-foot">
               <button className="lc-restart" onClick={() => setScreen("intro")}>처음부터 다시</button>
             </div>
+          </div>
+        )}
+
+        {screen === "closing" && (
+          <div className="lc-panel">
+            <p className="lc-q">나를 받치는 돌을 놓았습니다</p>
+            <p className="lc-note">
+              처음에는 지금 나에게 허락하고 있는 선택과 아직 어려운 선택을 살펴봤습니다. 그리고
+              어려운 선택을 다시 보면서 무엇이 그 선택을 어렵게 만드는지, 무엇이 달라지면
+              가능해지는지 확인했습니다.
+              <br />
+              <br />
+              여기서 중요한 것은 조건입니다. 지금 어렵게 느껴지는 선택에도 내가 그 선택을 나에게
+              허락할 수 있는 조건이 있습니다. 그 조건을 알게 되면 다음에 같은 상황을 만났을 때
+              무엇이 달라지면 다른 선택이 가능한지 함께 생각할 수 있습니다.
+              <br />
+              <br />
+              내가 나에게 허락할 수 있는 선택을 하나씩 늘려가는 것. 이것이 여기서 시작하는 첫 번째
+              인지훈련입니다.
+            </p>
+            <button className="lc-next" onClick={() => onComplete({ items, dominantDomain })}>
+              계속하기
+            </button>
           </div>
         )}
       </div>

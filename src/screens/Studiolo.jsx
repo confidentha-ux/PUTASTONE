@@ -52,7 +52,7 @@ export default function Studiolo() {
         <div className="st-section">
           <h2>I. 내가 열어둔 판단 공간</h2>
           {lectio.items.length === 0 ? (
-            <div className="st-empty">아직 내가 할 수 있는 선택을 완료하지 않았습니다.</div>
+            <div className="st-empty">아직 나를 받치는 돌을 완료하지 않았습니다.</div>
           ) : (
             <div className="st-card">
               자연스럽게 가능한 행동 {openItems.length}개, 조건이 붙는 행동 {closedItems.length}개.
@@ -75,7 +75,7 @@ export default function Studiolo() {
         <div className="st-section">
           <h2>II · III. 판단이 만들어지는 방식 / 중요한 순간의 판단</h2>
           {!meditatio.derived ? (
-            <div className="st-empty">아직 나는 어떻게 판단하는가를 완료하지 않았습니다.</div>
+            <div className="st-empty">아직 판단이 만들어지는 과정을 완료하지 않았습니다.</div>
           ) : (
             <div className="st-card">{meditatio.derived.narrative}</div>
           )}

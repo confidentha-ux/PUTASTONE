@@ -21,11 +21,11 @@ export default function SessionResult({
 }) {
   return (
     <Shell>
-      <h1 style={titleStyle}>이번에 확인한 것</h1>
+      <h1 style={titleStyle}>이번에 생긴 것</h1>
 
       <Row label="처음의 판단" value={initialJudgment || "—"} />
-      <Row label="이번에 사용한 인지구조" value={personaName || "—"} />
-      <Row label="새롭게 보인 것" value={newInformation || "특별히 없음"} />
+      <Row label="이번에 따라간 질문" value={personaName || "—"} />
+      <Row label="새롭게 생긴 것" value={newInformation || "특별히 없음"} />
       <Row label="판단의 변화" value={SHIFT_LABEL[judgmentShift] ?? "—"} />
       <Row label="지금의 판단" value={rejudgment || "—"} />
 

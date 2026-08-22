@@ -199,19 +199,19 @@ export default function MeditatioV1({ onComplete }) {
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <PaperGrain seed={11} baseFrequency={0.55} octaves={3} opacity={0.14} />
       <div className="mv-shell">
-        <SectionMark number="02" title="나는 어떻게 판단하는가" />
+        <SectionMark number="02" title="판단이 만들어지는 과정" />
 
         {view === "intro" && (
           <>
             <div className="mv-intro">
               <div>
                 <p className="mv-open-desc">
-                  내가 무엇을 보고, 무엇을 기억하며, 어떤 과정을 거쳐 판단을 내리는지 살펴봅니다.
+                  중요한 결정을 어떻게 만들어가는지 네 부분으로 따라가 봅니다.
                 </p>
               </div>
             </div>
             <button className="mv-next" style={{ marginTop: 24 }} onClick={() => setView("home")}>
-              시작하기
+              다음
             </button>
           </>
         )}
@@ -297,7 +297,7 @@ export default function MeditatioV1({ onComplete }) {
             </div>
 
             <button className="mv-next" disabled={!canProceed} onClick={nextQuestion}>
-              {groupIdx === GROUPS.length - 1 && qIdx === group.questions.length - 1 ? "판단 마치기" : "다음"}
+              {groupIdx === GROUPS.length - 1 && qIdx === group.questions.length - 1 ? "판단의 흐름 보기" : "다음"}
             </button>
             {isMulti && (
               <button className="mv-skip" onClick={nextQuestion}>
@@ -312,7 +312,7 @@ export default function MeditatioV1({ onComplete }) {
             <button className="mv-back" onClick={() => setView("home")}>
               ← 목록으로
             </button>
-            <h2>지금, 나는 이렇게 판단합니다</h2>
+            <h2>지금까지 만들어진 판단의 흐름</h2>
             <div className="mv-result-card">{derived.narrative || "아직 판단 흐름을 구성할 만큼 응답이 모이지 않았습니다."}</div>
 
             {derived.affect.length > 0 && (
@@ -327,9 +327,15 @@ export default function MeditatioV1({ onComplete }) {
             )}
 
             {onComplete && (
-              <button className="mv-next" onClick={() => onComplete(derived)}>
-                다른 역할로 이동
-              </button>
+              <>
+                <p className="mv-hint" style={{ margin: 0 }}>
+                  이것이 지금까지 쌓여온 당신의 판단입니다. 이제 여기에 실제로 마음에 있는 일을 하나
+                  올려봅니다.
+                </p>
+                <button className="mv-next" onClick={() => onComplete(derived)}>
+                  지금의 판단 꺼내기
+                </button>
+              </>
             )}
             <button className="mv-restart" onClick={() => setView("home")}>
               목록으로 돌아가기

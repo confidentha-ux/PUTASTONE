@@ -22,8 +22,8 @@ import MeditatioV1 from "./components/MeditatioV1";
 
 const NAV = [
   { key: "home", label: "홈" },
-  { key: "lectio", label: "선택" },
-  { key: "meditatio", label: "판단" },
+  { key: "lectio", label: "받치는 돌" },
+  { key: "meditatio", label: "판단 과정" },
   { key: "speculum", label: "다른 역할" },
   { key: "studiolo", label: "현재의 돌탑" },
 ];

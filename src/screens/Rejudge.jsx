@@ -21,9 +21,9 @@ export default function Rejudge({ initialJudgment, onComplete }) {
 
   return (
     <Shell>
-      <h1 style={titleStyle}>다시, 같은 질문 앞에서</h1>
+      <h1 style={titleStyle}>지금은</h1>
 
-      <div style={labelStyle}>처음의 판단</div>
+      <div style={labelStyle}>처음에는</div>
       <div style={quoteBoxStyle}>{initialJudgment || "기록된 처음의 판단이 없습니다."}</div>
 
       <label style={labelStyle}>이번 질문을 따라가면서 새롭게 보인 것이 있다면 적어주세요.</label>

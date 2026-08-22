@@ -24,19 +24,17 @@ export default function Purpose({ onDone }) {
     >
       <PaperGrain seed={5} baseFrequency={0.75} octaves={2} opacity={0.14} />
       <div style={{ position: "relative", maxWidth: 380, flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
-        <p style={{ fontWeight: 300, fontSize: 14, lineHeight: 2, letterSpacing: "0.01em", color: "#847c6b", whiteSpace: "pre-line" }}>
-          {`우리는 매일 크고 작은 판단을 내립니다.
-
-어떤 것은 쉽게 결정하고, 어떤 것은 오래 고민합니다.
-같은 상황에서도 무엇을 먼저 보고, 무엇을 중요하게 여기느냐에 따라 판단은 달라집니다.`}
-        </p>
-        <p style={{ fontWeight: 500, fontSize: 15, lineHeight: 1.9, color: "#1c1a17", marginTop: 22 }}>
-          돌 하나를 얹다는 당신이 어떤 판단을 내리고, 그 판단이 어떤 기준과 과정을 거쳐 만들어지는지
-          들여다볼 수 있도록 돕습니다.
+        <p style={{ fontWeight: 500, fontSize: 15, lineHeight: 1.9, color: "#1c1a17" }}>
+          돌 하나를 얹다는 내가 나 자신에게 무엇을 허락하고, 어떤 기준과 과정을 거쳐 판단하는지
+          살펴보는 앱입니다.
         </p>
         <p style={{ fontWeight: 300, fontSize: 14, lineHeight: 2, letterSpacing: "0.01em", color: "#847c6b", marginTop: 22 }}>
-          여러 장면과 실제 고민을 지나며, 당신의 판단이 어디에서 시작되고 무엇에 의해 움직이는지
-          발견하게 됩니다.
+          실제 선택과 고민을 통해 무엇이 내 판단에 중요하게 작용하는지, 그리고 어떤 조건과 새로운
+          관점에서 다른 판단이 가능해지는지 직접 확인합니다.
+        </p>
+        <p style={{ fontWeight: 300, fontSize: 14, lineHeight: 2, letterSpacing: "0.01em", color: "#847c6b", marginTop: 22 }}>
+          이 경험이 쌓이면 내가 판단하는 방식과 그 판단이 달라지는 지점을 더 구체적으로 볼 수
+          있습니다.
         </p>
       </div>
       <button

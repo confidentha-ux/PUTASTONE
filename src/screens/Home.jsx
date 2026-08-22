@@ -2,8 +2,8 @@ import React from "react";
 import { useUserState } from "../state/UserStateContext";
 
 const NAV_ITEMS = [
-  { key: "lectio", title: "내가 할 수 있는 선택", desc: "지금 자연스럽게 할 수 있는 선택을 확인합니다" },
-  { key: "meditatio", title: "나는 어떻게 판단하는가?", desc: "내가 판단하는 방식을 살펴봅니다" },
+  { key: "lectio", title: "나를 받치는 돌", desc: "나는 나에게 무엇을 허락하고 있는가" },
+  { key: "meditatio", title: "판단이 만들어지는 과정", desc: "내가 판단하는 방식을 살펴봅니다" },
   { key: "speculum", title: "다른 역할 입어보기", desc: "지금의 판단에 다른 질문을 얹어봅니다" },
   { key: "studiolo", title: "현재의 돌탑", desc: "지금까지 얹은 돌과, 쌓이면서 드러난 것" },
 ];
@@ -31,7 +31,7 @@ export default function Home({ onNavigate }) {
           오늘은 무엇을 해볼까요?
         </h1>
         <p style={{ color: "#847c6b", fontSize: 13, marginBottom: 28 }}>
-          내가 할 수 있는 선택 {lectioDone ? "완료" : "미완료"} · 나는 어떻게 판단하는가 {meditatioDone ? "완료" : "미완료"}
+          나를 받치는 돌 {lectioDone ? "완료" : "미완료"} · 판단이 만들어지는 과정 {meditatioDone ? "완료" : "미완료"}
         </p>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {NAV_ITEMS.map((item) => (

@@ -702,9 +702,12 @@ export default function Lectio({ onComplete }) {
             <p className="lc-closing-title">나를 받치는 돌을 놓았습니다</p>
             <div className="lc-closing-rule" />
             <p className="lc-closing-body">
-              지금 어렵게 느껴지는 선택에는
-              <br />그 선택을 어렵게 만드는 <span className="lc-closing-accent">조건</span>이
-              있었습니다.
+              14개의 장면에서 지금의 나에게 어떤 선택이 가능하고 어떤 선택이 어려운지
+              살펴봤습니다.
+              <br />
+              그리고 어려웠던 선택은, 나를 막고 있던{" "}
+              <span className="lc-closing-accent">조건</span>을 하나씩 덜어내며 다시
+              바라봤습니다.
             </p>
             <p className="lc-closing-body">
               그 조건을 하나씩 살펴보니,

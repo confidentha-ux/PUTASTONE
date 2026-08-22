@@ -249,6 +249,14 @@ const ITEMS = [
   },
 ];
 
+// 마지막 글자에 받침이 있는지로 "이었습니다"/"였습니다" 중 맞는 어미를 고른다 — AXIS_LABEL 값마다
+// 받침 유무가 달라서(예: "책임"은 받침 있음, "평가"는 없음) 하나로 하드코딩하면 절반은 틀린다.
+function wasSuffix(word) {
+  const lastChar = word.charCodeAt(word.length - 1);
+  const hasBatchim = (lastChar - 0xac00) % 28 !== 0;
+  return hasBatchim ? "이었습니다" : "였습니다";
+}
+
 const AXIS_LABEL = {
   evaluation: "타인의 평가",
   relationship: "관계가 달라짐",
@@ -312,6 +320,13 @@ const CSS = `
 .lc-actions { display: flex; gap: 10px; margin-top: 18px; }
 .lc-btn { flex: 1; padding: 16px 10px; border-radius: 2px; font-size: 15px; font-family: inherit; cursor: pointer; background: rgba(49,53,45,0.06); border: 1px solid var(--line); color: var(--paper); }
 .lc-panel { flex: 1; display: flex; flex-direction: column; gap: 20px; padding-top: 8px; }
+.lc-closing { flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; padding-top: 32px; }
+.lc-closing svg { margin-bottom: 20px; }
+.lc-closing-title { font-family: Pretendard, sans-serif; font-weight: 800; letter-spacing: -0.01em; font-size: 19px; line-height: 1.4; color: var(--ink); margin: 0; max-width: 220px; }
+.lc-closing-rule { width: 28px; height: 1px; background: rgba(28,26,23,0.3); margin: 22px 0; }
+.lc-closing-body { font-weight: 300; font-size: 13px; line-height: 2; letter-spacing: 0.01em; color: var(--muted); text-align: left; margin: 0 0 20px; }
+.lc-closing-accent { color: var(--open); font-weight: 600; }
+.lc-closing-lead { font-weight: 500; font-size: 14px; line-height: 1.9; color: var(--ink); text-align: left; margin: 0 0 28px; }
 .lc-q { font-family: Pretendard, sans-serif; font-size: 19px; line-height: 1.62; margin: 0; font-weight: 400; }
 .lc-subject { font-size: 12px; color: var(--open); border-left: 2px solid rgba(28,26,23,0.5); padding-left: 10px; margin: 0; }
 .lc-counter { font-size: 11px; color: var(--muted); margin: 0 0 4px; letter-spacing: 0.04em; }
@@ -561,9 +576,12 @@ export default function Lectio({ onComplete }) {
             </div>
             {closed.length > 0 && (
               <p className="lc-note">
-                앞에서는 지금 내가 나 자신에게 무엇을 허락하고 있는지 살펴봤습니다. 이제 어렵다고
-                답한 선택만 다시 보면서, 무엇이 그 선택을 어렵게 만드는지 확인합니다. 그다음 무엇이
-                달라지면 같은 선택을 할 수 있는지도 살펴봅니다.
+                앞에서는 지금 내가 나 자신에게 무엇을 허락하고 있는지 살펴봤습니다. 이미
+                자연스럽게 하고 있는 선택은 다시 볼 이유가 없습니다.
+                <br />
+                <br />
+                '어렵다'고 답한 선택은 자동으로 그렇게 판단했을 수 있습니다. 그 판단에 실제로
+                근거가 있는지, 조건에 따라 달라질 수 있는 건지 지금부터 확인합니다.
                 <br />
                 <br />
                 같은 선택도 조건이 달라지면 판단이 달라질 수 있습니다. 지금의 선택을 결정하고 있는
@@ -653,21 +671,47 @@ export default function Lectio({ onComplete }) {
         )}
 
         {screen === "closing" && (
-          <div className="lc-panel">
-            <p className="lc-q">나를 받치는 돌을 놓았습니다</p>
-            <p className="lc-note">
-              처음에는 지금 나에게 허락하고 있는 선택과 아직 어려운 선택을 살펴봤습니다. 그리고
-              어려운 선택을 다시 보면서 무엇이 그 선택을 어렵게 만드는지, 무엇이 달라지면
-              가능해지는지 확인했습니다.
-              <br />
-              <br />
-              여기서 중요한 것은 조건입니다. 지금 어렵게 느껴지는 선택에도 내가 그 선택을 나에게
-              허락할 수 있는 조건이 있습니다. 그 조건을 알게 되면 다음에 같은 상황을 만났을 때
-              무엇이 달라지면 다른 선택이 가능한지 함께 생각할 수 있습니다.
-              <br />
-              <br />
-              내가 나에게 허락할 수 있는 선택을 하나씩 늘려가는 것. 이것이 여기서 시작하는 첫 번째
-              인지훈련입니다.
+          <div className="lc-closing">
+            <svg width="34" height="36" viewBox="30 25 180 195" aria-hidden="true">
+              <g stroke="#1c1a17" strokeOpacity="0.3" strokeWidth="1" strokeLinejoin="round">
+                <path d="M42,196 Q111,181 198,196 Q132,211 42,196 Z" fill="#2b2823" />
+                <path d="M49,177 Q123,163 177,177 Q105,191 49,177 Z" fill="#3d3a34" />
+                <path d="M75,160 Q121,147 179,160 Q135,173 75,160 Z" fill="#524e46" />
+                <path d="M70,121 Q106,109 160,121 Q124,133 70,121 Z" fill="#696459" />
+                <path d="M91,99 Q132,88 159,99 Q117,110 91,99 Z" fill="#827c6d" />
+                <path d="M94,79 Q110,69 142,79 Q126,89 94,79 Z" fill="#9c9584" />
+                <path d="M105,60 Q124,47 135,60 Q116,73 105,60 Z" fill="#b8b09c" />
+              </g>
+            </svg>
+            <p className="lc-closing-title">나를 받치는 돌을 놓았습니다</p>
+            <div className="lc-closing-rule" />
+            {closed.length > 0 ? (
+              <p className="lc-closing-body">
+                지금 어렵게 느껴지는 선택에도 <span className="lc-closing-accent">조건</span>이
+                있습니다. 오늘 열네 개 중 <b>{closed.length}개</b>에서 그 조건을 확인했고
+                {dominantDomain && (
+                  <>
+                    , 가장 많이 반복된 건 <b>'{AXIS_LABEL[dominantDomain.domain]}'</b>
+                    {wasSuffix(AXIS_LABEL[dominantDomain.domain])}
+                  </>
+                )}
+                .
+              </p>
+            ) : (
+              <p className="lc-closing-body">
+                지금 어렵게 느껴지는 선택에도{" "}
+                <span className="lc-closing-accent">조건</span>이 있습니다.
+              </p>
+            )}
+            {closed.length > 0 && (
+              <p className="lc-closing-body">
+                같은 선택도 조건이 갖춰지면 판단이 달라집니다. 다음에 같은 상황을 만나면, 무엇이
+                갖춰져야 하는지 이미 알고 시작하게 됩니다.
+              </p>
+            )}
+            <p className="lc-closing-lead">
+              내가 나에게 허락할 수 있는 선택을 하나씩 늘려가는 것 — 이것이 여기서부터
+              시작됩니다.
             </p>
             <button className="lc-next" onClick={() => onComplete({ items, dominantDomain })}>
               계속하기

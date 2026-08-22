@@ -77,21 +77,23 @@ export default function Speculum({ onNavigate, currentJudgment }) {
     return (
       <Rejudge
         initialJudgment={initialJudgment}
-        onComplete={({ newInformation, judgmentShift, rejudgment }) => {
-          setPendingResult({ ...pendingResult, newInformation, judgmentShift, rejudgment, rejudgmentDone: true });
+        onComplete={({ rejudgment }) => {
+          setPendingResult({ ...pendingResult, rejudgment, rejudgmentDone: true });
         }}
       />
     );
   }
 
   // "8. 한 번의 인지 시뮬레이션 결과" — 실제 저장은 이 화면의 [ 돌 하나를 얹다 ] 버튼을 눌러야 일어난다.
+  // "새롭게 생긴 것"은 Rejudge에서 따로 묻지 않는다 — 페르소나 자신이 만든 answers.suggestion을 그대로 쓴다
+  // (18개 페르소나 모두 완료 시 summary/suggestion을 반드시 채우도록 되어 있다).
   if (pendingResult && pendingResult.rejudgmentDone) {
+    const newInformation = pendingResult.answers?.suggestion ?? "";
     return (
       <SessionResult
         personaName={pendingResult.personaName}
         initialJudgment={initialJudgment}
-        newInformation={pendingResult.newInformation}
-        judgmentShift={pendingResult.judgmentShift}
+        newInformation={newInformation}
         rejudgment={pendingResult.rejudgment}
         onSave={() => {
           const session = makeSpeculumSession({
@@ -100,8 +102,7 @@ export default function Speculum({ onNavigate, currentJudgment }) {
             personaVersion: SCHEMA_VERSIONS.personaProtocolVersion,
             initialJudgment,
             operationData: pendingResult.answers,
-            newInformation: pendingResult.newInformation,
-            judgmentShift: pendingResult.judgmentShift,
+            newInformation,
             rejudgment: pendingResult.rejudgment,
             reflection: pendingResult.answers?.suggestion ?? "",
             rawAnswers: pendingResult.answers,

@@ -1,21 +1,12 @@
 import React from "react";
 
-const SHIFT_LABEL = {
-  same: "처음과 같은 판단입니다",
-  reason_shift: "같은 판단이지만, 그 이유는 달라졌습니다",
-  different: "다른 판단을 하게 되었습니다",
-  unclear: "아직 잘 모르겠습니다",
-};
-
 // claude/돌하나를-얹다-app-spec-v1.md "8. 한 번의 인지 시뮬레이션 결과".
-// 저장되는 것은 세션 전체(Initial Judgment / Operation / New Information / Judgment Shift /
-// Rejudgment)다 — 이 화면은 저장 전에 그 다섯 가지를 한 화면에 모아 보여주고, 실제 저장은
-// [ 돌 하나를 얹다 ] 버튼을 눌러야 일어난다.
+// 저장되는 것은 세션 전체(Initial Judgment / Operation / New Information / Rejudgment)다 — 이 화면은
+// 저장 전에 그 네 가지를 한 화면에 모아 보여주고, 실제 저장은 [ 돌 하나를 얹다 ] 버튼을 눌러야 일어난다.
 export default function SessionResult({
   personaName,
   initialJudgment,
   newInformation,
-  judgmentShift,
   rejudgment,
   onSave,
 }) {
@@ -26,7 +17,6 @@ export default function SessionResult({
       <Row label="처음의 판단" value={initialJudgment || "—"} />
       <Row label="이번에 따라간 질문" value={personaName || "—"} />
       <Row label="새롭게 생긴 것" value={newInformation || "특별히 없음"} />
-      <Row label="판단의 변화" value={SHIFT_LABEL[judgmentShift] ?? "—"} />
       <Row label="지금의 판단" value={rejudgment || "—"} />
 
       <button style={{ ...primaryButtonStyle, width: "100%", marginTop: 8 }} onClick={onSave}>

@@ -27,11 +27,12 @@ const CSS = `
 .st-section h2 { font-family: Pretendard, sans-serif; font-size: 16px; font-weight: 400; color: #1c1a17; margin: 0 0 12px; }
 .st-card { background: rgba(49,53,45,0.04); border: 1px solid rgba(49,53,45,0.14); border-radius: 4px; padding: 16px 18px; font-size: 13.5px; line-height: 1.8; white-space: pre-line; }
 .st-empty { color: #847c6b; font-size: 13px;  }
+.st-guide { color: #847c6b; font-size: 12.5px; line-height: 1.8; margin-top: 16px; }
 .st-tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
 .st-tag { font-size: 11px; padding: 4px 9px; border-radius: 20px; border: 1px solid rgba(49,53,45,0.14); color: #847c6b; }
 .st-item { padding: 10px 0; border-bottom: 1px solid rgba(49,53,45,0.08); font-size: 13.5px; }
 .st-item:last-child { border-bottom: none; }
-.st-item .k { color: #1c1a17; font-size: 11px; letter-spacing: 0.04em; display: block; margin-bottom: 2px; }
+.st-item .k { color: #847c6b; font-size: 11px; letter-spacing: 0.04em; display: block; margin-top: 4px; }
 `;
 
 export default function Studiolo() {
@@ -88,11 +89,11 @@ export default function Studiolo() {
           ) : (
             speculumSessions.map((s) => (
               <div key={s.sessionId} className="st-item">
+                {s.initialJudgment}
                 <span className="k">
                   {PERSONA_REGISTRY[s.personaId]?.koreanName ?? s.personaId}
                   {s.timestamp ? ` · ${formatSessionDate(s.timestamp)}` : ""}
                 </span>
-                {s.initialJudgment} → {s.rejudgment}
               </div>
             ))
           )}
@@ -111,6 +112,10 @@ export default function Studiolo() {
               </div>
             ))
           )}
+          <p className="st-guide">
+            하나의 돌만으로는 탑의 모양을 알기 어렵습니다. 여러 판단이 쌓이면, 현재의 돌탑이 어떤
+            모양을 이루고 있는지 조금씩 보이기 시작합니다.
+          </p>
         </div>
       </div>
     </div>

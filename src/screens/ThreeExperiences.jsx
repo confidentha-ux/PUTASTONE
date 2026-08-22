@@ -51,7 +51,7 @@ export default function ThreeExperiences({ onDone }) {
         }}
         onClick={onDone}
       >
-        시작하기
+        다음
       </button>
     </div>
   );

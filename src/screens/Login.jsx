@@ -45,15 +45,15 @@ export default function Login({ onDone }) {
         <StoneMark />
       </div>
       <h1 style={{ position: "relative", fontWeight: 800, letterSpacing: "-0.02em", fontSize: 26, margin: 0 }}>돌 하나를 얹다</h1>
-      <p style={{ position: "relative", color: "#847c6b", fontWeight: 300, fontSize: 14, lineHeight: 1.9, marginTop: 18, marginBottom: 0, whiteSpace: "pre-line" }}>
-        {`결정하기 어려운 일이 있을 때,
-그 고민을 적고 몇 가지 질문에 답해보세요.
+      <p style={{ position: "relative", color: "#847c6b", fontWeight: 300, fontSize: 14, lineHeight: 1.9, marginTop: 18, marginBottom: 40, whiteSpace: "pre-line" }}>
+        {`생각을 오래 했는데도
+비슷한 선택을 반복하고 있나요?
 
-왜 이 선택은 어렵게 느껴지는지,
-무엇이 달라지면 다른 선택도 가능해지는지 살펴봅니다.`}
-      </p>
-      <p style={{ position: "relative", color: "#1c1a17", fontWeight: 500, fontSize: 14.5, lineHeight: 1.8, marginTop: 22, marginBottom: 40 }}>
-        지금보다 더 많은 선택을 생각할 수 있도록.
+내가 어떤 기준으로 판단하는지 살펴보고,
+평소에는 떠올리지 않았던 방식으로도 생각해봅니다.
+
+그렇게 경험한 판단 방법은
+필요한 순간에 다시 꺼내 쓸 수 있게 쌓입니다.`}
       </p>
       <button
         style={{

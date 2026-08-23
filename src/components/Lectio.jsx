@@ -508,7 +508,11 @@ export default function Lectio({ onComplete }) {
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <PaperGrain seed={3} opacity={0.14} />
       <div className="lc-shell">
-        <SectionMark number="01" title="나를 받치는 돌" />
+        {screen === "result" ? (
+          <SectionMark number="1" title="현재의 돌탑" />
+        ) : (
+          <SectionMark number="01" title="나를 받치는 돌" />
+        )}
 
         {screen === "intro" && (
           <>
@@ -648,7 +652,7 @@ export default function Lectio({ onComplete }) {
 
         {screen === "result" && (
           <div className="lc-panel">
-            <p className="lc-q">오늘 {order.length}개의 장면에서, 내가 자연스럽게 선택하는 것과 조건이 필요한 것을 확인했습니다.</p>
+            <p className="lc-note" style={{ fontWeight: 700, color: "var(--ink)" }}>나를 받치는 돌</p>
 
             <p className="lc-note">자연스럽게 선택하는 것</p>
             <div className="lc-opened">
@@ -657,39 +661,32 @@ export default function Lectio({ onComplete }) {
               ))}
             </div>
 
-            <p className="lc-note" style={{ marginTop: 22 }}>조건이 필요한 것</p>
+            <p className="lc-note" style={{ marginTop: 22 }}>어렵게 느껴지는 것</p>
             <div className="lc-opened">
               {items.filter((it) => it.status === "closed").map((it) => (
                 <div key={it.itemId} className="lc-mini">
                   {it.label}
-                  {it.closingLogic && <div className="lc-cond">그 선택을 어렵게 만든 생각 — {it.closingLogic.text}</div>}
-                  {it.openingCondition && <div className="lc-cond">이럴 때는 선택할 수 있습니다 — {it.openingCondition}</div>}
+                  {it.closingLogic && <div className="lc-cond">이 선택을 어렵게 만든 생각 — {it.closingLogic.text}</div>}
+                  {it.openingCondition && <div className="lc-cond">이 생각이 덜 크게 작용할 수 있는 조건 — {it.openingCondition}</div>}
                 </div>
               ))}
             </div>
 
             {dominantDomain && (
               <div className="lc-tally">
+                지금까지의 답을 함께 보면,
+                <br />
+                당신의 판단에는 이런 결이 있습니다.
+                <br />
                 <b>{AXIS_LABEL[dominantDomain.domain]}</b> — {dominantDomain.n}번
                 <br />
                 {AXIS_MEANING[dominantDomain.domain]}
               </div>
             )}
 
-            {onComplete && (
-              <button className="lc-next" onClick={() => setScreen("closing")}>
-                계속
-              </button>
-            )}
-            <div className="lc-foot">
-              <button className="lc-restart" onClick={() => setScreen("intro")}>처음부터 다시</button>
-            </div>
-          </div>
-        )}
+            <div style={{ height: 1, background: "rgba(28,26,23,0.14)", margin: "28px 0" }} />
 
-        {screen === "closing" && (
-          <div className="lc-closing">
-            <svg width="72" height="26" viewBox="30 175 180 42" aria-hidden="true">
+            <svg width="72" height="26" viewBox="30 175 180 42" aria-hidden="true" style={{ display: "block", margin: "0 auto 16px" }}>
               <path
                 d="M42,196 Q111,181 198,196 Q132,211 42,196 Z"
                 fill="#2b2823"
@@ -702,42 +699,69 @@ export default function Lectio({ onComplete }) {
             <p className="lc-closing-title">나를 받치는 돌을 놓았습니다</p>
             <div className="lc-closing-rule" />
             <p className="lc-closing-body">
-              14개의 장면에서 지금의 나에게 어떤 선택이 가능하고 어떤 선택이 어려운지
-              살펴봤습니다.
-              <br />
-              그리고 어려웠던 선택은, 나를 막고 있던{" "}
-              <span className="lc-closing-accent">조건</span>을 하나씩 덜어내며 다시
-              바라봤습니다.
+              어떤 선택은 할 수 없어서가 아니라
+              <br />"내가 그래도 될까?"라는 생각 때문에 검토하기도 전에 빠집니다.
             </p>
             <p className="lc-closing-body">
-              그 조건을 하나씩 살펴보니,
-              <br />무엇이 달라져야 그 선택을 나에게 허락할 수 있는지도 보였습니다.
+              도움을 먼저 청하지 않고,
+              <br />원하는 것을 말하지 않고,
+              <br />거절할 수 있는데도 받아들이는 식입니다.
             </p>
             <p className="lc-closing-body">
-              앞으로 어떤 선택 앞에서 망설이게 될 때
-              <br />이렇게 한 번 물어보세요.
+              <span className="lc-closing-accent">자기허용</span>은 내가 어떤 선택까지
+              <br />실제로 내 선택지에 올려놓고 판단할 수 있는지를 보여줍니다.
             </p>
-            <p className="lc-closing-prompt">
-              무엇이 달라지면,
-              <br />나도 이 선택을 나에게 허락할 수 있을까?
+            <p className="lc-closing-prompt">돈은 이 차이를 특히 분명하게 보여줍니다.</p>
+            <p className="lc-closing-body">
+              나를 위해 돈을 쓰는 데에는
+              <br />내가 원하는 것에 내 자원을 써도 되는가가 들어 있습니다.
             </p>
             <p className="lc-closing-body">
-              조건이 달라지면
-              <br />나에게 허락할 수 있는 선택도 늘어날 수 있습니다.
+              큰돈이 걸린 결정을 직접 내리는 데에는
+              <br />그만큼 중요한 결정을 내가 맡아도 되는가가 들어 있습니다.
             </p>
             <p className="lc-closing-body">
-              조금 더 거절해도 되고,
-              <br />도움을 청해도 되고,
-              <br />원하는 것을 말해도 되고,
-              <br />나를 위해 선택해도 됩니다.
+              내가 한 일의 가격을 먼저 말하는 데에는
+              <br />내 일의 가치를 내가 정하고 먼저 말해도 되는가가 들어 있습니다.
+            </p>
+            <p className="lc-closing-body">
+              모두 돈에 관한 선택이지만,
+              <br />하나는 내 욕구, 하나는 내 결정권, 하나는 내 일의 가치를 다룹니다.
+            </p>
+            <p className="lc-closing-body">
+              어렵다고 답한 선택을 다시 본 것도
+              <br />그 '어렵다' 안에 무엇이 들어 있는지 보기 위해서였습니다.
+            </p>
+            <p className="lc-closing-body">
+              무엇이 마음에 걸렸는지,
+              <br />그 생각이 덜 중요해지는 경우는 언제인지 살펴보면
+              <br />막연했던 어려움이 조금 더 구체적으로 보입니다.
+            </p>
+            <p className="lc-closing-body">
+              그때부터는 단순히
+              <br />"이건 나에게 어려운 선택이야"에서 끝나지 않습니다.
+            </p>
+            <p className="lc-closing-body">
+              무엇 때문에 어려운지 알고,
+              <br />그 이유까지 포함해 다시 판단할 수 있습니다.
+            </p>
+            <p className="lc-closing-body">
+              어렵다는 이유만으로 판단하기 전에 선택지를 지우지 않는 것.
+              <br />어려움 안에 들어 있는 생각과 조건까지 한 번 더 보는 것.
             </p>
             <p className="lc-closing-lead">
-              그렇게 나에게 허락하는 선택을 하나씩 늘려가는 것.
-              <br />그것이 나를 받치는 기초석이 됩니다.
+              우리는 이것을 앞으로의 판단을 받치는
+              <br />기초석이라고 부릅니다.
             </p>
-            <button className="lc-next" onClick={() => onComplete({ items, dominantDomain })}>
-              다음 돌로 가기
-            </button>
+
+            {onComplete && (
+              <button className="lc-next" onClick={() => onComplete({ items, dominantDomain })}>
+                판단이 만들어지는 과정 보기
+              </button>
+            )}
+            <div className="lc-foot">
+              <button className="lc-restart" onClick={() => setScreen("intro")}>처음부터 다시</button>
+            </div>
           </div>
         )}
       </div>

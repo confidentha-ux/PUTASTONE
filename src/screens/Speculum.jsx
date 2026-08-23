@@ -22,7 +22,7 @@ export default function Speculum({ onNavigate, currentJudgment }) {
   const meditatioDerived = state.meditatio.derived;
   const initialJudgment = currentJudgment?.initialJudgment ?? "";
   const [selectedPersonaId, setSelectedPersonaId] = useState(null);
-  const [operationConfirmed, setOperationConfirmed] = useState(false);
+  const [stage, setStage] = useState("intro"); // "intro" | "pick" | "confirm"
   const [openPersonaId, setOpenPersonaId] = useState(null);
   const [justCompleted, setJustCompleted] = useState(null);
   // Persona 질문을 마친 뒤 재판단(Rejudge)과 세션 결과(SessionResult) 두 화면을 지나야 실제로
@@ -36,7 +36,7 @@ export default function Speculum({ onNavigate, currentJudgment }) {
     const ranked = rankFamilies(scores, meditatioDerived);
     const candidateFamilies = ranked.filter((r) => r.candidate);
     const candidatePersonas = getCandidatePersonas(candidateFamilies);
-    const operationCandidates = buildOperationCandidatesFromRankedFamilies(ranked, { max: 3 });
+    const operationCandidates = buildOperationCandidatesFromRankedFamilies(ranked, { max: 2 });
     return { ranked, candidateFamilies, candidatePersonas, operationCandidates };
   }, [meditatioDerived]);
 
@@ -116,7 +116,7 @@ export default function Speculum({ onNavigate, currentJudgment }) {
           actions.addSpeculumSession(session);
           setJustCompleted(true);
           setPendingResult(null);
-          setOperationConfirmed(false);
+          setStage("intro");
           setSelectedPersonaId(null);
         }}
       />
@@ -157,80 +157,95 @@ export default function Speculum({ onNavigate, currentJudgment }) {
 
   const selectedPersona = routing.operationCandidates.find((p) => p.id === selectedPersonaId) ?? null;
 
-  // "9. 지금은" 이후 페르소나를 마치고 여기로 돌아왔을 때 justCompleted를 보여주는 화면은
-  // "돌 하나를 고르다" 쪽에 둔다 — 다음 렌즈를 고르는 시작점이기 때문.
-  if (!operationConfirmed) {
+  // "9. 다른 판단 방식 안내" — 완료 직후 돌아왔을 때도 여기가 시작점이다.
+  if (stage === "intro") {
     return (
-      <Shell sectionTitle="돌 하나를 고르다">
-        <h1 style={titleStyle}>돌 하나를 고르다</h1>
-        <p style={bodyStyle}>
-          지금의 판단에 서로 다른 질문을 하나씩 얹어볼 수 있습니다. 지금 따라가 보고 싶은 질문을
-          골라주세요.
-        </p>
+      <Shell>
+        <h1 style={titleStyle}>다른 역할 입어보기</h1>
 
         {justCompleted && (
           <div style={completedBoxStyle}>
             <div style={{ fontSize: 14, marginBottom: 14 }}>돌 하나가 더해졌습니다.</div>
             <div style={{ display: "flex", gap: 10 }}>
               <button style={primaryButtonStyle} onClick={() => onNavigate("studiolo")}>현재의 돌탑으로 이동</button>
-              <button style={secondaryButtonStyle} onClick={() => setJustCompleted(null)}>다른 렌즈 보기</button>
+              <button style={secondaryButtonStyle} onClick={() => setJustCompleted(null)}>다른 역할 보기</button>
             </div>
           </div>
         )}
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 24 }}>
-          {routing.operationCandidates.map((persona) => (
-            <button
-              key={persona.id}
-              data-testid="operation-card"
-              data-persona-id={persona.id}
-              onClick={() => setSelectedPersonaId(persona.id)}
-              style={{
-                ...personaCardStyle,
-                borderColor: selectedPersonaId === persona.id ? "#1c1a17" : "rgba(49,53,45,0.14)",
-              }}
-            >
-              <div style={{ fontFamily: "Pretendard, sans-serif", fontSize: 15.5, lineHeight: 1.5 }}>
-                {persona.operationHeader}
-              </div>
-            </button>
-          ))}
-        </div>
+        <p style={bodyStyle}>이번에는 다른 판단 방식을 사용해봅니다.</p>
+        <p style={bodyStyle}>
+          「나를 받치는 돌」에서는 어려운 선택에 걸려 있던 생각을 한 번 덜어내 봤습니다. 이번에는
+          지금의 고민을 다른 판단 방식으로 생각해봅니다.
+        </p>
+        <p style={bodyStyle}>
+          각 역할은 판단을 다루는 자기만의 방법을 가지고 있습니다. 역할을 하나 고르면 그 역할의
+          방식대로 지금의 고민을 생각해봅니다.
+        </p>
+        <p style={bodyStyle}>마치 잠시 다른 가면을 써보는 것처럼요.</p>
 
-        <button
-          style={{ ...primaryButtonStyle, width: "100%", opacity: selectedPersona ? 1 : 0.5 }}
-          disabled={!selectedPersona}
-          onClick={() => setOperationConfirmed(true)}
-        >
-          이 질문을 얹어보기
+        <button style={{ ...primaryButtonStyle, width: "100%" }} onClick={() => setStage("pick")}>
+          역할 보기
         </button>
       </Shell>
     );
   }
 
-  // "8. 다른 역할 입어보기" — Operation을 고른 뒤에만 실제로 어떤 Persona를 쓰는지 드러난다.
-  return (
-    <Shell sectionTitle="다른 역할 입어보기">
-      <h1 style={titleStyle}>다른 역할 입어보기</h1>
-      <p style={bodyStyle}>다른 사람들의 인지구조를 따라가 봅니다.</p>
+  // "10. 두 역할 추천" — Family Routing + operationDedup으로 이미 정해진 상위 2명을 그대로 보여준다.
+  // 자유 탐색이 아니라, 각 카드에 바로 시작 버튼이 붙는다.
+  if (stage === "pick") {
+    return (
+      <Shell>
+        <h1 style={titleStyle}>어떤 역할로 생각해볼까요?</h1>
+        <p style={bodyStyle}>
+          앞에서 답한 내용과 지금 적어준 고민을 바탕으로 이번에 사용해볼 두 역할을 골랐습니다.
+        </p>
 
+        <div style={{ display: "flex", flexDirection: "column", gap: 14, marginTop: 8 }}>
+          {routing.operationCandidates.map((persona) => (
+            <div key={persona.id} style={personaCardStyle}>
+              <div style={{ fontFamily: "Pretendard, sans-serif", fontWeight: 700, fontSize: 15.5, marginBottom: 6 }}>
+                {persona.koreanName}
+              </div>
+              <div style={{ fontSize: 13, color: "#847c6b", marginBottom: 14, lineHeight: 1.6 }}>
+                {persona.operationHeader}
+              </div>
+              <button
+                style={primaryButtonStyle}
+                onClick={() => {
+                  setSelectedPersonaId(persona.id);
+                  setStage("confirm");
+                }}
+              >
+                이 역할로 시작하기
+              </button>
+            </div>
+          ))}
+        </div>
+      </Shell>
+    );
+  }
+
+  // "11. 선택한 역할"
+  return (
+    <Shell>
       <div style={noticeBoxStyle}>
-        <div style={{ fontFamily: "Pretendard, sans-serif", fontSize: 16, marginBottom: 12 }}>
+        <div style={{ fontFamily: "Pretendard, sans-serif", fontWeight: 700, fontSize: 16, marginBottom: 8 }}>
           {selectedPersona?.koreanName}
         </div>
         <div style={{ fontSize: 13.5, color: "#847c6b", marginBottom: 14 }}>{selectedPersona?.operationHeader}</div>
         <div style={{ display: "flex", gap: 10 }}>
           <button style={primaryButtonStyle} onClick={() => setOpenPersonaId(selectedPersona.id)}>
-            시작
+            가면쓰기
           </button>
           <button
             style={secondaryButtonStyle}
             onClick={() => {
-              setOperationConfirmed(false);
+              setStage("pick");
               setSelectedPersonaId(null);
             }}
           >
-            다시 고르기
+            다른 역할 고르기
           </button>
         </div>
       </div>
@@ -238,7 +253,7 @@ export default function Speculum({ onNavigate, currentJudgment }) {
   );
 }
 
-function Shell({ children, sectionTitle = "다른 역할 입어보기" }) {
+function Shell({ children }) {
   return (
     <div
       style={{
@@ -254,7 +269,7 @@ function Shell({ children, sectionTitle = "다른 역할 입어보기" }) {
     >
       <PaperGrain seed={23} baseFrequency={0.65} octaves={3} opacity={0.13} />
       <div style={{ maxWidth: 460, margin: "0 auto", position: "relative" }}>
-        <SectionMark number="04" title={sectionTitle} />
+        <SectionMark number="04" title="다른 역할 입어보기" />
         {children}
       </div>
     </div>

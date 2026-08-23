@@ -36,6 +36,15 @@ function buildGroups() {
 const GROUPS = buildGroups();
 const TOTAL_QUESTIONS = GROUPS.reduce((sum, g) => sum + g.questions.length, 0);
 
+// 홈 목록 표시 전용 — MEDITATIO_SECTIONS의 짧은 주제 제목과 별개로,
+// 홈 화면에서는 질문형 제목 + 한 줄 설명을 보여준다(데이터 구조는 안 건드림).
+const SECTION_DISPLAY = {
+  section1: { seq: "1/4", q: "결정을 앞두고 나는 무엇을 먼저 확인하는가?", desc: "정보를 더 확인하는지, 직접 해보는지, 다른 사람의 의견을 듣는지 살펴봅니다." },
+  section2: { seq: "2/4", q: "나는 무엇을 오래 기억하는가?", desc: "어떤 일이 기억에 남아 있고, 좋은 일과 힘든 일이 얼마나 오래 마음에 남는지 살펴봅니다." },
+  section3: { seq: "3/4", q: "나는 어떻게 판단을 내리는가?", desc: "예상과 다른 일이 생겼을 때 무엇을 먼저 보고, 무엇을 믿으며, 어느 정도 확인되면 결정을 내리는지 살펴봅니다." },
+  section4: { seq: "4/4", q: "중요한 결정을 내릴 때 나는 무엇을 부담스러워하는가?", desc: "결정을 앞두고 가장 마음에 걸리는 점과 결정을 미루는 이유를 간단히 살펴봅니다." },
+};
+
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=Gowun+Batang:wght@400;700&display=swap');
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
@@ -224,12 +233,19 @@ export default function MeditatioV1({ onComplete }) {
               한 번에 다 하지 않아도 됩니다. 장 하나씩 이어가면 됩니다.
             </p>
             <div className="mv-cardlist">
-              {sectionsView.map(({ section, doneQ, totalQ }) => (
-                <div key={section.id} className="mv-cardrow" onClick={() => openSection(section)}>
-                  <span>{section.title}</span>
-                  <span className="n">{doneQ}/{totalQ}</span>
-                </div>
-              ))}
+              {sectionsView.map(({ section, doneQ, totalQ }) => {
+                const d = SECTION_DISPLAY[section.id];
+                return (
+                  <div key={section.id} className="mv-cardrow" onClick={() => openSection(section)} style={{ flexDirection: "column", alignItems: "flex-start", gap: 4 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+                      <span style={{ fontSize: 11, color: "var(--muted)" }}>{d?.seq}</span>
+                      <span className="n">{doneQ}/{totalQ}</span>
+                    </div>
+                    <span style={{ fontWeight: 500 }}>{d?.q ?? section.title}</span>
+                    {d?.desc && <span style={{ fontSize: 11.5, fontWeight: 300, color: "var(--muted)", lineHeight: 1.6 }}>{d.desc}</span>}
+                  </div>
+                );
+              })}
             </div>
             <p style={{ fontSize: 12, marginTop: 8 }}>
               전체 {answeredCount}/{TOTAL_QUESTIONS}문항 응답됨

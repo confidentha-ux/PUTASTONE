@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useUserState } from "./state/UserStateContext";
 import Login from "./screens/Login";
-import ThreeExperiences from "./screens/ThreeExperiences";
 import Start from "./screens/Start";
 import Home from "./screens/Home";
 import Studiolo from "./screens/Studiolo";
@@ -10,10 +9,11 @@ import CurrentJudgment from "./screens/CurrentJudgment";
 import Lectio from "./components/Lectio";
 import MeditatioV1 from "./components/MeditatioV1";
 
-// App Shell — claude/돌하나를-얹다-app-spec-v1.md 확정 흐름 + claude/renaissance-mirror-full-copy-v1.md·
-// claude/온보딩 에 확정된 로그인/사용목적/세 가지 경험(브랜드명·라틴어만 교체)을 앞에 붙였다:
-//   로그인 → 인트로(돌탑 시) → 사용목적 → 세 가지 경험 → Lectio → Meditatio → 지금의 판단(신설) →
-//   Speculum(Operation 선택 → Persona) → 현재의 돌탑(첫 진입) → HOME → 이후 반복 사용
+// App Shell — 2026-08-22 초반 구조 수정본:
+//   로그인 → 첫 화면(돌탑의 의미) → 홈(전체 흐름과 현재 위치) → 01 나를 받치는 돌 →
+//   02 판단이 만들어지는 과정 → 03 지금의 판단 → 다른 역할 입어보기 → 지금은 → 이번에 생긴 것 →
+//   현재의 돌탑(별도 공간, 홈에서 언제든 진입 가능)
+// 기존 "세 가지 경험" 화면은 삭제 — 첫 화면 버튼을 누르면 바로 홈으로 이동한다.
 // 로그인은 실제 인증이 없다(백엔드 미구현) — 버튼을 누르면 바로 다음 화면으로 넘어간다.
 //
 // "지금의 판단" 화면(CurrentJudgment)에서 받은 두 번째 입력이 Speculum Session의
@@ -27,7 +27,7 @@ const NAV = [
   { key: "studiolo", label: "현재의 돌탑" },
 ];
 
-const ONBOARDING_SCREENS = ["login", "start", "threeExperiences"];
+const ONBOARDING_SCREENS = ["login", "start"];
 
 export default function App() {
   const { state } = useUserState();
@@ -75,8 +75,7 @@ export default function App() {
 
       <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
         {screen === "login" && <Login onDone={() => goTo("start")} />}
-        {screen === "start" && <Start onStart={() => goTo("threeExperiences")} />}
-        {screen === "threeExperiences" && <ThreeExperiences onDone={() => goTo("lectio")} />}
+        {screen === "start" && <Start onStart={() => goTo("home")} />}
         {screen === "home" && <Home onNavigate={goTo} />}
         {screen === "lectio" && <Lectio onComplete={() => goTo("meditatio")} />}
         {screen === "meditatio" && <MeditatioV1 onComplete={() => goTo("judgment")} />}

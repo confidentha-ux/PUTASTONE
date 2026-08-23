@@ -7,12 +7,12 @@ export default function Rejudge({ initialJudgment, onComplete }) {
 
   return (
     <Shell>
-      <h1 style={titleStyle}>지금은</h1>
+      <h1 style={titleStyle}>가면을 벗고</h1>
 
       <div style={labelStyle}>처음에는</div>
       <div style={quoteBoxStyle}>{initialJudgment || "기록된 처음의 판단이 없습니다."}</div>
 
-      <label style={labelStyle}>질문을 지나온 지금, 같은 일을 어떻게 판단하고 있나요?</label>
+      <label style={labelStyle}>같은 고민에 대해 지금은 어떻게 생각하나요?</label>
       <textarea
         style={textareaStyle}
         rows={4}

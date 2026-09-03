@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useUserState } from "./state/UserStateContext";
 import Login from "./screens/Login";
 import Start from "./screens/Start";
@@ -30,8 +30,8 @@ const NAV = [
 const ONBOARDING_SCREENS = ["login", "start"];
 
 export default function App() {
-  const { state } = useUserState();
-  const [screen, setScreen] = useState(state.meditatio.completedAt ? "home" : "login");
+  const { state, isLoggedIn, authLoading } = useUserState();
+  const [screen, setScreen] = useState("login");
   const [showNav, setShowNav] = useState(!ONBOARDING_SCREENS.includes(screen));
   const [currentJudgment, setCurrentJudgment] = useState(null);
 
@@ -39,6 +39,19 @@ export default function App() {
     setScreen(next);
     setShowNav(!ONBOARDING_SCREENS.includes(next));
   };
+
+  // 인증 확인이 끝났는데 이미 로그인되어 있으면(재방문, 또는 Google/이메일 인증 뒤 리다이렉트로
+  // 돌아온 경우 포함) login 화면을 건너뛴다 — 인트로 시(start)는 로그인마다 한 번은 보여준다.
+  useEffect(() => {
+    if (!authLoading && isLoggedIn && screen === "login") {
+      goTo("start");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authLoading, isLoggedIn]);
+
+  if (authLoading) {
+    return <div style={{ minHeight: "100vh", background: "#eae6da" }} />;
+  }
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
@@ -74,7 +87,7 @@ export default function App() {
       )}
 
       <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
-        {screen === "login" && <Login onDone={() => goTo("start")} />}
+        {screen === "login" && <Login />}
         {screen === "start" && <Start onStart={() => goTo("home")} />}
         {screen === "home" && <Home onNavigate={goTo} />}
         {screen === "lectio" && <Lectio onComplete={() => goTo("meditatio")} />}

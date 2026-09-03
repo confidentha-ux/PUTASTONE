@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { PaperGrain } from "../components/PaperGrain";
+import { supabase } from "../lib/supabaseClient";
 
 function StoneMark() {
   return (
@@ -17,10 +18,38 @@ function StoneMark() {
   );
 }
 
-// claude/renaissance-mirror-full-copy-v1.md "## 로그인" — 브랜드명만 "돌 하나를 얹다"로 교체, 문구는 그대로.
-// 실제 Google/이메일 인증은 붙어있지 않다(app-build-readiness-v1.md 로드맵 8번, 백엔드는 아직 없음) —
-// 버튼을 누르면 인증 없이 바로 다음 화면으로 넘어간다.
-export default function Login({ onDone }) {
+// Google은 Supabase 대시보드(Authentication → Providers → Google)에 OAuth 클라이언트를
+// 등록해야 실제로 작동한다 — 코드만으로는 안 되고, 대시보드에서 한 번 설정이 필요하다.
+// 이메일은 비밀번호 없이 매직링크(OTP)로 로그인한다.
+export default function Login() {
+  const [showEmail, setShowEmail] = useState(false);
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState(null); // null | "sending" | "sent" | "error"
+
+  const handleGoogle = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: window.location.origin },
+    });
+    if (error) {
+      console.warn("[Login] Google 로그인 실패", error);
+      setStatus("error");
+    }
+    // 성공하면 브라우저가 Google로 이동했다가 돌아온다 — onDone은 여기서 부르지 않는다,
+    // App.jsx가 로그인 상태 변화를 감지해서 알아서 다음 화면으로 넘긴다.
+  };
+
+  const handleEmailSend = async () => {
+    if (!email.trim()) return;
+    setStatus("sending");
+    const { error } = await supabase.auth.signInWithOtp({
+      email: email.trim(),
+      options: { emailRedirectTo: window.location.origin },
+    });
+    setStatus(error ? "error" : "sent");
+    if (error) console.warn("[Login] 이메일 로그인 실패", error);
+  };
+
   return (
     <div
       style={{
@@ -55,28 +84,72 @@ export default function Login({ onDone }) {
 그렇게 경험한 판단 방법은
 필요한 순간에 다시 꺼내 쓸 수 있게 쌓입니다.`}
       </p>
-      <button
-        style={{
-          position: "relative",
-          width: "100%", maxWidth: 320, padding: 15, borderRadius: 2, marginBottom: 10,
-          background: "rgba(28,26,23,0.92)", border: "none", color: "#eae6da",
-          fontWeight: 600, fontSize: 14.5, fontFamily: "inherit", cursor: "pointer",
-        }}
-        onClick={onDone}
-      >
-        Google로 계속하기
-      </button>
-      <button
-        style={{
-          position: "relative",
-          width: "100%", maxWidth: 320, padding: 15, borderRadius: 2,
-          background: "transparent", border: "1px solid rgba(49,53,45,0.3)", color: "#1c1a17",
-          fontWeight: 600, fontSize: 14.5, fontFamily: "inherit", cursor: "pointer",
-        }}
-        onClick={onDone}
-      >
-        이메일로 계속하기
-      </button>
+
+      {!showEmail ? (
+        <>
+          <button
+            style={{
+              position: "relative",
+              width: "100%", maxWidth: 320, padding: 15, borderRadius: 2, marginBottom: 10,
+              background: "rgba(28,26,23,0.92)", border: "none", color: "#eae6da",
+              fontWeight: 600, fontSize: 14.5, fontFamily: "inherit", cursor: "pointer",
+            }}
+            onClick={handleGoogle}
+          >
+            Google로 계속하기
+          </button>
+          <button
+            style={{
+              position: "relative",
+              width: "100%", maxWidth: 320, padding: 15, borderRadius: 2,
+              background: "transparent", border: "1px solid rgba(49,53,45,0.3)", color: "#1c1a17",
+              fontWeight: 600, fontSize: 14.5, fontFamily: "inherit", cursor: "pointer",
+            }}
+            onClick={() => setShowEmail(true)}
+          >
+            이메일로 계속하기
+          </button>
+        </>
+      ) : (
+        <div style={{ position: "relative", width: "100%", maxWidth: 320 }}>
+          {status === "sent" ? (
+            <p style={{ fontSize: 13.5, color: "#1c1a17", lineHeight: 1.7 }}>
+              {email}로 로그인 링크를 보냈습니다. 이메일함을 확인해주세요.
+            </p>
+          ) : (
+            <>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="이메일 주소"
+                style={{
+                  width: "100%", padding: 13, borderRadius: 2, marginBottom: 10,
+                  border: "1px solid rgba(49,53,45,0.3)", fontSize: 14, fontFamily: "inherit",
+                  boxSizing: "border-box", background: "#f5f2e6",
+                }}
+              />
+              <button
+                style={{
+                  width: "100%", padding: 15, borderRadius: 2,
+                  background: "rgba(28,26,23,0.92)", border: "none", color: "#eae6da",
+                  fontWeight: 600, fontSize: 14.5, fontFamily: "inherit", cursor: "pointer",
+                  opacity: status === "sending" ? 0.6 : 1,
+                }}
+                onClick={handleEmailSend}
+                disabled={status === "sending"}
+              >
+                {status === "sending" ? "보내는 중..." : "로그인 링크 받기"}
+              </button>
+              {status === "error" && (
+                <p style={{ fontSize: 12.5, color: "#a13d2e", marginTop: 10 }}>
+                  전송에 실패했습니다. 다시 시도해주세요.
+                </p>
+              )}
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 }

@@ -2,25 +2,46 @@ import React, { useState } from "react";
 import { PaperGrain } from "../components/PaperGrain";
 import { SectionMark } from "../components/SectionMark";
 
-// claude/돌하나를-얹다-app-spec-v1.md "4. 실제 고민을 가져오는 구간" — 기존 App Shell에는 없던 신설 화면.
-// Meditatio 결과와 Speculum(Operation 선택) 사이에 위치한다. 여기서부터 사용자는 "지금까지의 나"에 대한
-// 자료가 아니라 지금 실제로 고민 중인 문제 하나를 가져온다. 두 번째 입력(현재 판단)이 이후 Speculum
-// Session의 Initial Judgment가 된다(App.jsx가 이 값을 Speculum.jsx로 그대로 넘겨준다).
+// "4. CurrentJudgment" 확정본 — 입력 화면과 확인 화면을 분리했다.
+// 화면 1(요즘 마음에 있는 일)에서 입력 받고, 화면 2(내가 이야기한 것)에서 그대로 보여준 뒤에만
+// onComplete가 불린다 — 사용자가 자기가 쓴 걸 한 번 더 보고 다음으로 넘어가는 구조.
 export default function CurrentJudgment({ onComplete }) {
+  const [step, setStep] = useState("input"); // "input" | "confirm"
   const [concern, setConcern] = useState("");
   const [judgment, setJudgment] = useState("");
 
   const canProceed = concern.trim().length > 0 && judgment.trim().length > 0;
 
+  if (step === "confirm") {
+    return (
+      <Shell>
+        <SectionMark number="03" title="지금의 판단" />
+        <p style={titleStyle}>내가 이야기한 것</p>
+
+        <Row label="마음에 있는 일" value={concern} />
+        <Row label="지금은 이렇게 생각하고 있습니다" value={judgment} />
+
+        <p style={{ ...bodyStyle, marginTop: 4 }}>
+          이 생각을 시작점으로 남겨둡니다. 가면을 벗은 뒤 같은 고민에 다시 답합니다.
+        </p>
+
+        <button
+          style={{ ...primaryButtonStyle, width: "100%", marginTop: 8 }}
+          onClick={() => onComplete({ concern: concern.trim(), initialJudgment: judgment.trim() })}
+        >
+          다음
+        </button>
+      </Shell>
+    );
+  }
+
   return (
     <Shell>
       <SectionMark number="03" title="지금의 판단" />
-      <p style={bodyStyle}>
-        여기까지는 지금까지의 나에 대한 자료를 만드는 과정이었습니다. 여기서부터는 지금 실제로 고민 중인
-        문제 하나를 가져옵니다.
-      </p>
+      <p style={titleStyle}>요즘 마음에 있는 일</p>
+      <p style={bodyStyle}>계속 생각하게 되는 일이 있다면 여기에서 먼저 이야기해 주세요.</p>
 
-      <label style={labelStyle}>실제 고민을 적어주세요.</label>
+      <label style={labelStyle}>어떤 일인가요?</label>
       <textarea
         style={textareaStyle}
         value={concern}
@@ -29,7 +50,7 @@ export default function CurrentJudgment({ onComplete }) {
         rows={3}
       />
 
-      <label style={labelStyle}>그 문제에 대한 현재 판단을 적어주세요.</label>
+      <label style={labelStyle}>이 일에 대해 지금은 어떻게 생각하고 있나요?</label>
       <textarea
         style={textareaStyle}
         value={judgment}
@@ -41,11 +62,20 @@ export default function CurrentJudgment({ onComplete }) {
       <button
         style={{ ...primaryButtonStyle, width: "100%", marginTop: 8, opacity: canProceed ? 1 : 0.5 }}
         disabled={!canProceed}
-        onClick={() => onComplete({ concern: concern.trim(), initialJudgment: judgment.trim() })}
+        onClick={() => setStep("confirm")}
       >
         다음
       </button>
     </Shell>
+  );
+}
+
+function Row({ label, value }) {
+  return (
+    <div style={{ marginBottom: 18 }}>
+      <div style={labelStyle}>{label}</div>
+      <div style={quoteBoxStyle}>{value}</div>
+    </div>
   );
 }
 
@@ -69,6 +99,7 @@ function Shell({ children }) {
   );
 }
 
+const titleStyle = { fontFamily: "Pretendard, sans-serif", fontWeight: 700, fontSize: 17, marginBottom: 14 };
 const bodyStyle = { fontSize: 13.5, lineHeight: 1.8, fontWeight: 300, marginBottom: 24, color: "#847c6b" };
 const labelStyle = { display: "block", fontSize: 12.5, color: "#847c6b", marginBottom: 8 };
 const textareaStyle = {
@@ -84,6 +115,15 @@ const textareaStyle = {
   marginBottom: 20,
   boxSizing: "border-box",
   resize: "vertical",
+};
+const quoteBoxStyle = {
+  padding: "12px 14px",
+  borderRadius: 3,
+  background: "rgba(49,53,45,0.035)",
+  border: "1px solid rgba(49,53,45,0.14)",
+  fontSize: 13.5,
+  lineHeight: 1.6,
+  whiteSpace: "pre-line",
 };
 const primaryButtonStyle = {
   padding: "12px 20px",

@@ -116,7 +116,7 @@ const CSS = `
 
 export default function MeditatioV1({ onComplete }) {
   const { state, actions } = useUserState();
-  const [view, setView] = useState("intro"); // intro | home | group | question | result
+  const [view, setView] = useState(() => (state.meditatio.derived ? "result" : "intro")); // intro | home | group | question | result
   const [groupIdx, setGroupIdx] = useState(null);
   const [qIdx, setQIdx] = useState(0);
 

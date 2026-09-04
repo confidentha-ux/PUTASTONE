@@ -227,7 +227,7 @@ export default function PioneerLens({ onComplete } = {}) {
           <>
             <div className="pn-step-label">STEP 3</div>
             <div className="pn-subject">"{answers.judgment}"</div>
-            <p className="pn-q">방금 말한 그 자격 중, 지금 당신에게 이미 있는 건 무엇입니까?</p>
+            <p className="pn-q">방금 말한 그 자격 중, 지금 나에게 이미 있는 건 무엇입니까?</p>
             <p className="pn-hint">전부가 아니어도 됩니다. 하나라도 있다면 그것부터 적어주세요.</p>
             <textarea className="pn-textarea" value={answers.step3} onChange={(e) => set("step3", e.target.value)} />
             {error && <p className="pn-hint" style={{ color: "#c85f5f" }}>{error}</p>}

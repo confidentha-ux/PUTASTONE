@@ -257,7 +257,7 @@ function wasSuffix(word) {
   return hasBatchim ? "이었습니다" : "였습니다";
 }
 
-const AXIS_LABEL = {
+export const AXIS_LABEL = {
   evaluation: "타인의 평가",
   relationship: "관계가 달라짐",
   self_permission: "자기 허용",
@@ -266,7 +266,7 @@ const AXIS_LABEL = {
   responsibility: "책임",
 };
 
-const AXIS_MEANING = {
+export const AXIS_MEANING = {
   evaluation: "다른 사람의 시선이나 평가가 행동을 정하기 전에 먼저 계산됩니다.",
   relationship: "그 행동을 하면 상대와의 사이가 달라질 거라는 예상이 판단보다 먼저 떠오릅니다.",
   self_permission: "그것을 해도 되는지를 남이 아니라 스스로에게 먼저 묻고 있습니다.",
@@ -397,8 +397,8 @@ const shuffle = (arr) => {
 };
 
 export default function Lectio({ onComplete }) {
-  const { actions } = useUserState();
-  const [screen, setScreen] = useState("intro");
+  const { state, actions } = useUserState();
+  const [screen, setScreen] = useState(() => (state.lectio.completedAt ? "result" : "intro"));
   const [order, setOrder] = useState([]);
   const [idx, setIdx] = useState(0);
   const [answers, setAnswers] = useState({}); // itemId -> true(open)/false(closed)
@@ -451,8 +451,13 @@ export default function Lectio({ onComplete }) {
   };
 
   // --- 결과를 공통 User State(Lectio Object)로 변환해서 저장한다 ---
+  // screen이 처음부터 "result"로 시작한 경우(이미 완료 뒤 다시 들어온 경우) answers/examined는
+  // 비어있다 — 이럴 땐 방금 계산할 게 아니라 저장되어 있던 결과를 그대로 보여준다.
+  const viewingSavedResult = screen === "result" && Object.keys(answers).length === 0;
+
   const items = useMemo(() => {
     if (screen !== "result") return [];
+    if (viewingSavedResult) return state.lectio.items ?? [];
     return ITEMS.map((it) => {
       const isOpen = answers[it.id] === true;
       if (isOpen) {
@@ -472,7 +477,7 @@ export default function Lectio({ onComplete }) {
         openingCondition: openingConditionOpt ?? null,
       });
     });
-  }, [screen, answers, examined]);
+  }, [screen, answers, examined, viewingSavedResult, state.lectio.items]);
 
   const tallyCounts = useMemo(() => {
     const c = {};
@@ -483,15 +488,16 @@ export default function Lectio({ onComplete }) {
   }, [items]);
 
   const dominantDomain = useMemo(() => {
+    if (viewingSavedResult) return state.lectio.dominantDomain ?? null;
     let best = null;
     Object.entries(tallyCounts).forEach(([domain, n]) => {
       if (n >= 2 && (!best || n > best.n)) best = { domain, n };
     });
     return best;
-  }, [tallyCounts]);
+  }, [tallyCounts, viewingSavedResult, state.lectio.dominantDomain]);
 
   useEffect(() => {
-    if (screen !== "result") return;
+    if (screen !== "result" || viewingSavedResult) return;
     const raw = {};
     ITEMS.forEach((it) => {
       raw[it.id] = { status: answers[it.id] === true ? "open" : "closed", ...(examined[it.id] ?? {}) };

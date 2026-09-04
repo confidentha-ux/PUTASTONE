@@ -7,7 +7,7 @@ export default function Rejudge({ initialJudgment, onComplete }) {
 
   return (
     <Shell>
-      <h1 style={titleStyle}>가면을 벗고</h1>
+      <h1 style={titleStyle}>역할을 마치고</h1>
 
       <div style={labelStyle}>처음에는</div>
       <div style={quoteBoxStyle}>{initialJudgment || "기록된 처음의 판단이 없습니다."}</div>

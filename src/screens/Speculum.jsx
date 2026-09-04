@@ -158,7 +158,7 @@ export default function Speculum({ onNavigate }) {
     return (
       <Shell>
         <p style={bodyStyle}>
-          다른 역할 입어보기는 내 판단의 지형에서 드러난 판단 기준을 바탕으로, 지금의 판단을 다른
+          다른 돌을 얹어보기는 내 판단의 지형에서 드러난 판단 기준을 바탕으로, 지금의 판단을 다른
           역할로 다시 보게 해줍니다.
         </p>
         <p style={{ ...bodyStyle, color: "#847c6b" }}>
@@ -178,7 +178,43 @@ export default function Speculum({ onNavigate }) {
   if (stage === "bringIntro") {
     return (
       <Shell>
-        <h1 style={titleStyle}>이번에는 다른 돌 하나를 얹어봅니다.</h1>
+        <svg width="52" height="150" viewBox="0 0 120 240" aria-hidden="true" style={{ display: "block", margin: "0 auto 20px" }}>
+          {/* 마이산 탑사의 원뿔형 돌탑 실루엣 — 실제 사진이 아니라, 20겹으로 촘촘히 쌓인 얇은
+              층과 매끈하게 좁아지는 윤곽을 참고해서 새로 그린 SVG. 큰 돌 몇 개가 아니라 무수한
+              작은 돌이 쌓여 높이 올라간다는 게 마이산 탑의 핵심 특징이라, 층 수를 20개로 늘렸다. */}
+          <g stroke="#1c1a17" strokeOpacity="0.2" strokeWidth="0.6" strokeLinejoin="round">
+              <path d="M24.5,232 L94.6,232 L90.5,221.1 L31,221.1 Z" fill="#2b2823" />
+              <path d="M30.9,221.1 L88.9,221.1 L89.5,210.2 L30.4,210.2 Z" fill="#37332d" />
+              <path d="M30.6,210.2 L86.7,210.2 L87.2,199.3 L34.4,199.3 Z" fill="#403d36" />
+              <path d="M34.1,199.3 L85.5,199.3 L85.7,188.4 L34.4,188.4 Z" fill="#49453d" />
+              <path d="M35.4,188.4 L85.3,188.4 L83.8,177.5 L36.2,177.5 Z" fill="#514d44" />
+              <path d="M37.3,177.5 L81.8,177.5 L79.7,166.6 L39.8,166.6 Z" fill="#59554b" />
+              <path d="M39.4,166.6 L81,166.6 L78.3,155.7 L40.3,155.7 Z" fill="#615c52" />
+              <path d="M39.6,155.7 L80,155.7 L78.7,144.8 L41.4,144.8 Z" fill="#696459" />
+              <path d="M41.5,144.8 L78.4,144.8 L75.4,133.9 L44.3,133.9 Z" fill="#706b5f" />
+              <path d="M43.6,133.9 L77.7,133.9 L75.5,123 L45.1,123 Z" fill="#787265" />
+              <path d="M46.2,123 L75.1,123 L75,112.1 L45.6,112.1 Z" fill="#7f796c" />
+              <path d="M47.1,112.1 L72.8,112.1 L73.9,101.2 L46.7,101.2 Z" fill="#868072" />
+              <path d="M46.5,101.2 L73.3,101.2 L70.2,90.3 L48.8,90.3 Z" fill="#8d8778" />
+              <path d="M50.2,90.3 L71.4,90.3 L69.7,79.4 L49.7,79.4 Z" fill="#948d7e" />
+              <path d="M50.9,79.4 L70.4,79.4 L68.2,68.5 L51.1,68.5 Z" fill="#9b9484" />
+              <path d="M51,68.5 L69.6,68.5 L66.4,57.6 L53.8,57.6 Z" fill="#a19a8a" />
+              <path d="M53.7,57.6 L68.9,57.6 L65.2,46.7 L52.3,46.7 Z" fill="#a8a18f" />
+              <path d="M53.4,46.7 L66.7,46.7 L66,35.8 L55.6,35.8 Z" fill="#afa795" />
+              <path d="M55.2,35.8 L66.7,35.8 L64.2,24.9 L56.8,24.9 Z" fill="#b5ad9b" />
+              <path d="M55.3,24.9 L65.1,24.9 L63.8,14 L57.8,14 Z" fill="#bcb4a0" />
+          </g>
+        </svg>
+        <p style={bodyStyle}>
+          마이산에는 한 사람이 30년 넘게, 접착제 없이 돌만으로 쌓은 탑들이 있습니다.
+        </p>
+        <p style={bodyStyle}>
+          큰 돌을 그냥 포개기만 했다면 이렇게 높이 올라가지 못했을 것입니다. 큰 돌 사이사이에
+          작은 돌을 끼워 넣는, 전혀 다른 방식을 썼기 때문에 가능했습니다.
+        </p>
+        <p style={bodyStyle}>다른 판단 방식을 쓴다는 것도 이와 같습니다.</p>
+
+        <h1 style={titleStyle}>이번에는 다른 돌을 얹어봅니다.</h1>
 
         {justCompleted && (
           <div style={completedBoxStyle}>
@@ -202,12 +238,11 @@ export default function Speculum({ onNavigate }) {
           어떤 역할은 사실과 예상을 나누고, 어떤 역할은 책임의 경계를 다시 보고, 어떤 역할은
           판단에서 한 가지 요소를 잠시 빼봅니다.
         </p>
-        <p style={bodyStyle}>새로운 돌 하나를 얹으면 돌탑의 무게중심이나 모양이 달라질 수 있습니다.</p>
         <p style={bodyStyle}>
           같은 방식으로, 다른 판단 방식을 하나 사용해본 뒤 처음의 생각에서 무엇이 달라지고 무엇이
           그대로 남는지 봅니다.
         </p>
-        <p style={bodyStyle}>마치 잠시 다른 가면을 써보는 것처럼요.</p>
+        <p style={bodyStyle}>마치 잠시 다른 역할을 입어보는 것처럼요.</p>
 
         <button style={{ ...primaryButtonStyle, width: "100%" }} onClick={() => setStage("concern")}>
           고민 가져오기
@@ -269,7 +304,7 @@ export default function Speculum({ onNavigate }) {
         </div>
 
         <p style={{ ...bodyStyle, marginTop: 4 }}>
-          이 생각을 시작점으로 남겨둡니다. 가면을 벗은 뒤 같은 고민에 다시 답합니다.
+          이 생각을 시작점으로 남겨둡니다. 역할을 마친 뒤 같은 고민에 다시 답합니다.
         </p>
 
         <button style={{ ...primaryButtonStyle, width: "100%" }} onClick={() => setStage("roleIntro")}>
@@ -283,7 +318,7 @@ export default function Speculum({ onNavigate }) {
   if (stage === "roleIntro") {
     return (
       <Shell>
-        <h1 style={titleStyle}>다른 역할 입어보기</h1>
+        <h1 style={titleStyle}>다른 돌을 얹어보기</h1>
         <p style={bodyStyle}>이번에는 다른 판단 방식을 사용해봅니다.</p>
         <p style={bodyStyle}>
           「나를 받치는 돌」에서는 어려운 선택에 걸려 있던 생각을 한 번 덜어내 봤습니다. 이번에는
@@ -293,7 +328,7 @@ export default function Speculum({ onNavigate }) {
           각 역할은 판단을 다루는 자기만의 방법을 가지고 있습니다. 역할을 하나 고르면 그 역할의
           방식대로 지금의 고민을 생각해봅니다.
         </p>
-        <p style={bodyStyle}>마치 잠시 다른 가면을 써보는 것처럼요.</p>
+        <p style={bodyStyle}>마치 잠시 다른 역할을 입어보는 것처럼요.</p>
 
         <button style={{ ...primaryButtonStyle, width: "100%" }} onClick={() => setStage("pick")}>
           역할 보기
@@ -347,7 +382,7 @@ export default function Speculum({ onNavigate }) {
         <div style={{ fontSize: 13.5, color: "#847c6b", marginBottom: 14 }}>{selectedPersona?.operationHeader}</div>
         <div style={{ display: "flex", gap: 10 }}>
           <button style={primaryButtonStyle} onClick={() => setOpenPersonaId(selectedPersona.id)}>
-            가면쓰기
+            역할 시작하기
           </button>
           <button
             style={secondaryButtonStyle}
@@ -380,7 +415,7 @@ function Shell({ children }) {
     >
       <PaperGrain seed={23} baseFrequency={0.65} octaves={3} opacity={0.13} />
       <div style={{ maxWidth: 460, margin: "0 auto", position: "relative" }}>
-        <SectionMark number="04" title="다른 역할 입어보기" />
+        <SectionMark number="04" title="다른 돌을 얹어보기" />
         {children}
       </div>
     </div>

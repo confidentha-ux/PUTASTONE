@@ -96,6 +96,10 @@ function reducer(state, action) {
       };
     }
 
+    case "MARK_ENDING_SEEN": {
+      return { ...state, hasSeenFirstJourneyEnding: true };
+    }
+
     default:
       console.warn("[UserState] unknown action", action);
       return state;
@@ -173,6 +177,7 @@ export function UserStateProvider({ children }) {
         dispatch({ type: "JUDGMENT_PATHS_SET", payload: { paths } });
         if (userId) saveJudgmentPathsToSupabase(userId, paths);
       },
+      markEndingSeen: () => dispatch({ type: "MARK_ENDING_SEEN" }),
     }),
     [userId, state.meditatio.raw]
   );

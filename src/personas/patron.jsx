@@ -136,13 +136,13 @@ export default function PatronLens({ onComplete } = {}) {
 
   const needsBranchText = answers.step4 === APPLY_DIFFERENT || answers.step4 === APPLY_UNSURE;
   const branchLabel = answers.step4 === APPLY_DIFFERENT
-    ? "왜 비슷한 상황의 다른 사람에게 적용한 기준과 당신 자신에게 필요한 기준이 다르다고 생각합니까?"
+    ? "왜 비슷한 상황의 다른 사람에게 적용한 기준과 나 자신에게 필요한 기준이 다르다고 생각합니까?"
     : "같은 기준을 자신에게 적용할 수 있는지 판단하기 어렵게 만드는 것은 무엇입니까?";
   const rejudgeIntro = answers.step4 === APPLY_DIFFERENT
     ? "그 차이를 함께 놓고 보면, 처음에 하지 않았던 선택은 지금 어떻게 보입니까?"
     : answers.step4 === APPLY_UNSURE
     ? "이렇게 놓고 보니, 처음에 하지 않았던 선택은 지금 어떻게 보입니까?"
-    : "그 기준을 당신 자신에게도 적용해보면, 처음에 하지 않았던 선택은 지금 어떻게 보입니까?";
+    : "그 기준을 나 자신에게도 적용해보면, 처음에 하지 않았던 선택은 지금 어떻게 보입니까?";
 
   return (
     <div className="pt-root">
@@ -177,7 +177,7 @@ export default function PatronLens({ onComplete } = {}) {
             <div className="pt-step-label">STEP 1</div>
             <div className="pt-subject">"{answers.step1}"</div>
             <p className="pt-q">지금과 비슷한 상황에 있는 사람을 한 명 떠올려 보세요.</p>
-            <p className="pt-hint">그런 처지의 사람에게 당신이 후원자라면, 그 사람이 이 기회나 자리를 앞에 두고 있을 때 어떻게 후원하겠습니까?</p>
+            <p className="pt-hint">그런 처지의 사람에게 내가 후원자라면, 그 사람이 이 기회나 자리를 앞에 두고 있을 때 어떻게 후원하겠습니까?</p>
             <textarea className="pt-textarea" value={answers.step2} onChange={(e) => set("step2", e.target.value)} />
             <div className="pt-actions-row">
               <button className="pt-back" onClick={() => setStep("s0")}>← 이전</button>
@@ -204,7 +204,7 @@ export default function PatronLens({ onComplete } = {}) {
             <div className="pt-step-label">기준 병치</div>
             <div className="pt-summary-card">
               <div className="pt-summary-row">
-                <div className="pt-summary-label">당신이 하지 않았던 것</div>
+                <div className="pt-summary-label">내가 하지 않았던 것</div>
                 <div className="pt-summary-value">{answers.step1}</div>
               </div>
               <div className="pt-summary-row">
@@ -216,7 +216,7 @@ export default function PatronLens({ onComplete } = {}) {
                 <div className="pt-summary-value">{answers.step3}</div>
               </div>
             </div>
-            <p className="pt-q">방금 그 사람에게 적용한 기준을 당신 자신에게도 적용할 수 있다고 생각합니까?</p>
+            <p className="pt-q">방금 그 사람에게 적용한 기준을 나 자신에게도 적용할 수 있다고 생각합니까?</p>
             <div className="pt-opts">
               {Q4_OPTS.map((o) => (
                 <button key={o} className={`pt-opt ${answers.step4 === o ? "sel" : ""}`} onClick={() => set("step4", o)}>{o}</button>

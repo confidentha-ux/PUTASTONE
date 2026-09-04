@@ -5,7 +5,7 @@ import { PaperGrain } from "../components/PaperGrain";
 const EXPERIENCES = [
   { key: "lectio", number: "01", title: "나를 받치는 돌", q: "어떤 선택은 왜 나에게 더 어려울까?", doneKey: "lectio" },
   { key: "meditatio", number: "02", title: "내 판단의 지형", q: "나는 무엇을 보고 판단을 내릴까?", doneKey: "meditatio" },
-  { key: "speculum", number: "03", title: "다른 역할 입어보기", q: "다른 판단 방식을 써보면 무엇이 달라질까?", doneKey: null },
+  { key: "speculum", number: "03", title: "다른 돌을 얹어보기", q: "다른 판단 방식을 써보면 무엇이 달라질까?", doneKey: null },
 ];
 
 const CSS = `

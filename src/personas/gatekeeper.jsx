@@ -263,7 +263,7 @@ export default function GatekeeperLens({ onComplete } = {}) {
                 <div className="gd-summary-value">{answers.step5}</div>
               </div>
             </div>
-            <p className="gd-q">당신이 방금 말한 "{answers.step5}" 상황이 실제로 생겼다고 생각해보세요. 그때 어떻게 하시겠습니까?</p>
+            <p className="gd-q">방금 말한 "{answers.step5}" 상황이 실제로 생겼다고 생각해보세요. 그때 어떻게 하시겠습니까?</p>
             <div className="gd-opts">
               {Q6_OPTS.map((o) => (
                 <button key={o} className={`gd-opt ${answers.step6 === o ? "sel" : ""}`} onClick={() => set("step6", o)}>{o}</button>

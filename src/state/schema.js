@@ -133,5 +133,9 @@ export function createInitialUserState() {
     speculumSessions: [], // SpeculumSession[]
     judgmentPaths: [],    // JudgmentPath[]
     judgmentPathsGeneratedAt: null,
+    // "첫 여정을 마치며" 화면을 이미 봤는지 — 01·02·03을 처음 한 바퀴 돈 뒤 현재의 돌탑에
+    // 처음 들어갈 때 한 번만 보여주고, 그 이후로는 다시 안 보여준다. 로컬에만 저장한다
+    // (Supabase 테이블에는 아직 없음 — 기기를 바꾸면 다시 한 번 보일 수 있다).
+    hasSeenFirstJourneyEnding: false,
   };
 }

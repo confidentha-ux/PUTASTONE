@@ -4,7 +4,7 @@ import { callClaude } from "./aiStub";
 // 텍스트 두 개를 실제로 비교·종합해야 해서 템플릿으로는 못 만든다(2026-09-03 세션에서 확인).
 // /api/claude-proxy가 붙은 뒤에는 페르소나와 같은 방식(callClaude)으로 실제 생성한다.
 function buildSynthesisPrompt({ initialJudgment, rejudgment, personaName, summary, suggestion }) {
-  return `지금 어떤 사람이 판단 연습 앱에서 "다른 역할 입어보기"를 한 번 마쳤습니다. 아래는 그 사람의 실제 데이터입니다.
+  return `지금 어떤 사람이 판단 연습 앱에서 "다른 돌을 얹어보기"를 한 번 마쳤습니다. 아래는 그 사람의 실제 데이터입니다.
 
 - 처음 판단: "${initialJudgment}"
 - 사용한 역할: ${personaName}

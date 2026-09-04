@@ -220,7 +220,7 @@ export default function TimeTravelerLens({ onComplete } = {}) {
           <>
             <div className="tt-step-label">STEP 3</div>
             <div className="tt-subject">"{answers.judgment}"</div>
-            <p className="tt-q">3년 뒤의 당신이 지금을 돌아본다면, "{answers.step2}"은 지금과 비교해 어느 정도 중요하게 보일 것 같습니까?</p>
+            <p className="tt-q">3년 뒤의 내가 지금을 돌아본다면, "{answers.step2}"은 지금과 비교해 어느 정도 중요하게 보일 것 같습니까?</p>
             <div className="tt-opts">
               {Q4_OPTS.map((o) => (
                 <button key={o} className={`tt-opt ${answers.step3 === o ? "sel" : ""}`} onClick={() => set("step3", o)}>{o}</button>

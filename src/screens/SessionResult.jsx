@@ -3,7 +3,7 @@ import { PaperGrain } from "../components/PaperGrain";
 import { SectionMark } from "../components/SectionMark";
 
 // "13. 현재의 돌탑 · 3" — 확정본 기준. 처음/새로 생각하게 된 것/지금은을 보여주고,
-// 왜 다른 가면을 써봤는지 고정 서사를 지난 뒤 저장한다.
+// 왜 다른 역할을 입어봤는지 고정 서사를 지난 뒤 저장한다.
 //
 // 참고: "달라진 것과 그대로 남은 것"과 "이번 답에서 보인 것"의 구체적 피드백은 텍스트를
 // 실제로 비교·종합하는 로직이 필요해서(AI 계층 없이는 생성 불가) 이번엔 자리만 비워뒀다 —
@@ -19,6 +19,13 @@ export default function SessionResult({
 }) {
   return (
     <Shell>
+      <p style={{ ...titleStyle, fontSize: 19 }}>다른 돌을 얹어본 뒤</p>
+      <p style={bodyStyle}>이번에는 같은 고민에 평소와 다른 판단 방식을 하나 사용해봤습니다.</p>
+      <p style={{ ...bodyStyle, marginBottom: 22 }}>
+        이제 처음의 판단에 무엇이 새로 들어왔고, 무엇의 무게가 달라졌으며, 무엇이 그대로 남았는지
+        함께 봅니다.
+      </p>
+
       <Row label="처음에는" value={initialJudgment || "—"} />
       <Row label="새로 생각하게 된 것" value={newInformation || "특별히 없음"} />
       <Row label="지금은" value={rejudgment || "—"} />
@@ -32,7 +39,7 @@ export default function SessionResult({
 
       <div style={{ height: 1, background: "rgba(28,26,23,0.14)", margin: "26px 0" }} />
 
-      <p style={titleStyle}>왜 다른 가면을 써봤을까요?</p>
+      <p style={titleStyle}>왜 다른 역할을 입어봤을까요?</p>
       <p style={bodyStyle}>
         익숙한 방식으로 판단할 때는 내가 무엇을 중요하게 보고 있는지는 물론, 무엇을 아예 생각하지
         않고 있는지도 알아차리기 어렵습니다.
@@ -50,10 +57,10 @@ export default function SessionResult({
         더 분명해집니다.
       </p>
       <p style={bodyStyle}>
-        여러 가면을 경험하다 보면 필요한 순간에 다른 판단 방법을 스스로 꺼내 쓸 수도 있습니다.
+        여러 역할을 경험하다 보면 필요한 순간에 다른 판단 방법을 스스로 꺼내 쓸 수도 있습니다.
       </p>
       <p style={leadStyle}>
-        다른 가면을 써본 이유는 결국 내 판단을 더 잘 보기 위해서였습니다.
+        다른 역할을 입어본 이유는 결국 내 판단을 더 잘 보기 위해서였습니다.
       </p>
 
       {insight && (

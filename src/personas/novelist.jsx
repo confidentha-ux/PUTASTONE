@@ -194,7 +194,7 @@ export default function NovelistLens({ onComplete } = {}) {
           <>
             <div className="nv-step-label">STEP 3 · Initial Judgment</div>
             <div className="nv-subject">"{answers.step2}"</div>
-            <p className="nv-q">그 일이 있었을 때, 당신은 자신을 어떻게 생각했습니까?</p>
+            <p className="nv-q">그 일이 있었을 때, 나는 나 자신을 어떻게 생각했습니까?</p>
             <textarea className="nv-textarea" value={answers.step3} onChange={(e) => set("step3", e.target.value)} placeholder="예: 나는 중요한 순간에 말을 못 하는 사람이라고 생각했다." />
             <div className="nv-actions-row">
               <button className="nv-back" onClick={() => setStep("s2")}>← 이전</button>
@@ -207,7 +207,7 @@ export default function NovelistLens({ onComplete } = {}) {
           <>
             <div className="nv-step-label">STEP 4</div>
             <div className="nv-subject">"{answers.step2}"</div>
-            <p className="nv-q">당신은 이제 이 장면을 쓰는 소설가입니다. 이번에는 이 사람의 마음속을 알 수 없습니다.</p>
+            <p className="nv-q">이제 이 장면을 쓰는 소설가가 되어봅니다. 이번에는 이 사람의 마음속을 알 수 없습니다.</p>
             <p className="nv-hint">밖에서 보이는 행동과 상태만 쓴다면, 이 장면에서 이 사람은 무엇을 하고 있습니까?</p>
             <textarea className="nv-textarea" value={answers.step4} onChange={(e) => set("step4", e.target.value)} placeholder="예: 다른 사람들의 이야기를 듣고 있었고, 내 차례가 왔을 때 짧게 대답했다." />
             <div className="nv-actions-row">
@@ -257,7 +257,7 @@ export default function NovelistLens({ onComplete } = {}) {
           <>
             <div className="nv-step-label">STEP 7</div>
             <div className="nv-subject">"{answers.step3}"</div>
-            <p className="nv-q">지금까지는 소설가로 이 사람을 보았습니다. 이제 다시 당신 자신으로 돌아와보세요.</p>
+            <p className="nv-q">지금까지는 소설가로 이 사람을 보았습니다. 이제 다시 나 자신으로 돌아와봅니다.</p>
             <p className="nv-hint">처음에는 "{answers.step3}"라고 생각했습니다. 지금도 그렇게 생각합니까?</p>
             <div className="nv-opts">
               {Q7_OPTS.map((o) => (

@@ -75,7 +75,7 @@ function q9Prompt(a) {
     case "처음과 같은 판단이다.":
       return "일을 나누어 본 뒤에도 처음과 같은 범위를 맡는 것이 맞다고 생각하는 이유는 무엇입니까?";
     case "내가 맡을 범위가 달라졌다.":
-      return "어떤 일을 나누어 보면서 당신이 맡을 범위가 달라졌습니까?";
+      return "어떤 일을 나누어 보면서 내가 맡을 범위가 달라졌습니까?";
     case "함께 맡아야 할 부분이 새롭게 보인다.":
       return "어떤 일을 함께 맡는 것이 맞다고 보게 되었습니까?";
     case "다른 사람에게 맡길 부분이 새롭게 보인다.":
@@ -330,7 +330,7 @@ export default function StewardLens({ onComplete } = {}) {
                 <div className="st-summary-value">{joinOrNone(g.unclear)}</div>
               </div>
             </div>
-            <p className="st-q">이렇게 나누어 놓고 보니, 이 일에서 당신이 실제로 맡을 부분은 무엇입니까?</p>
+            <p className="st-q">이렇게 나누어 놓고 보니, 이 일에서 내가 실제로 맡을 부분은 무엇입니까?</p>
             <textarea className="st-textarea" value={answers.step6} onChange={(e) => set("step6", e.target.value)} placeholder="예: 장소 예약과 비용 정리는 내가 맡고, 연락은 동생이 맡고, 음식 준비는 같이 하면 될 것 같다." />
             <div className="st-actions-row">
               <button className="st-back" onClick={() => { set("step5Idx", answers.step4Items.length - 1); setStep("s5"); }}>← 이전</button>
@@ -343,7 +343,7 @@ export default function StewardLens({ onComplete } = {}) {
           <>
             <div className="st-step-label">STEP 7</div>
             <div className="st-subject">"{answers.step2}"</div>
-            <p className="st-q">당신이 맡을 범위를 넘어서는 일은 누구의 몫입니까?</p>
+            <p className="st-q">내가 맡을 범위를 넘어서는 일은 누구의 몫입니까?</p>
             <textarea className="st-textarea" value={answers.step7} onChange={(e) => set("step7", e.target.value)} placeholder="예: 참석자 연락은 동생의 몫이다." />
             {error && <p className="st-hint" style={{ color: "#c85f5f" }}>{error}</p>}
             <div className="st-actions-row">

@@ -287,7 +287,7 @@ export default function PortraitistLens({ onComplete } = {}) {
           <>
             <div className="pr-step-label">STEP 7</div>
             <div className="pr-subject">"{answers.step2}"</div>
-            <p className="pr-q">이 장면에서 당신은 실제로 무엇을 했습니까?</p>
+            <p className="pr-q">이 장면에서 나는 실제로 무엇을 했습니까?</p>
             <textarea className="pr-textarea" value={answers.step7a} onChange={(e) => set("step7a", e.target.value)} />
             <div className="pr-actions-row">
               <button className="pr-back" onClick={() => setStep(hasSecond ? "s6" : "s5")}>← 이전</button>
@@ -355,7 +355,7 @@ export default function PortraitistLens({ onComplete } = {}) {
               )}
             </div>
             <p className="pr-q">{hasSecond
-              ? "이 두 경험에서 보인 모습을 함께 담아 지금의 당신을 묘사한다면, 어떤 사람이라고 하겠습니까?"
+              ? "이 두 경험에서 보인 모습을 함께 담아 지금의 나를 묘사한다면, 어떤 사람이라고 하겠습니까?"
               : "그때 실제로 한 것까지 함께 놓고 자신을 다시 묘사한다면, 어떤 사람이라고 하겠습니까?"}</p>
             <textarea className="pr-textarea" value={answers.step8} onChange={(e) => set("step8", e.target.value)} />
             <div className="pr-actions-row">

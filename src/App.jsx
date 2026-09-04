@@ -4,14 +4,15 @@ import Login from "./screens/Login";
 import Start from "./screens/Start";
 import Home from "./screens/Home";
 import Studiolo from "./screens/Studiolo";
+import Ending from "./screens/Ending";
 import Speculum from "./screens/Speculum";
 import Lectio from "./components/Lectio";
 import MeditatioV1 from "./components/MeditatioV1";
 
 // App Shell — 2026-09-04 구조 수정본:
 //   로그인 → 첫 화면(돌탑의 의미) → 홈(전체 흐름과 현재 위치) → 01 나를 받치는 돌 →
-//   02 내 판단의 지형 → 03 다른 역할 입어보기(고민 가져오기 → 두 역할 추천 → 가면쓰기 →
-//   가면을 벗고 → 03을 마치며) → 현재의 돌탑(별도 공간, 홈에서 언제든 진입 가능)
+//   02 내 판단의 지형 → 03 다른 돌을 얹어보기(고민 가져오기 → 두 역할 추천 → 역할 시작하기 →
+//   역할을 마치고 → 03을 마치며) → 현재의 돌탑(별도 공간, 홈에서 언제든 진입 가능)
 // "지금의 판단"(구 CurrentJudgment)은 더 이상 별도 App 화면이 아니다 — 03 안의 내부 단계
 // (concern/concernConfirm)로 흡수되었다. Speculum.jsx가 그 입력을 직접 들고 있다가
 // Speculum Session의 Initial Judgment로 그대로 쓴다.
@@ -22,20 +23,28 @@ const NAV = [
   { key: "home", label: "홈" },
   { key: "lectio", label: "받치는 돌" },
   { key: "meditatio", label: "판단 지형" },
-  { key: "speculum", label: "다른 역할" },
+  { key: "speculum", label: "다른 돌" },
   { key: "studiolo", label: "현재의 돌탑" },
 ];
 
 const ONBOARDING_SCREENS = ["login", "start"];
 
 export default function App() {
-  const { state, isLoggedIn, authLoading } = useUserState();
+  const { state, actions, isLoggedIn, authLoading } = useUserState();
   const [screen, setScreen] = useState("login");
   const [showNav, setShowNav] = useState(!ONBOARDING_SCREENS.includes(screen));
 
   const goTo = (next) => {
-    setScreen(next);
-    setShowNav(!ONBOARDING_SCREENS.includes(next));
+    // "첫 여정을 마치며"는 01·02·03(최소 한 세션)을 처음 다 돈 뒤, 현재의 돌탑에 처음
+    // 들어가기 직전에만 끼워 넣는다 — 그 뒤로는 studiolo로 바로 간다.
+    const isFirstFullJourney =
+      !state.hasSeenFirstJourneyEnding &&
+      state.lectio.completedAt &&
+      state.meditatio.completedAt &&
+      state.speculumSessions.length >= 1;
+    const target = next === "studiolo" && isFirstFullJourney ? "ending" : next;
+    setScreen(target);
+    setShowNav(!ONBOARDING_SCREENS.includes(target));
   };
 
   // 인증 확인이 끝났는데 이미 로그인되어 있으면(재방문, 또는 Google/이메일 인증 뒤 리다이렉트로
@@ -91,7 +100,15 @@ export default function App() {
         {screen === "lectio" && <Lectio onComplete={() => goTo("meditatio")} />}
         {screen === "meditatio" && <MeditatioV1 onComplete={() => goTo("speculum")} />}
         {screen === "speculum" && <Speculum onNavigate={goTo} />}
-        {screen === "studiolo" && <Studiolo />}
+        {screen === "ending" && (
+          <Ending
+            onDone={() => {
+              actions.markEndingSeen();
+              goTo("studiolo");
+            }}
+          />
+        )}
+        {screen === "studiolo" && <Studiolo onNavigate={goTo} />}
       </div>
     </div>
   );

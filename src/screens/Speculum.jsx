@@ -1,10 +1,11 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useUserState } from "../state/UserStateContext";
 import { scoreFamilies, rankFamilies } from "../speculum/familyRouting";
 import { getCandidatePersonas } from "../speculum/personaRegistry";
 import { buildOperationCandidatesFromRankedFamilies } from "../speculum/operationDedup";
 import { getPersonaComponent } from "../personas";
 import { makeSpeculumSession, SCHEMA_VERSIONS } from "../state/schema";
+import { generateSessionSynthesis } from "../speculum/sessionSynthesis";
 import Rejudge from "./Rejudge";
 import SessionResult from "./SessionResult";
 import { PaperGrain } from "../components/PaperGrain";
@@ -12,23 +13,43 @@ import { SectionMark } from "../components/SectionMark";
 
 // 구조 문서 7번 "HOME → Speculum" — Family Routing(claude/family-routing-matrix-v1.md)과
 // 18 Persona Registry(src/speculum/personaRegistry.js)를 연결하는 화면.
-// Task #14: 이제 렌즈를 선택하면 실제 18개 persona 컴포넌트(src/personas/*.jsx)가 열리고,
+// Task #14: 이제 역할을 선택하면 실제 18개 persona 컴포넌트(src/personas/*.jsx)가 열리고,
 // 완료하면 SpeculumSession으로 저장된다(state/schema.js의 makeSpeculumSession). AI 계층은
 // 아직 서버 프록시가 없어 src/speculum/aiStub.js의 임시 mock으로 대신하고 있다 — 이 부분은
 // 여전히 다음 로드맵 항목이다. Persona Eligibility(자유 텍스트 판정)도 아직 없어서, 지금은
 // Family Routing으로 후보를 좁힌 뒤 사용자가 직접 하나를 선택하는 방식이다.
-export default function Speculum({ onNavigate, currentJudgment }) {
+export default function Speculum({ onNavigate }) {
   const { state, actions } = useUserState();
   const meditatioDerived = state.meditatio.derived;
-  const initialJudgment = currentJudgment?.initialJudgment ?? "";
+  // "지금의 판단"(구 CurrentJudgment)이 이제 03 안의 내부 단계라, 여기서 자체 상태로 갖는다.
+  const [concern, setConcern] = useState("");
+  const [initialJudgment, setInitialJudgment] = useState("");
   const [selectedPersonaId, setSelectedPersonaId] = useState(null);
-  const [stage, setStage] = useState("intro"); // "intro" | "pick" | "confirm"
+  // "bringIntro"(03 시작, 신설) → "concern"(요즘 마음에 있는 일) → "concernConfirm"(내가 이야기한 것)
+  // → "roleIntro"(다른 판단 방식 안내) → "pick"(두 역할 추천) → "confirm"(선택한 역할)
+  const [stage, setStage] = useState("bringIntro");
   const [openPersonaId, setOpenPersonaId] = useState(null);
   const [justCompleted, setJustCompleted] = useState(null);
   // Persona 질문을 마친 뒤 재판단(Rejudge)과 세션 결과(SessionResult) 두 화면을 지나야 실제로
   // 저장된다 — claude/돌하나를-얹다-app-spec-v1.md "7~8" 참고. rejudgmentDone이 true가 되기 전엔
   // Rejudge를, 그 후엔 SessionResult를 보여준다.
   const [pendingResult, setPendingResult] = useState(null);
+  // "달라진 것과 그대로 남은 것" / "이번 답에서 보인 것" — 재판단이 끝나야 생성할 수 있다.
+  // undefined=아직 시작 안 함, null=생성 중이거나 실패(그 자리는 비움), 객체=생성 완료.
+  const [synthesis, setSynthesis] = useState(undefined);
+
+  useEffect(() => {
+    if (!pendingResult?.rejudgmentDone || synthesis !== undefined) return;
+    setSynthesis(null);
+    generateSessionSynthesis({
+      initialJudgment,
+      rejudgment: pendingResult.rejudgment,
+      personaName: pendingResult.personaName,
+      summary: pendingResult.answers?.summary,
+      suggestion: pendingResult.answers?.suggestion,
+    }).then(setSynthesis);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pendingResult?.rejudgmentDone]);
 
   const routing = useMemo(() => {
     if (!meditatioDerived) return null;
@@ -40,7 +61,7 @@ export default function Speculum({ onNavigate, currentJudgment }) {
     return { ranked, candidateFamilies, candidatePersonas, operationCandidates };
   }, [meditatioDerived]);
 
-  // 렌즈(Persona) 하나를 실제로 열었을 때 — 해당 컴포넌트를 전체 화면으로 렌더링한다.
+  // 역할(Persona) 하나를 실제로 열었을 때 — 해당 컴포넌트를 전체 화면으로 렌더링한다.
   // 질문지가 끝나면(onComplete) SpeculumSession을 만들어 저장하고, 다시 라우팅 화면으로
   // 돌아온다. 이 전환은 항상 사용자가 페르소나 화면 안의 "완료하고 Speculum으로 돌아가기"
   // 버튼을 눌러야 일어난다 — 자동으로 넘어가지 않는다(Lectio/Meditatio와 같은 원칙).
@@ -88,6 +109,13 @@ export default function Speculum({ onNavigate, currentJudgment }) {
   // "새롭게 생긴 것"은 Rejudge에서 따로 묻지 않는다 — 페르소나 자신이 만든 answers.suggestion을 그대로 쓴다
   // (18개 페르소나 모두 완료 시 summary/suggestion을 반드시 채우도록 되어 있다).
   if (pendingResult && pendingResult.rejudgmentDone) {
+    if (synthesis === null) {
+      return (
+        <Shell>
+          <p style={bodyStyle}>지금까지의 답을 살펴보는 중입니다…</p>
+        </Shell>
+      );
+    }
     const newInformation = pendingResult.answers?.suggestion ?? "";
     return (
       <SessionResult
@@ -95,6 +123,8 @@ export default function Speculum({ onNavigate, currentJudgment }) {
         initialJudgment={initialJudgment}
         newInformation={newInformation}
         rejudgment={pendingResult.rejudgment}
+        comparison={synthesis?.comparison}
+        insight={synthesis?.insight}
         onSave={() => {
           const session = makeSpeculumSession({
             sessionId: `${pendingResult.personaId}-${Date.now()}`,
@@ -116,7 +146,8 @@ export default function Speculum({ onNavigate, currentJudgment }) {
           actions.addSpeculumSession(session);
           setJustCompleted(true);
           setPendingResult(null);
-          setStage("intro");
+          setSynthesis(undefined);
+          setStage("bringIntro");
           setSelectedPersonaId(null);
         }}
       />
@@ -127,29 +158,15 @@ export default function Speculum({ onNavigate, currentJudgment }) {
     return (
       <Shell>
         <p style={bodyStyle}>
-          다른 역할 입어보기는 판단이 만들어지는 과정에서 읽은 판단 기준을 바탕으로, 지금의 판단을 다른
-          렌즈로 다시 보게 해줍니다.
+          다른 역할 입어보기는 내 판단의 지형에서 드러난 판단 기준을 바탕으로, 지금의 판단을 다른
+          역할로 다시 보게 해줍니다.
         </p>
         <p style={{ ...bodyStyle, color: "#847c6b" }}>
-          아직 판단이 만들어지는 과정을 완료하지 않아서, 어떤 렌즈를 열어야 할지 정할 근거가 없습니다. 먼저
+          아직 내 판단의 지형을 확인하지 않아서, 어떤 역할을 골라야 할지 정할 근거가 없습니다. 먼저
           완료해 주세요.
         </p>
         <button style={primaryButtonStyle} onClick={() => onNavigate("meditatio")}>
-          판단이 만들어지는 과정 하러 가기
-        </button>
-      </Shell>
-    );
-  }
-
-  if (!initialJudgment) {
-    return (
-      <Shell>
-        <p style={bodyStyle}>
-          어떤 질문을 얹을지 정하기 전에, 지금 실제로 고민 중인 문제와 그 문제에 대한 현재 판단을 먼저
-          받아야 합니다.
-        </p>
-        <button style={primaryButtonStyle} onClick={() => onNavigate("judgment")}>
-          지금의 판단 적으러 가기
+          내 판단의 지형 하러 가기
         </button>
       </Shell>
     );
@@ -157,11 +174,11 @@ export default function Speculum({ onNavigate, currentJudgment }) {
 
   const selectedPersona = routing.operationCandidates.find((p) => p.id === selectedPersonaId) ?? null;
 
-  // "9. 다른 판단 방식 안내" — 완료 직후 돌아왔을 때도 여기가 시작점이다.
-  if (stage === "intro") {
+  // "## 시작" — 03 전체의 진입점. 완료 직후 돌아왔을 때도 여기가 시작점이다.
+  if (stage === "bringIntro") {
     return (
       <Shell>
-        <h1 style={titleStyle}>다른 역할 입어보기</h1>
+        <h1 style={titleStyle}>이번에는 다른 돌 하나를 얹어봅니다.</h1>
 
         {justCompleted && (
           <div style={completedBoxStyle}>
@@ -173,6 +190,100 @@ export default function Speculum({ onNavigate, currentJudgment }) {
           </div>
         )}
 
+        <p style={bodyStyle}>
+          지금까지는 내가 어떤 선택을 어렵게 느끼는지, 그리고 평소 어떤 방식으로 판단하는지
+          봤습니다.
+        </p>
+        <p style={bodyStyle}>
+          이번에는 실제 고민 하나를 가지고 평소에는 쓰지 않던 판단 방식을 직접 사용해봅니다.
+        </p>
+        <p style={bodyStyle}>각 역할은 서로 다른 방법으로 판단을 다룹니다.</p>
+        <p style={bodyStyle}>
+          어떤 역할은 사실과 예상을 나누고, 어떤 역할은 책임의 경계를 다시 보고, 어떤 역할은
+          판단에서 한 가지 요소를 잠시 빼봅니다.
+        </p>
+        <p style={bodyStyle}>새로운 돌 하나를 얹으면 돌탑의 무게중심이나 모양이 달라질 수 있습니다.</p>
+        <p style={bodyStyle}>
+          같은 방식으로, 다른 판단 방식을 하나 사용해본 뒤 처음의 생각에서 무엇이 달라지고 무엇이
+          그대로 남는지 봅니다.
+        </p>
+        <p style={bodyStyle}>마치 잠시 다른 가면을 써보는 것처럼요.</p>
+
+        <button style={{ ...primaryButtonStyle, width: "100%" }} onClick={() => setStage("concern")}>
+          고민 가져오기
+        </button>
+      </Shell>
+    );
+  }
+
+  // "요즘 마음에 있는 일" — 구 CurrentJudgment 화면 1. 03 안의 내부 단계로 들어왔다.
+  if (stage === "concern") {
+    const canProceed = concern.trim().length > 0 && initialJudgment.trim().length > 0;
+    return (
+      <Shell>
+        <h1 style={titleStyle}>요즘 마음에 있는 일</h1>
+        <p style={bodyStyle}>계속 생각하게 되는 일이 있다면 여기에서 먼저 이야기해 주세요.</p>
+
+        <label style={labelStyle}>어떤 일인가요?</label>
+        <textarea
+          style={textareaStyle}
+          value={concern}
+          onChange={(e) => setConcern(e.target.value)}
+          placeholder="예: 새로운 일을 맡을지 계속 고민하고 있다."
+          rows={3}
+        />
+
+        <label style={labelStyle}>이 일에 대해 지금은 어떻게 생각하고 있나요?</label>
+        <textarea
+          style={textareaStyle}
+          value={initialJudgment}
+          onChange={(e) => setInitialJudgment(e.target.value)}
+          placeholder="예: 지금은 맡지 않는 편이 낫다고 생각한다."
+          rows={3}
+        />
+
+        <button
+          style={{ ...primaryButtonStyle, width: "100%", opacity: canProceed ? 1 : 0.5 }}
+          disabled={!canProceed}
+          onClick={() => setStage("concernConfirm")}
+        >
+          다음
+        </button>
+      </Shell>
+    );
+  }
+
+  // "내가 이야기한 것" — 구 CurrentJudgment 화면 2.
+  if (stage === "concernConfirm") {
+    return (
+      <Shell>
+        <h1 style={titleStyle}>내가 이야기한 것</h1>
+
+        <div style={{ marginBottom: 18 }}>
+          <div style={labelStyle}>마음에 있는 일</div>
+          <div style={quoteBoxStyle}>{concern}</div>
+        </div>
+        <div style={{ marginBottom: 18 }}>
+          <div style={labelStyle}>지금은 이렇게 생각하고 있습니다</div>
+          <div style={quoteBoxStyle}>{initialJudgment}</div>
+        </div>
+
+        <p style={{ ...bodyStyle, marginTop: 4 }}>
+          이 생각을 시작점으로 남겨둡니다. 가면을 벗은 뒤 같은 고민에 다시 답합니다.
+        </p>
+
+        <button style={{ ...primaryButtonStyle, width: "100%" }} onClick={() => setStage("roleIntro")}>
+          다음
+        </button>
+      </Shell>
+    );
+  }
+
+  // "다른 판단 방식 안내" — 고민을 확인한 뒤, 실제 역할 추천 전에 한 번 더 개념을 짚는다.
+  if (stage === "roleIntro") {
+    return (
+      <Shell>
+        <h1 style={titleStyle}>다른 역할 입어보기</h1>
         <p style={bodyStyle}>이번에는 다른 판단 방식을 사용해봅니다.</p>
         <p style={bodyStyle}>
           「나를 받치는 돌」에서는 어려운 선택에 걸려 있던 생각을 한 번 덜어내 봤습니다. 이번에는
@@ -278,6 +389,30 @@ function Shell({ children }) {
 
 const titleStyle = { fontFamily: "Pretendard, sans-serif", fontWeight: 400, fontSize: 22, marginBottom: 12 };
 const bodyStyle = { fontSize: 13.5, lineHeight: 1.6, marginBottom: 16, color: "#1c1a17" };
+const labelStyle = { display: "block", fontSize: 12.5, color: "#847c6b", marginBottom: 8 };
+const textareaStyle = {
+  width: "100%",
+  padding: "12px 14px",
+  borderRadius: 3,
+  background: "rgba(49,53,45,0.035)",
+  border: "1px solid rgba(49,53,45,0.14)",
+  color: "#1c1a17",
+  fontSize: 13.5,
+  lineHeight: 1.6,
+  fontFamily: "inherit",
+  marginBottom: 20,
+  boxSizing: "border-box",
+  resize: "vertical",
+};
+const quoteBoxStyle = {
+  padding: "12px 14px",
+  borderRadius: 3,
+  background: "rgba(49,53,45,0.035)",
+  border: "1px solid rgba(49,53,45,0.14)",
+  fontSize: 13.5,
+  lineHeight: 1.6,
+  whiteSpace: "pre-line",
+};
 const primaryButtonStyle = {
   padding: "12px 20px",
   borderRadius: 3,

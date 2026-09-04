@@ -1,6 +1,7 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { MEDITATIO_SECTIONS } from "../data/meditatioV1";
-import { deriveMeditatioResult, DOMAIN_COPY } from "../state/deriveMeditatio";
+import { deriveMeditatioResult, derivePartSummaries, DOMAIN_COPY } from "../state/deriveMeditatio";
+import { generateMeditatioPartDescriptions } from "../state/meditatioSynthesis";
 import { useUserState } from "../state/UserStateContext";
 import { PaperGrain } from "./PaperGrain";
 import { SectionMark } from "./SectionMark";
@@ -39,10 +40,10 @@ const TOTAL_QUESTIONS = GROUPS.reduce((sum, g) => sum + g.questions.length, 0);
 // 홈 목록 표시 전용 — MEDITATIO_SECTIONS의 짧은 주제 제목과 별개로,
 // 홈 화면에서는 질문형 제목 + 한 줄 설명을 보여준다(데이터 구조는 안 건드림).
 const SECTION_DISPLAY = {
-  section1: { seq: "1/4", q: "결정을 앞두고 나는 무엇을 먼저 확인하는가?", desc: "정보를 더 확인하는지, 직접 해보는지, 다른 사람의 의견을 듣는지 살펴봅니다." },
-  section2: { seq: "2/4", q: "나는 무엇을 오래 기억하는가?", desc: "어떤 일이 기억에 남아 있고, 좋은 일과 힘든 일이 얼마나 오래 마음에 남는지 살펴봅니다." },
-  section3: { seq: "3/4", q: "나는 어떻게 판단을 내리는가?", desc: "예상과 다른 일이 생겼을 때 무엇을 먼저 보고, 무엇을 믿으며, 어느 정도 확인되면 결정을 내리는지 살펴봅니다." },
-  section4: { seq: "4/4", q: "중요한 결정을 내릴 때 나는 무엇을 부담스러워하는가?", desc: "결정을 앞두고 가장 마음에 걸리는 점과 결정을 미루는 이유를 간단히 살펴봅니다." },
+  section1: { seq: "1/4", q: "결정을 앞두고 나는 무엇을 먼저 확인하는가?", desc: "정보를 더 알아야 움직이는지, 직접 해봐야 알 수 있는지, 다른 사람의 생각을 먼저 확인하는지 봅니다. 내 판단이 어디에서 시작되는지 확인합니다." },
+  section2: { seq: "2/4", q: "나는 무엇을 오래 기억하는가?", desc: "어떤 성공이 오래 남는지, 어떤 힘든 일이 쉽게 사라지지 않는지, 사람과의 경험이 얼마나 오래 영향을 주는지 봅니다." },
+  section3: { seq: "3/4", q: "나는 어떻게 판단을 내리는가?", desc: "예상과 다른 일이 생겼을 때 무엇을 먼저 보고, 어떤 정보를 믿고, 어느 정도 확인되면 충분하다고 느끼는지 봅니다." },
+  section4: { seq: "4/4", q: "중요한 결정을 내릴 때 나는 무엇을 부담스러워하는가?", desc: "결과를 잘못 예상하는 것이 부담스러운지, 누군가에게 미칠 영향이 마음에 걸리는지, 내가 감당해야 할 책임이나 손실이 큰지 봅니다." },
 };
 
 const CSS = `
@@ -121,6 +122,20 @@ export default function MeditatioV1({ onComplete }) {
 
   const raw = state.meditatio.raw;
   const derived = state.meditatio.derived;
+
+  // "오래 남는 것"(Part 2) / "판단을 내릴 때 보는 것"(Part 3) — 결과 화면에 처음 들어왔을 때
+  // 한 번만 생성한다. undefined=시작 전, null=생성 중이거나 실패(자리 비움), 객체=완료.
+  const [partSynthesis, setPartSynthesis] = useState(undefined);
+  const [partSynthesisFor, setPartSynthesisFor] = useState(null);
+
+  useEffect(() => {
+    if (view !== "result" || !derived) return;
+    if (partSynthesisFor === derived.generatedAt) return; // 이미 이 결과로 생성했음
+    setPartSynthesis(null);
+    setPartSynthesisFor(derived.generatedAt);
+    generateMeditatioPartDescriptions(raw).then(setPartSynthesis);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [view, derived?.generatedAt]);
 
   const answeredCount = useMemo(() => Object.keys(raw).length, [raw]);
   const doneGroupIds = useMemo(() => {
@@ -208,19 +223,37 @@ export default function MeditatioV1({ onComplete }) {
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <PaperGrain seed={11} baseFrequency={0.55} octaves={3} opacity={0.14} />
       <div className="mv-shell">
-        <SectionMark number="02" title="판단이 만들어지는 과정" />
+        <SectionMark number="02" title="내 판단의 지형" />
 
         {view === "intro" && (
           <>
             <div className="mv-intro">
               <div>
                 <p className="mv-open-desc">
-                  중요한 결정을 어떻게 만들어가는지 네 부분으로 따라가 봅니다.
+                  돌탑은 놓이는 자리에 따라 쌓이는 모습이 달라집니다.
+                  <br />
+                  <br />
+                  비탈에서는 한쪽으로 무게가 실리고,
+                  <br />
+                  평평한 땅에서는 다른 방식으로 균형을 잡습니다.
+                  <br />
+                  <br />
+                  판단에도 이런 차이가 있습니다.
+                  <br />
+                  <br />
+                  무엇을 먼저 확인하는지, 어떤 경험이 오래 남아 있는지,
+                  <br />
+                  무엇을 믿어야 결정할 수 있는지, 중요한 결정에서 무엇을 가장 부담스럽게
+                  느끼는지.
+                  <br />
+                  <br />
+                  이 네 가지를 보면 내가 어떤 조건에서 판단하고 있는지 조금 더 구체적으로 볼 수
+                  있습니다.
                 </p>
               </div>
             </div>
             <button className="mv-next" style={{ marginTop: 24 }} onClick={() => setView("home")}>
-              다음
+              시작하기
             </button>
           </>
         )}
@@ -328,8 +361,41 @@ export default function MeditatioV1({ onComplete }) {
             <button className="mv-back" onClick={() => setView("home")}>
               ← 목록으로
             </button>
-            <h2>지금까지 만들어진 판단의 흐름</h2>
-            <div className="mv-result-card">{derived.narrative || "아직 판단 흐름을 구성할 만큼 응답이 모이지 않았습니다."}</div>
+            <h2>내 판단의 지형</h2>
+            <p className="mv-hint" style={{ margin: 0 }}>이제 네 가지를 함께 볼 수 있습니다.</p>
+
+            {(() => {
+              const { part1, part4 } = derivePartSummaries(derived);
+              const part2 = partSynthesis?.part2;
+              const part3 = partSynthesis?.part3;
+              const loading = partSynthesis === null;
+              const PART_ROWS = [
+                { label: "먼저 확인하는 것", text: part1 },
+                { label: "오래 남는 것", text: part2, loading },
+                { label: "판단을 내릴 때 보는 것", text: part3, loading },
+                { label: "중요한 결정에서 마음에 걸리는 것", text: part4 },
+              ];
+              return (
+                <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                  {PART_ROWS.map((row) => (
+                    <div key={row.label}>
+                      <p className="mv-hint" style={{ margin: "0 0 6px", fontWeight: 700, color: "var(--ink)" }}>
+                        {row.label}
+                      </p>
+                      <div className="mv-result-card" style={{ boxShadow: "none" }}>
+                        {row.text ?? (row.loading ? "살펴보는 중입니다…" : "아직 확인할 만큼 응답이 모이지 않았습니다.")}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
+
+            <p className="mv-hint" style={{ lineHeight: 1.8 }}>
+              이 네 가지는 따로 움직이지 않습니다. 오래 남아 있는 경험이 다음 결정에서 먼저 보는
+              것을 바꿀 수도 있고, 부담스럽게 느끼는 것이 결정을 끝내기까지 더 많은 확인을 요구할
+              수도 있습니다. 이 조합이 지금 내 판단이 서 있는 지형입니다.
+            </p>
 
             {derived.affect.length > 0 && (
               <div>

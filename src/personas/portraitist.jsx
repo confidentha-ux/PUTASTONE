@@ -200,7 +200,7 @@ export default function PortraitistLens({ onComplete } = {}) {
         {step === "exit" && (
           <>
             <p className="pr-q">초상화가는 실제로 자신을 판단했던 순간이 있을 때 가장 잘 작동합니다.</p>
-            <p className="pr-hint">그런 순간이 떠오르면 다시 시작해주세요. 지금은 다른 렌즈를 먼저 시도해보는 것도 좋습니다.</p>
+            <p className="pr-hint">그런 순간이 떠오르면 다시 시작해주세요. 지금은 다른 역할을 먼저 시도해보는 것도 좋습니다.</p>
             <button className="pr-restart" onClick={restart}>처음으로</button>
           </>
         )}

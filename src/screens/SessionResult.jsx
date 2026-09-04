@@ -13,6 +13,8 @@ export default function SessionResult({
   initialJudgment,
   newInformation,
   rejudgment,
+  comparison,
+  insight,
   onSave,
 }) {
   return (
@@ -20,6 +22,13 @@ export default function SessionResult({
       <Row label="처음에는" value={initialJudgment || "—"} />
       <Row label="새로 생각하게 된 것" value={newInformation || "특별히 없음"} />
       <Row label="지금은" value={rejudgment || "—"} />
+
+      {comparison && (
+        <div style={{ marginBottom: 18 }}>
+          <div style={labelStyle}>달라진 것과 그대로 남은 것</div>
+          <div style={quoteBoxStyle}>{comparison}</div>
+        </div>
+      )}
 
       <div style={{ height: 1, background: "rgba(28,26,23,0.14)", margin: "26px 0" }} />
 
@@ -46,6 +55,13 @@ export default function SessionResult({
       <p style={leadStyle}>
         다른 가면을 써본 이유는 결국 내 판단을 더 잘 보기 위해서였습니다.
       </p>
+
+      {insight && (
+        <>
+          <p style={titleStyle}>이번 답에서 보인 것</p>
+          <p style={leadStyle}>{insight}</p>
+        </>
+      )}
 
       <p style={{ ...bodyStyle, marginTop: 24 }}>이 내용을 지금의 돌탑에 남겨둘 수 있습니다.</p>
 

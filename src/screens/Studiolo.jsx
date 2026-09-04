@@ -76,7 +76,7 @@ export default function Studiolo() {
         <div className="st-section">
           <h2>II · III. 판단이 만들어지는 방식 / 중요한 순간의 판단</h2>
           {!meditatio.derived ? (
-            <div className="st-empty">아직 판단이 만들어지는 과정을 완료하지 않았습니다.</div>
+            <div className="st-empty">아직 내 판단의 지형을 확인하지 않았습니다.</div>
           ) : (
             <div className="st-card">{meditatio.derived.narrative}</div>
           )}

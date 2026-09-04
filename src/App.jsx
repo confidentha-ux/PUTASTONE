@@ -5,24 +5,23 @@ import Start from "./screens/Start";
 import Home from "./screens/Home";
 import Studiolo from "./screens/Studiolo";
 import Speculum from "./screens/Speculum";
-import CurrentJudgment from "./screens/CurrentJudgment";
 import Lectio from "./components/Lectio";
 import MeditatioV1 from "./components/MeditatioV1";
 
-// App Shell — 2026-08-22 초반 구조 수정본:
+// App Shell — 2026-09-04 구조 수정본:
 //   로그인 → 첫 화면(돌탑의 의미) → 홈(전체 흐름과 현재 위치) → 01 나를 받치는 돌 →
-//   02 판단이 만들어지는 과정 → 03 지금의 판단 → 다른 역할 입어보기 → 지금은 → 이번에 생긴 것 →
-//   현재의 돌탑(별도 공간, 홈에서 언제든 진입 가능)
+//   02 내 판단의 지형 → 03 다른 역할 입어보기(고민 가져오기 → 두 역할 추천 → 가면쓰기 →
+//   가면을 벗고 → 03을 마치며) → 현재의 돌탑(별도 공간, 홈에서 언제든 진입 가능)
+// "지금의 판단"(구 CurrentJudgment)은 더 이상 별도 App 화면이 아니다 — 03 안의 내부 단계
+// (concern/concernConfirm)로 흡수되었다. Speculum.jsx가 그 입력을 직접 들고 있다가
+// Speculum Session의 Initial Judgment로 그대로 쓴다.
 // 기존 "세 가지 경험" 화면은 삭제 — 첫 화면 버튼을 누르면 바로 홈으로 이동한다.
 // 로그인은 실제 인증이 없다(백엔드 미구현) — 버튼을 누르면 바로 다음 화면으로 넘어간다.
-//
-// "지금의 판단" 화면(CurrentJudgment)에서 받은 두 번째 입력이 Speculum Session의
-// Initial Judgment가 되어 Speculum.jsx로 그대로 전달된다.
 
 const NAV = [
   { key: "home", label: "홈" },
   { key: "lectio", label: "받치는 돌" },
-  { key: "meditatio", label: "판단 과정" },
+  { key: "meditatio", label: "판단 지형" },
   { key: "speculum", label: "다른 역할" },
   { key: "studiolo", label: "현재의 돌탑" },
 ];
@@ -33,7 +32,6 @@ export default function App() {
   const { state, isLoggedIn, authLoading } = useUserState();
   const [screen, setScreen] = useState("login");
   const [showNav, setShowNav] = useState(!ONBOARDING_SCREENS.includes(screen));
-  const [currentJudgment, setCurrentJudgment] = useState(null);
 
   const goTo = (next) => {
     setScreen(next);
@@ -91,16 +89,8 @@ export default function App() {
         {screen === "start" && <Start onStart={() => goTo("home")} />}
         {screen === "home" && <Home onNavigate={goTo} />}
         {screen === "lectio" && <Lectio onComplete={() => goTo("meditatio")} />}
-        {screen === "meditatio" && <MeditatioV1 onComplete={() => goTo("judgment")} />}
-        {screen === "judgment" && (
-          <CurrentJudgment
-            onComplete={(value) => {
-              setCurrentJudgment(value);
-              goTo("speculum");
-            }}
-          />
-        )}
-        {screen === "speculum" && <Speculum onNavigate={goTo} currentJudgment={currentJudgment} />}
+        {screen === "meditatio" && <MeditatioV1 onComplete={() => goTo("speculum")} />}
+        {screen === "speculum" && <Speculum onNavigate={goTo} />}
         {screen === "studiolo" && <Studiolo />}
       </div>
     </div>

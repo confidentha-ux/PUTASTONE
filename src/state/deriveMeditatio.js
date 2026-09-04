@@ -189,6 +189,17 @@ function buildNarrative({ defaultStrategy, judgmentProcess, pressure }) {
   return paragraphs.join("\n\n");
 }
 
+// "현재의 돌탑 · 2"의 "먼저 확인하는 것"(Part 1) / "중요한 결정에서 마음에 걸리는 것"(Part 4) —
+// 이미 있는 카피 테이블(DEFAULT_STRATEGY_LABEL, DOMAIN_COPY)만으로 만들 수 있어서 AI 호출 없이 뽑는다.
+export function derivePartSummaries({ defaultStrategy, pressure }) {
+  const part1 = defaultStrategy
+    ? `결정을 시작할 때는 ${DEFAULT_STRATEGY_LABEL[defaultStrategy]} 편입니다.`
+    : null;
+  const triggerDomain = pressure?.trigger?.domain;
+  const part4 = triggerDomain && DOMAIN_COPY[triggerDomain] ? DOMAIN_COPY[triggerDomain].caught : null;
+  return { part1, part4 };
+}
+
 export function deriveMeditatioResult(raw) {
   const defaultStrategy = computeDefaultStrategy(raw);
   const affect = computeAffect(raw);

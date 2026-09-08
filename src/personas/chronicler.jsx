@@ -153,9 +153,9 @@ const INITIAL_ANSWERS = {
   step7: "",
 };
 
-export default function ChroniclerLens({ onComplete } = {}) {
+export default function ChroniclerLens({ onComplete, initialJudgment } = {}) {
   const [step, setStep] = useState("intro"); // intro | s0..s7 | s5(판단카드) | loading-condition | s6 | s7 | loading-result | result
-  const [answers, setAnswers] = useState(INITIAL_ANSWERS);
+  const [answers, setAnswers] = useState(() => ({ ...INITIAL_ANSWERS, judgment: initialJudgment || SAMPLE_JUDGMENT }));
   const [error, setError] = useState(null);
   const set = (k, v) => setAnswers((p) => ({ ...p, [k]: v }));
 
@@ -190,7 +190,7 @@ export default function ChroniclerLens({ onComplete } = {}) {
     }
   }
   function restart() {
-    setAnswers(INITIAL_ANSWERS);
+    setAnswers({ ...INITIAL_ANSWERS, judgment: initialJudgment || SAMPLE_JUDGMENT });
     setStep("intro");
   }
 

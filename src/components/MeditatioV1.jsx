@@ -46,6 +46,22 @@ const SECTION_DISPLAY = {
   section4: { seq: "4/4", q: "중요한 결정을 내릴 때 나는 무엇을 부담스러워하는가?", desc: "결과를 잘못 예상하는 것이 부담스러운지, 누군가에게 미칠 영향이 마음에 걸리는지, 내가 감당해야 할 책임이나 손실이 큰지 봅니다." },
 };
 
+// 6개 축(DOMAIN_COPY)에 안 걸리는 나머지 signal 태그들 — src/data/meditatioV1.js의 실제
+// signals 값 전수(agency/autonomous_choice/contribution/growth/open_desire)를 확인해서 만들었다.
+// "none"/"unclear"는 "신호 없음/불명확"이라는 뜻이라 태그로 보여줄 대상이 아니라서 제외한다.
+const EXTRA_SIGNAL_LABEL = {
+  agency: "주체성",
+  autonomous_choice: "자율적 선택",
+  contribution: "기여",
+  growth: "성장",
+  open_desire: "바람",
+};
+const HIDDEN_SIGNALS = new Set(["none", "unclear"]);
+
+function affectSignalLabel(s) {
+  return DOMAIN_COPY[s.replace("_related", "")]?.label ?? EXTRA_SIGNAL_LABEL[s] ?? s;
+}
+
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=Gowun+Batang:wght@400;700&display=swap');
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
@@ -397,12 +413,12 @@ export default function MeditatioV1({ onComplete }) {
               수도 있습니다. 이 조합이 지금 내 판단이 서 있는 지형입니다.
             </p>
 
-            {derived.affect.length > 0 && (
+            {derived.affect.filter((s) => !HIDDEN_SIGNALS.has(s)).length > 0 && (
               <div>
                 <p className="mv-hint" style={{ margin: "0 0 8px" }}>정서적으로 반복해서 나타난 것</p>
                 <div className="mv-affect-tags">
-                  {[...new Set(derived.affect)].map((s) => (
-                    <span key={s} className="mv-affect-tag">{DOMAIN_COPY[s.replace("_related", "")]?.label ?? s}</span>
+                  {[...new Set(derived.affect.filter((s) => !HIDDEN_SIGNALS.has(s)))].map((s) => (
+                    <span key={s} className="mv-affect-tag">{affectSignalLabel(s)}</span>
                   ))}
                 </div>
               </div>

@@ -81,6 +81,7 @@ export default function Speculum({ onNavigate }) {
 
     return (
       <PersonaComponent
+        initialJudgment={initialJudgment}
         onComplete={(answers) => {
           setPendingResult({
             personaId: openPersonaId,

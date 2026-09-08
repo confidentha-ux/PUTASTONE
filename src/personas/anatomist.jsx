@@ -104,7 +104,7 @@ const INITIAL_ANSWERS = {
   step8: "",
 };
 
-export default function AnatomistLens({ onComplete } = {}) {
+export default function AnatomistLens({ onComplete, initialJudgment } = {}) {
   const [step, setStep] = useState("intro");
   const [answers, setAnswers] = useState(INITIAL_ANSWERS);
   const [error, setError] = useState(null);
@@ -144,6 +144,7 @@ export default function AnatomistLens({ onComplete } = {}) {
         {step === "intro" && (
           <>
             <p className="an-tagline">마음에 걸리는 한 가지가 없다면,<br />그래도 같은 선택을 할까.</p>
+            {initialJudgment && <div className="an-subject">"{initialJudgment}"</div>}
             <p className="an-persona-header">이 판단에 들어간 것들을 하나씩 떼어봅시다.</p>
             <p className="an-hint">여덟 개의 질문을 지나갑니다.</p>
             <button className="an-next" onClick={() => setStep("s0")}>시작하기</button>
@@ -152,6 +153,7 @@ export default function AnatomistLens({ onComplete } = {}) {
 
         {step === "s0" && (
           <>
+            {initialJudgment && <div className="an-subject">"{initialJudgment}"</div>}
             <p className="an-q">이런 생각을 했던 때를 하나 떠올려보세요. 그때 무슨 일이 있었습니까?</p>
             <textarea className="an-textarea" value={answers.step0} onChange={(e) => set("step0", e.target.value)} />
             <button className="an-next" disabled={!answers.step0.trim()} onClick={() => setStep("s1")}>다음</button>

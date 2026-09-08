@@ -112,9 +112,9 @@ const INITIAL_ANSWERS = {
   step8: "",
 };
 
-export default function MerchantLens({ onComplete } = {}) {
+export default function MerchantLens({ onComplete, initialJudgment } = {}) {
   const [step, setStep] = useState("intro");
-  const [answers, setAnswers] = useState(INITIAL_ANSWERS);
+  const [answers, setAnswers] = useState(() => ({ ...INITIAL_ANSWERS, judgment: initialJudgment || SAMPLE_JUDGMENT }));
   const [error, setError] = useState(null);
   const set = (k, v) => setAnswers((p) => ({ ...p, [k]: v }));
 
@@ -134,7 +134,7 @@ export default function MerchantLens({ onComplete } = {}) {
     }
   }
   function restart() {
-    setAnswers(INITIAL_ANSWERS);
+    setAnswers({ ...INITIAL_ANSWERS, judgment: initialJudgment || SAMPLE_JUDGMENT });
     setStep("intro");
   }
 

@@ -9,10 +9,13 @@ import Speculum from "./screens/Speculum";
 import Lectio from "./components/Lectio";
 import MeditatioV1 from "./components/MeditatioV1";
 
-// App Shell — 2026-09-04 구조 수정본:
-//   로그인 → 첫 화면(돌탑의 의미) → 홈(전체 흐름과 현재 위치) → 01 나를 받치는 돌 →
-//   02 내 판단의 지형 → 03 다른 돌을 얹어보기(고민 가져오기 → 두 역할 추천 → 역할 시작하기 →
+// App Shell — 2026-09-08 구조 수정본(01·02 순서 스왑):
+//   로그인 → 첫 화면(돌탑의 의미) → 홈(전체 흐름과 현재 위치) → 01 내 판단의 지형 →
+//   02 나를 받치는 돌 → 03 다른 돌을 얹어보기(고민 가져오기 → 두 역할 추천 → 역할 시작하기 →
 //   역할을 마치고 → 03을 마치며) → 현재의 돌탑(별도 공간, 홈에서 언제든 진입 가능)
+// 순서를 바꾼 이유: Persona 추천(Family Routing)은 01(내 판단의 지형)의 구조화 데이터만 쓴다 —
+// 02(나를 받치는 돌)는 라우팅에 안 쓰인다. "지형이 먼저, 그 지형 위에 놓인 구체적 선택(기초석)이
+// 나중"이라는 순서가 이 역할 분담과도 맞고, 마이산 돌탑을 쌓는 실제 순서(터 → 기단)와도 맞다.
 // "지금의 판단"(구 CurrentJudgment)은 더 이상 별도 App 화면이 아니다 — 03 안의 내부 단계
 // (concern/concernConfirm)로 흡수되었다. Speculum.jsx가 그 입력을 직접 들고 있다가
 // Speculum Session의 Initial Judgment로 그대로 쓴다.
@@ -21,8 +24,8 @@ import MeditatioV1 from "./components/MeditatioV1";
 
 const NAV = [
   { key: "home", label: "홈" },
-  { key: "lectio", label: "받치는 돌" },
   { key: "meditatio", label: "판단 지형" },
+  { key: "lectio", label: "받치는 돌" },
   { key: "speculum", label: "다른 돌" },
   { key: "studiolo", label: "현재의 돌탑" },
 ];
@@ -97,8 +100,8 @@ export default function App() {
         {screen === "login" && <Login />}
         {screen === "start" && <Start onStart={() => goTo("home")} />}
         {screen === "home" && <Home onNavigate={goTo} />}
-        {screen === "lectio" && <Lectio onComplete={() => goTo("meditatio")} />}
-        {screen === "meditatio" && <MeditatioV1 onComplete={() => goTo("speculum")} />}
+        {screen === "meditatio" && <MeditatioV1 onComplete={() => goTo("lectio")} />}
+        {screen === "lectio" && <Lectio onComplete={() => goTo("speculum")} />}
         {screen === "speculum" && <Speculum onNavigate={goTo} />}
         {screen === "ending" && (
           <Ending

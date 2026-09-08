@@ -193,7 +193,7 @@ export default function OracleLens({ onComplete, initialJudgment } = {}) {
           <>
             <div className="or-step-label">STEP 1</div>
             <div className="or-subject">"{answers.judgment}"</div>
-            <p className="or-hint" style={{ marginBottom: 6 }}>이 문장을 고르셨습니다.</p>
+            <p className="or-hint" style={{ marginBottom: 6 }}>방금 이렇게 적으셨습니다.</p>
             <p className="or-q">무엇을 보고 이 문장이 나와 가깝다고 느끼셨습니까?</p>
             <p className="or-hint">떠오르는 게 없다면, 앞으로 그런 순간이 온다면 어떨지 상상해서 적어도 됩니다.</p>
             <textarea className="or-textarea" value={answers.step1} onChange={(e) => set("step1", e.target.value)} placeholder="여기에 적어주세요." />

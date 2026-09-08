@@ -3,8 +3,8 @@ import { useUserState } from "../state/UserStateContext";
 import { PaperGrain } from "../components/PaperGrain";
 
 const EXPERIENCES = [
-  { key: "lectio", number: "01", title: "나를 받치는 돌", q: "어떤 선택은 왜 나에게 더 어려울까?", doneKey: "lectio" },
-  { key: "meditatio", number: "02", title: "내 판단의 지형", q: "나는 무엇을 보고 판단을 내릴까?", doneKey: "meditatio" },
+  { key: "meditatio", number: "01", title: "내 판단의 지형", q: "나는 무엇을 보고 판단을 내릴까?", doneKey: "meditatio" },
+  { key: "lectio", number: "02", title: "나를 받치는 돌", q: "어떤 선택은 왜 나에게 더 어려울까?", doneKey: "lectio" },
   { key: "speculum", number: "03", title: "다른 돌을 얹어보기", q: "다른 판단 방식을 써보면 무엇이 달라질까?", doneKey: null },
 ];
 
@@ -56,12 +56,12 @@ export default function Home({ onNavigate }) {
         <p style={{ fontSize: 12.5, fontWeight: 300, lineHeight: 1.9, color: "#847c6b", textAlign: "center", margin: "0 0 30px" }}>
           먼저
           <br />
-          어떤 선택은 자연스럽고, 어떤 선택은 어렵게 느껴지는지 봅니다.
+          결정할 때 무엇을 먼저 보고, 무엇을 믿고, 어디에서 부담을 느끼는지 살펴봅니다.
           <br />
           <br />
           그다음
           <br />
-          결정할 때 무엇을 먼저 보고, 무엇을 믿고, 어디에서 부담을 느끼는지 살펴봅니다.
+          어떤 선택은 자연스럽고, 어떤 선택은 어렵게 느껴지는지 봅니다.
           <br />
           <br />
           마지막에는 실제 고민 하나를 가지고

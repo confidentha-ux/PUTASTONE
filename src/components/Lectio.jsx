@@ -517,7 +517,7 @@ export default function Lectio({ onComplete }) {
         {screen === "result" ? (
           <SectionMark number="1" title="현재의 돌탑" />
         ) : (
-          <SectionMark number="01" title="나를 받치는 돌" />
+          <SectionMark number="02" title="나를 받치는 돌" />
         )}
 
         {screen === "intro" && (
@@ -730,7 +730,7 @@ export default function Lectio({ onComplete }) {
 
             {onComplete && (
               <button className="lc-next" onClick={() => onComplete({ items, dominantDomain })}>
-                내 판단의 지형 보기
+                다른 돌 얹어보기
               </button>
             )}
             <div className="lc-foot">

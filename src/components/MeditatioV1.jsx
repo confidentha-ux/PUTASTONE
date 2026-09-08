@@ -239,7 +239,7 @@ export default function MeditatioV1({ onComplete }) {
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <PaperGrain seed={11} baseFrequency={0.55} octaves={3} opacity={0.14} />
       <div className="mv-shell">
-        <SectionMark number="02" title="내 판단의 지형" />
+        <SectionMark number="01" title="내 판단의 지형" />
 
         {view === "intro" && (
           <>
@@ -427,11 +427,10 @@ export default function MeditatioV1({ onComplete }) {
             {onComplete && (
               <>
                 <p className="mv-hint" style={{ margin: 0 }}>
-                  이것이 지금까지 쌓여온 당신의 판단입니다. 이제 여기에 실제로 마음에 있는 일을 하나
-                  올려봅니다.
+                  이제 이 지형 위에서, 실제로 어떤 선택까지 내 선택지에 올려놓는지 살펴봅니다.
                 </p>
                 <button className="mv-next" onClick={() => onComplete(derived)}>
-                  지금의 판단 꺼내기
+                  나를 받치는 돌 보기
                 </button>
               </>
             )}

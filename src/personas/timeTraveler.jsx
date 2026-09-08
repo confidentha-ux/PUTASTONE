@@ -192,7 +192,7 @@ export default function TimeTravelerLens({ onComplete, initialJudgment } = {}) {
           <>
             <div className="tt-step-label">STEP 1</div>
             <div className="tt-subject">"{answers.judgment}"</div>
-            <p className="tt-hint" style={{ marginBottom: 6 }}>이 문장을 고르셨습니다.</p>
+            <p className="tt-hint" style={{ marginBottom: 6 }}>방금 이렇게 적으셨습니다.</p>
             <p className="tt-q">무엇을 보고 이 문장이 나와 가깝다고 느끼셨습니까?</p>
             <p className="tt-hint">떠오르는 게 없다면, 앞으로 그런 순간이 온다면 어떨지 상상해서 적어도 됩니다.</p>
             <textarea className="tt-textarea" value={answers.step1} onChange={(e) => set("step1", e.target.value)} placeholder="예: 지금 방식에 큰 의심 없이 계속해왔던 것 같아서." />

@@ -245,7 +245,7 @@ export default function ChroniclerLens({ onComplete, initialJudgment } = {}) {
           <>
             <div className="dt-step-label">STEP 1</div>
             <div className="dt-subject">"{answers.judgment}"</div>
-            <p className="dt-hint" style={{ marginBottom: 6 }}>이 문장을 고르셨습니다.</p>
+            <p className="dt-hint" style={{ marginBottom: 6 }}>방금 이렇게 적으셨습니다.</p>
             <p className="dt-q">무엇을 보고 이 문장이 나와 가깝다고 느끼셨습니까?</p>
             <p className="dt-hint">편하게 적어주세요.</p>
             <textarea className="dt-textarea" value={answers.step1} onChange={(e) => set("step1", e.target.value)} placeholder="예: 예전에 비슷한 얘기를 꺼냈다가 분위기가 어색해진 적이 있어서." />

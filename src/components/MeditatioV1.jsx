@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { MEDITATIO_SECTIONS } from "../data/meditatioV1";
 import { deriveMeditatioResult, derivePartSummaries, DOMAIN_COPY } from "../state/deriveMeditatio";
-import { generateMeditatioPartDescriptions } from "../state/meditatioSynthesis";
+import { generateMeditatioPartDescriptions, generateMeditatioConnections } from "../state/meditatioSynthesis";
 import { useUserState } from "../state/UserStateContext";
 import { PaperGrain } from "./PaperGrain";
 import { SectionMark } from "./SectionMark";
@@ -127,6 +127,12 @@ const CSS = `
   font-family:Pretendard,sans-serif; font-size:14.5px; line-height:1.85; box-shadow: 0 6px 18px rgba(0,0,0,.25); white-space: pre-line; }
 .mv-affect-tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .mv-affect-tag { font-size: 11px; padding: 4px 9px; border-radius: 20px; border: 1px solid var(--line); color: var(--muted); }
+/* B: 함께 놓아보면 — 흐름이라 왼쪽에 얇은 세로선으로 "이어짐"을 표시 */
+.mv-flow-card { border-left: 2px solid var(--open); padding: 4px 0 4px 16px; font-size: 14px; line-height: 1.9; color: var(--ink); }
+/* C: 서로 다른 방향이 나타난 곳 — 대비가 핵심이라 좌우 두 톤 그러데이션 */
+.mv-tension-card { background: linear-gradient(90deg, rgba(161,61,46,0.06), transparent 55%, rgba(161,61,46,0.06)); border: 1px solid rgba(161,61,46,0.18); border-radius: 3px; padding: 16px 18px; font-size: 14px; line-height: 1.9; color: var(--ink); }
+/* D: 지금 이 지형에서 눈에 띄는 것 — Lectio 마무리 화면과 같은 "핵심 한 줄" 강조 박스 */
+.mv-insight-card { font-weight: 700; font-size: 15px; line-height: 1.7; color: var(--ink); text-align: center; margin: 4px 0; padding: 18px 16px; border-top: 1px solid rgba(28,26,23,0.14); border-bottom: 1px solid rgba(28,26,23,0.14); }
 .mv-restart { width: 100%; padding: 14px; margin-top: 8px; background: transparent; border: 1px solid var(--line); color: var(--muted); font-size: 13px; cursor: pointer; border-radius: 2px; font-family: inherit; }
 `;
 
@@ -143,15 +149,30 @@ export default function MeditatioV1({ onComplete }) {
   // 한 번만 생성한다. undefined=시작 전, null=생성 중이거나 실패(자리 비움), 객체=완료.
   const [partSynthesis, setPartSynthesis] = useState(undefined);
   const [partSynthesisFor, setPartSynthesisFor] = useState(null);
+  // B(함께 놓아보면)/C(서로 다른 방향이 나타난 곳)/D(지금 이 지형에서 눈에 띄는 것) — Part 2·3까지
+  // 다 생성된 뒤에 네 조각을 실제로 연결할 수 있는지 확인한다. undefined=시작 전,
+  // null=생성 중, 객체=완료(각 필드는 근거 없으면 null일 수 있음).
+  const [connections, setConnections] = useState(undefined);
 
   useEffect(() => {
     if (view !== "result" || !derived) return;
     if (partSynthesisFor === derived.generatedAt) return; // 이미 이 결과로 생성했음
     setPartSynthesis(null);
+    setConnections(undefined);
     setPartSynthesisFor(derived.generatedAt);
     generateMeditatioPartDescriptions(raw).then(setPartSynthesis);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [view, derived?.generatedAt]);
+
+  useEffect(() => {
+    if (!derived || !partSynthesis || connections !== undefined) return;
+    const { part1, part4 } = derivePartSummaries(derived);
+    setConnections(null);
+    generateMeditatioConnections({ part1, part2: partSynthesis.part2, part3: partSynthesis.part3, part4 }).then(
+      setConnections
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [partSynthesis]);
 
   const answeredCount = useMemo(() => Object.keys(raw).length, [raw]);
   const doneGroupIds = useMemo(() => {
@@ -407,11 +428,36 @@ export default function MeditatioV1({ onComplete }) {
               );
             })()}
 
-            <p className="mv-hint" style={{ lineHeight: 1.8 }}>
-              이 네 가지는 따로 움직이지 않습니다. 오래 남아 있는 경험이 다음 결정에서 먼저 보는
-              것을 바꿀 수도 있고, 부담스럽게 느끼는 것이 결정을 끝내기까지 더 많은 확인을 요구할
-              수도 있습니다. 이 조합이 지금 내 판단이 서 있는 지형입니다.
-            </p>
+            {connections === null && (
+              <p className="mv-hint">지금까지 답한 것들을 서로 연결해보는 중입니다…</p>
+            )}
+
+            {connections?.flow && (
+              <div>
+                <p className="mv-hint" style={{ margin: "0 0 6px", fontWeight: 700, color: "var(--ink)" }}>
+                  함께 놓아보면
+                </p>
+                <div className="mv-flow-card">{connections.flow}</div>
+              </div>
+            )}
+
+            {connections?.tension && (
+              <div>
+                <p className="mv-hint" style={{ margin: "0 0 6px", fontWeight: 700, color: "var(--ink)" }}>
+                  서로 다른 방향이 나타난 곳
+                </p>
+                <div className="mv-tension-card">{connections.tension}</div>
+              </div>
+            )}
+
+            {connections?.insight && (
+              <div className="mv-insight-card">
+                <div style={{ fontSize: 11, fontWeight: 500, color: "var(--muted)", marginBottom: 8 }}>
+                  지금 이 지형에서 눈에 띄는 것
+                </div>
+                {connections.insight}
+              </div>
+            )}
 
             {derived.affect.filter((s) => !HIDDEN_SIGNALS.has(s)).length > 0 && (
               <div>

@@ -101,7 +101,7 @@ const section2 = {
       questions: [
         {
           id: "s2q1", n: 1,
-          text: "최근 스스로 조용히 뿌듯했던 순간이 있었나요?",
+          text: "최근 자기 자신이 뿌듯했던 적이 있었나요?",
           object: "positive_affect_entry",
           options: [
             { n: 26, text: "있었다." },
@@ -214,7 +214,7 @@ const section2 = {
     },
     {
       id: "card3",
-      title: "감정이 켜지는 자리",
+      title: "감정이 움직이는 때",
       questions: [
         {
           id: "s2q10", n: 10,
@@ -241,7 +241,7 @@ const section2 = {
         },
         {
           id: "s2q12", n: 12,
-          text: "부러움을 느낄 때 가장 가까운 것은 무엇인가요?",
+          text: "다른 사람이 부러웠던 순간이 있다면, 그때 가장 가까운 것은 무엇인가요?",
           object: "envy_target",
           options: [
             { n: 77, text: "그 사람이 가진 것" },
@@ -259,20 +259,20 @@ const section2 = {
       questions: [
         {
           id: "s2q13", n: 13,
-          text: "일이 혼자 감당하기 어렵다고 느껴질 때 가장 가까운 반응은 무엇인가요?",
+          text: "일이 감당하기 어려울 때, 내 마음속에서 드는 생각은 대체로 어느 쪽에 가까운가요?",
           object: "help_response",
           options: [
             { n: 82, text: "내가 먼저 끝까지 해본다." },
             { n: 83, text: "필요한 부분을 정리한 뒤 도움을 청한다." },
             { n: 84, text: "누군가에게 상황을 이야기하며 함께 정리한다." },
-            { n: 85, text: "어떻게든 빨리 처리해본다." },
+            { n: 85, text: "일단 대충이라도 빠르게 끝내고 나중에 다시 본다." },
             { n: 86, text: "일단 피하거나 미뤄둔다." },
             { n: 87, text: "딱 맞는 것이 없다." },
           ],
         },
         {
           id: "s2q14", n: 14,
-          text: "중요한 문제를 혼자 결정하기 어려울 때, 다른 사람에게 무엇을 기대하나요?",
+          text: "중요한 문제를 혼자 결정하기 어려울 때, 가장 가까운 것은 무엇인가요?",
           object: "support_expectation",
           options: [
             { n: 88, text: "내가 놓친 정보를 알려주는 것" },
@@ -285,7 +285,7 @@ const section2 = {
         },
         {
           id: "s2q15", n: 15,
-          text: "마음이 힘든 일이 생겼을 때 다른 사람과 어떻게 하나요?",
+          text: "마음이 힘든 일이 생겼을 때, 가장 가까운 것은 무엇인가요?",
           object: "emotional_support_use",
           options: [
             { n: 94, text: "바로 이야기한다." },
@@ -434,14 +434,14 @@ const section3 = {
 };
 
 // ---------------------------------------------------------------------------
-// SECTION 4 — 판단을 멈추게 하는 것 (측정 레이어: Pressure Structure)
+// SECTION 4 — 판단을 붙잡는 것 (측정 레이어: Pressure Structure)
 // 핵심 구조: Trigger Domain → Response → Maintenance Mechanism → Release Domain
 // Domain: uncertainty / loss / responsibility / self_permission / relationship / evaluation
 // ---------------------------------------------------------------------------
 const section4 = {
   id: "section4",
   index: 4,
-  title: "판단을 멈추게 하는 것",
+  title: "판단을 붙잡는 것",
   layer: "Pressure Structure",
   type: "single",
   questions: [

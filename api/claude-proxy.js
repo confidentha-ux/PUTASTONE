@@ -36,7 +36,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: "claude-sonnet-5",
-        max_tokens: 500,
+        max_tokens: 1200,
         system:
           "요청받은 형식의 유효한 JSON만 응답하라. 마크다운 코드펜스(```)도, 설명도, 다른 텍스트도 앞뒤에 붙이지 마라 — 순수 JSON 객체 하나만.",
         messages: [{ role: "user", content: prompt }],
